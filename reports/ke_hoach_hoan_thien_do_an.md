@@ -1,6 +1,6 @@
 # 🏆 KẾ HOẠCH HOÀN THIỆN ĐỒ ÁN NLP: PHÂN TÍCH CẢM XÚC ĐÁNH GIÁ ITVIEC
 > **Giai đoạn**: Nước rút hoàn thiện, đóng gói đồ án & chuẩn bị bảo vệ trước Hội đồng  
-> **Cập nhật lần cuối**: 08/09/2026  
+> **Cập nhật lần cuối**: 09/09/2026  
 > **Repository**: [https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec](https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec)
 
 ---
@@ -16,7 +16,7 @@ flowchart TD
         
         TV2["📄 VĂN DUY (Data & Research Specialist)<br>⭐ VAI TRÒ: CHUYÊN TRÁCH VIẾT BÁO CÁO TOÀN VĂN<br>• 01 Cuốn Báo cáo Word/PDF hoàn chỉnh 6 Chương<br>• Tích hợp số liệu EDA, Ablation Study, ML & XAI"]
         
-        TV3["🎨 DUY KHANG (Machine Learning Specialist)<br>⭐ VAI TRÒ: CHUYÊN TRÁCH THIẾT KẾ SLIDE<br>• 01 File Slide PowerPoint (18-20 slides)<br>• Trực quan hóa mô hình ML, Stacking, ViSoBERT"]
+        TV3["🎨 DUY KHANG (Machine Learning Specialist)<br>⭐ VAI TRÒ: CHUYÊN TRÁCH THIẾT KẾ SLIDE<br>• 01 File Slide PowerPoint (đúng 15 slides)<br>• Trực quan hóa mô hình ML, Stacking, ViSoBERT"]
         
         TV4["🎬 THÀNH TRUNG (UI/UX & Deployment Specialist)<br>⭐ VAI TRÒ: LIVE DEMO, VIDEO & KỊCH BẢN<br>• Trực tiếp thao tác Live Demo khi bảo vệ<br>• 01 Video Clip Demo Full HD (3-5 phút)<br>• 01 Kịch bản thuyết trình & Bộ hỏi đáp Q&A"]
     end
@@ -87,29 +87,24 @@ flowchart TD
 
 ### 3. 🎨 DUY KHANG (TV3)
 * **Vị trí**: `Lead Presentation Designer (Chuyên trách Thiết kế Slide)`
-* **Sản phẩm bàn giao**: **01 File Slide Trình chiếu PowerPoint (`.pptx`)** gồm **18 – 20 slide** thiết kế chuẩn phong cách Dark-tech công nghệ.
+* **Sản phẩm bàn giao**: **01 File Slide Trình chiếu PowerPoint (`.pptx`)** gồm **đúng 15 slide** thiết kế chuẩn phong cách Dark-tech công nghệ, tinh gọn và cô đọng cho thời lượng bảo vệ 15–18 phút.
 
-#### Cấu trúc 20 Slide Duy Khang chịu trách nhiệm:
-1. **Slide 1**: Trang bìa (Tên đề tài, Giảng viên hướng dẫn: Thầy Đặng Văn Thìn, Nhóm 4 sinh viên).
-2. **Slide 2**: Bối cảnh đề tài & Thách thức đặc thù dữ liệu ITviec (Lệch lớp 11:1, teencode, tiếng Anh IT).
-3. **Slide 3**: Sơ đồ luồng End-to-End Pipeline hoàn chỉnh.
-4. **Slide 4**: Tiền xử lý 2 tầng độc lập (`clean_basic_text` vs `clean_advance_text`).
-5. **Slide 5**: Thuật toán quét cửa sổ phủ định (**Negation Scope Detection**).
-6. **Slide 6**: Khám phá dữ liệu EDA (Phân bố rating, độ dài câu, tương quan khía cạnh).
-7. **Slide 7**: **Thí nghiệm đối chứng đặc trưng (Ablation Study)**: Biểu đồ chứng minh `Text + Lexicon` vượt trội `Text-only`.
-8. **Slide 8**: Lập luận khoa học: Vì sao không đưa Aspect Ratings vào mô hình triển khai.
-9. **Slide 9**: Thiết kế 4 mô hình ML cơ sở & Tinh chỉnh siêu tham số (GridSearchCV trên 5-Fold CV).
-10. **Slide 10**: Mô hình kết hợp Stacking Ensemble Classifier (NB + LR + SVM).
-11. **Slide 11**: Thử nghiệm mô hình Deep Learning ViSoBERT trên GPU Runpod.
-12. **Slide 12**: Bảng so sánh hiệu năng tổng thể các mô hình (CV vs Final Test).
-13. **Slide 13**: Phân tích ma trận nhầm lẫn (Confusion Matrix) & Bẫy Accuracy.
-14. **Slide 14**: Phân tích lỗi sai chuyên sâu & Giải pháp Hybrid Decision Gate.
-15. **Slide 15**: Insight cảm xúc doanh nghiệp (WordCloud tích cực/tiêu cực).
-16. **Slide 16**: Phân tích văn hóa công ty, OT và đãi ngộ ngành IT.
-17. **Slide 17**: Giới thiệu giao diện Web Demo Streamlit (Ảnh chụp Overview, Insights, Prediction).
-18. **Slide 18**: Kiến trúc Explainable AI (XAI) giải thích quyết định của mô hình.
-19. **Slide 19**: Kết luận, hạn chế và hướng mở rộng (ABSA).
-20. **Slide 20**: Lời cảm ơn Thầy cô & Sẵn sàng giải đáp phản biện.
+#### Cấu trúc 15 Slide Duy Khang chịu trách nhiệm:
+1. **Slide 1: Trang bìa**: Tên đề tài, Giảng viên hướng dẫn: Thầy Đặng Văn Thìn, Nhóm 4 sinh viên thực hiện.
+2. **Slide 2: Đặt vấn đề & Thách thức dữ liệu ITviec**: Bối cảnh phân tích cảm xúc tuyển dụng ngành IT; Thách thức mất cân bằng nghiêm trọng (11:1), teencode, từ lóng kỹ thuật Anh - Việt, cấu trúc đối lập khen/chê đan xen.
+3. **Slide 3: Sơ đồ kiến trúc tổng thể (End-to-End Pipeline)**: Luồng dữ liệu hoàn chỉnh từ Thu thập $\to$ Tiền xử lý 2 tầng $\to$ Trích xuất đặc trưng $\to$ Mô hình hóa ML/DL $\to$ Hybrid Decision Gate $\to$ Ứng dụng Web & XAI.
+4. **Slide 4: Tiền xử lý dữ liệu chuyên sâu & Thuật toán Negation Scope**: Pipeline tiền xử lý 2 tầng độc lập (`clean_advance_text` cho ML vs `clean_text_for_transformer` bảo toàn cú pháp cho Deep Learning); Thuật toán quét cửa sổ phủ định (**Negation Scope Detection**) đảo ngược cực tính từ ngữ.
+5. **Slide 5: Khám phá dữ liệu EDA (Exploratory Data Analysis)**: Phân bố 8.417 review theo nhãn sao (73.8% Tích cực, 19.5% Trung tính, 6.8% Tiêu cực); Độ dài văn bản, độ trễ thời gian và tương quan giữa các khía cạnh đánh giá.
+6. **Slide 6: Thí nghiệm đối chứng đặc trưng (Ablation Study)**: Biểu đồ chứng minh bộ đặc trưng mở rộng `Text + Lexicon` (5.005 chiều) vượt trội `Text-only` (Macro F1 tăng từ 0.5475 lên 0.5658, Recall lớp Tiêu cực tăng lên 48.24%); Lập luận khoa học vì sao loại bỏ Aspect Ratings để ngăn chặn hiện tượng Data Shortcut.
+7. **Slide 7: Thiết kế 4 mô hình ML cơ sở & Kỹ thuật Stacking Ensemble**: Đánh giá 4 thuật toán nền tảng (Naive Bayes, Logistic Regression, Linear SVM, Random Forest) với `class_weight='balanced'`; Kiến trúc Stacking Ensemble kết hợp đa mô hình thông qua meta-classifier Logistic Regression.
+8. **Slide 8: Thử nghiệm Deep Learning ViSoBERT trên GPU Runpod**: Quá trình huấn luyện mô hình Transformer ViSoBERT trên hạ tầng GPU Runpod (Macro F1: 0.4036); Phân tích hiện tượng xung đột giữa tiền xử lý văn bản cổ điển (Over-cleaning) và cơ chế Tokenizer/Self-Attention của mô hình ngôn ngữ lớn.
+9. **Slide 9: Bảng so sánh hiệu năng tổng thể & Ma trận nhầm lẫn**: Bảng Leaderboard 7 mô hình (Cross-Validation vs Final Test); Trực quan hóa ma trận nhầm lẫn (Confusion Matrix) và vạch trần "bẫy Accuracy" trên tập dữ liệu mất cân bằng nghiêm trọng.
+10. **Slide 10: Phân tích lỗi sai định tính & Cổng quyết định Hybrid Decision Gate**: Phân tích chuyên sâu các case study dự đoán sai điển hình (câu phủ định phức tạp, đánh giá trung tính mập mờ); Cơ chế kích hoạt Cổng lai (Hybrid Gate) kết hợp linh hoạt giữa Machine Learning và Tri thức từ điển miền IT.
+11. **Slide 11: Khám phá Insight cảm xúc ngành công nghệ thông tin**: Trực quan hóa đám mây từ khóa (WordCloud) theo sắc thái cảm xúc; Khám phá thực trạng văn hóa làm việc, chế độ OT, đãi ngộ và lộ trình phát triển tại các tập đoàn công nghệ hàng đầu (FPT, VNG, NashTech...).
+12. **Slide 12: Giới thiệu Ứng dụng Web Demo Streamlit**: Giao diện Dark-tech công nghệ cao với 4 phân hệ chức năng: Trang Tổng quan dự án, Khám phá dữ liệu, Phân tích doanh nghiệp, và Dự đoán cảm xúc thời gian thực (hỗ trợ chuyển đổi song song 2 mô hình).
+13. **Slide 13: Kiến trúc Explainable AI (XAI) thời gian thực**: Trực quan hóa trọng số đóng góp của từng từ ngữ (TF-IDF Feature Importance); Bóc tách trực tiếp các cụm từ mang sắc thái Tích cực/Tiêu cực giúp người dùng hiểu rõ lý do mô hình ra quyết định.
+14. **Slide 14: Đánh giá thực nghiệm, Bài học & Hạn chế**: Tổng kết các thành tựu kỹ thuật đã đạt được; Những bài học kinh nghiệm về xử lý dữ liệu mất cân bằng và ngữ liệu tiếng Việt; Các giới hạn hiện tại của mô hình.
+15. **Slide 15: Kết luận, Hướng phát triển tương lai & Lời cảm ơn**: Định hướng mở rộng sang bài toán Phân tích cảm xúc theo khía cạnh (ABSA) và Tinh chỉnh toàn phần ViSoBERT; Lời cảm ơn chân thành đến GVHD Thầy Đặng Văn Thìn cùng Hội đồng đánh giá và sẵn sàng bước vào phần Q&A.
 
 ---
 
@@ -162,8 +157,8 @@ Bộ chọn trên Streamlit UI:
 | Ngày | Việc của Trưởng nhóm (Hoàng Hôn) | Việc của Văn Duy (Báo cáo) | Việc của Duy Khang (Slide) | Việc của Thành Trung (Demo & Video) |
 | :---: | :--- | :--- | :--- | :--- |
 | **Ngày 1** | **Hoàn thành Hướng 2**, đóng gói model `Text + Lexicon`, update Streamlit | Đọc kỹ outline, nhận số liệu bảng biểu | Chọn template Dark-tech, lấy ảnh biểu đồ | Lập kịch bản phân vai 15 phút |
-| **Ngày 2** | Kiểm tra tiến độ sơ bộ của 3 bạn | **Viết xong Chương 1, 2, 3** | **Thiết kế xong Slide 1 $\to$ 10** | Viết xong bản thảo kịch bản lời thoại |
-| **Ngày 3** | Nhắc nhở nộp bản thảo đầu tiên | **Viết xong Chương 4, 5, 6**; gom thành bản thảo Word | **Thiết kế xong Slide 11 $\to$ 20** | **Quay xong Video Demo Full HD**; soạn xong bộ Q&A |
+| **Ngày 2** | Kiểm tra tiến độ sơ bộ của 3 bạn | **Viết xong Chương 1, 2, 3** | **Thiết kế xong Slide 1 $\to$ 8** | Viết xong bản thảo kịch bản lời thoại |
+| **Ngày 3** | Nhắc nhở nộp bản thảo đầu tiên | **Viết xong Chương 4, 5, 6**; gom thành bản thảo Word | **Thiết kế xong Slide 9 $\to$ 15** | **Quay xong Video Demo Full HD**; soạn xong bộ Q&A |
 | **Ngày 4** | 🔍 **KIỂM TRA & DUYỆT TẤT CẢ**: Soát lỗi Báo cáo, duyệt Slide, duyệt Video | Sửa lỗi báo cáo theo yêu cầu của Hoàng Hôn; xuất bản PDF | Sửa slide theo yêu cầu của Hoàng Hôn; xuất file PPTX | Cắt ghép video hoàn chỉnh; phát kịch bản cho cả nhóm |
 | **Ngày 5** | 🎯 **TỔNG DUYỆT (REHEARSAL)**: Chạy thử thuyết trình 2 lần bấm giờ; Trung thao tác Live Demo |  |  |  |
 
@@ -179,7 +174,7 @@ Khi 3 bạn nộp bài vào Ngày 4, Hoàng Hôn chỉ cần mở checklist này
 - [ ] Có đầy đủ hình ảnh biểu đồ 300 DPI từ `reports/figures/`.
 
 ### 2. Slide (Duy Khang nộp):
-- [ ] Đúng 18 – 20 slide, phong cách Dark-tech, chữ to rõ ràng, không có đoạn văn dài.
+- [ ] Đúng 15 slide, phong cách Dark-tech, chữ to rõ ràng, không có đoạn văn dài.
 - [ ] Đủ các mục từ Đặt vấn đề $\to$ Tiền xử lý $\to$ EDA & Ablation $\to$ Model ML/DL $\to$ Insights $\to$ Demo $\to$ Kết luận.
 
 ### 3. Video Demo & Kịch bản (Thành Trung nộp):
