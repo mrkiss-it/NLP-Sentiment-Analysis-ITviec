@@ -1,6 +1,7 @@
 from pathlib import Path
 import sys
 
+import pytest
 try:
     import tomllib
 except ModuleNotFoundError:
@@ -81,3 +82,66 @@ def test_company_insights_page_renders_real_dataset():
     assert any(
         "WordCloud chỉ được tạo" in caption.value for caption in app.caption
     )
+
+
+def test_lexicon_model_status_dataclass_fields():
+    """Kiểm tra LexiconModelStatus trả về đúng cấu trúc dataclass cho Hướng 2."""
+    from src.app_services import LexiconModelStatus, get_lexicon_model_status
+
+    status = get_lexicon_model_status()
+
+    # Luôn trả về LexiconModelStatus dù artifact có sẵn hay chưa
+    assert isinstance(status, LexiconModelStatus)
+    assert isinstance(status.ready, bool)
+    assert isinstance(status.message, str)
+    assert len(status.message) > 0
+    # extractor_path phải là đường dẫn hợp lệ trỏ vào thư mục models/
+    assert "text_lexicon_feature_extractor" in str(status.extractor_path)
+    if status.model_path is not None:
+        assert "best_text_lexicon_model" in str(status.model_path)
+
+
+def test_predict_review_lexicon_returns_valid_prediction():
+    """Kiểm tra predict_review_lexicon trả về PredictionResult hợp lệ trên câu phủ định phức tạp.
+
+    Bỏ qua nếu artifact Hướng 2 chưa sẵn sàng (chưa chạy build_text_lexicon_artifacts.py).
+    """
+    from src.app_services import (
+        PredictionResult,
+        get_lexicon_model_status,
+        load_lexicon_inference_bundle,
+        predict_review_lexicon,
+    )
+    from src.preprocessing import TextPreprocessor
+
+    status = get_lexicon_model_status()
+    if not status.ready:
+        pytest.skip("Artifact Hướng 2 chưa sẵn sàng. Chạy scripts/build_text_lexicon_artifacts.py.")
+
+    model, extractor = load_lexicon_inference_bundle(status)
+    preprocessor = TextPreprocessor()
+    text = "Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi."
+
+    result = predict_review_lexicon(text, model, extractor, preprocessor)
+
+    assert isinstance(result, PredictionResult)
+    assert result.label in {"Positive", "Neutral", "Negative"}
+    assert result.confidence is not None
+    assert 0.0 <= result.confidence <= 1.0
+    assert result.decision_type in {"ml", "hybrid"}
+    assert result.probabilities is not None
+    # Câu phủ định tiêu cực rõ ràng — Negative phải cao hơn Positive
+    assert result.probabilities.get("Negative", 0) > result.probabilities.get("Positive", 0)
+    assert result.label == "Negative"
+
+def test_benchmark_page_renders_leaderboard_and_metrics():
+    """Kiểm tra trang app_pages/benchmark.py render thành công leaderboard và các thẻ KPI."""
+    app = AppTest.from_file(
+        PROJECT_ROOT / "app_pages" / "benchmark.py", default_timeout=90
+    ).run()
+
+    assert not app.exception
+    assert any("Hiệu năng Mô hình" in title.value for title in app.title)
+    assert len(app.metric) >= 4
+    assert any("Stacking" in m.value for m in app.metric)
+    assert any("0.5507" in m.value for m in app.metric)

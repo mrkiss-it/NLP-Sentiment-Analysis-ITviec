@@ -73,7 +73,7 @@ flowchart TD
         E1["Mô hình ML: MNB, Linear SVM, Logistic Regression, Random Forest"]
         E2["Xử lý Mất cân bằng: Class Weighting ('balanced') / SMOTE"]
         E3["Stacking Ensemble Classifier"]
-        E4["Fine-tuning Pretrained ViSoBERT"]
+        E4["Benchmark Zero-shot Pretrained ViSoBERT"]
     end
     
     E --> F["Đánh giá & Khai phá Insight Doanh nghiệp"]
@@ -118,7 +118,7 @@ Do_An_Sentiment_Analysis/
 │   ├── 01_data_exploration_eda.ipynb            # Khám phá & phân tích phân bố dữ liệu (EDA)
 │   ├── 02_text_preprocessing.ipynb              # Tiền xử lý & chuẩn hóa tiếng Việt
 │   ├── 03_sentiment_modeling_ml.ipynb           # Huấn luyện & tối ưu mô hình Machine Learning
-│   ├── 04_sentiment_modeling_deeplearning.ipynb # Huấn luyện với ViSoBERT / Transformer
+│   ├── 04_sentiment_modeling_deeplearning.ipynb # Benchmark Zero-shot với ViSoBERT / Transformer
 │   └── 05_company_sentiment_insights.ipynb      # Phân tích cảm xúc theo công ty & WordCloud
 ├── src/
 │   ├── __init__.py
@@ -197,11 +197,12 @@ git push origin feature/<ten-nhanh-cua-ban>
 ```bash
 pytest tests/ -v
 ```
-Toàn bộ **39 bài test tự động** (100% pass) kiểm tra toàn diện:
+Toàn bộ **43 bài test tự động** (100% pass) kiểm tra toàn diện:
 - Tiền xử lý văn bản, bóc tách emoji, từ điển phủ định và xử lý phạm vi phủ định (Negation Scope).
 - Trích xuất đặc trưng TF-IDF, ràng buộc số chiều ma trận và tương thích dữ liệu.
 - Tinh chỉnh siêu tham số mô hình ML, Stacking Ensemble và xác suất SVM.
 - Hợp đồng suy luận (Inference contract), cơ chế Hybrid Decision Gate và giao diện Streamlit AppTest.
+- Trang Benchmark & Leaderboard, kiểm thử hiển thị biểu đồ và phân lớp cảm xúc.
 
 ### Chạy Web Demo Streamlit
 
@@ -209,10 +210,11 @@ Toàn bộ **39 bài test tự động** (100% pass) kiểm tra toàn diện:
 python -m streamlit run app.py
 ```
 
-Ứng dụng gồm 3 phân hệ chính:
-1. **Trang Tổng quan (Overview):** Giới thiệu đề tài, cấu trúc dữ liệu, sơ đồ luồng pipeline và trạng thái bàn giao mô hình.
+Ứng dụng gồm 4 phân hệ chính:
+1. **Trang Tổng quan (Overview):** Giới thiệu đề tài, cấu trúc dữ liệu, sơ đồ luồng pipeline và trạng thái mô hình.
 2. **Dashboard Insight Doanh nghiệp (Company Insights):** Khám phá cảm xúc và WordCloud từ khóa tích cực/tiêu cực theo từng công ty công nghệ thực tế.
-3. **Phân tích Cảm xúc Thời gian thực (Real-time Prediction):** Cho phép nhập review tùy ý, dự đoán 3 lớp cảm xúc với **Hybrid Decision Gate (ML + Lexicon)**, biểu đồ xác suất và bóc tách từ ngữ Explainable AI (XAI).
+3. **Hiệu năng & Benchmark (Model Performance & Benchmark):** Bảng Leaderboard so sánh 7 mô hình, trực quan hóa biểu đồ 300 DPI, phân tích chi tiết chỉ số P/R/F1 từng lớp cảm xúc và giải thích học thuật sâu sắc.
+4. **Phân tích Cảm xúc Thời gian thực (Real-time Prediction):** Cho phép nhập review tùy ý, lựa chọn giữa mô hình Text-only (5.000 chiều) và Text + Lexicon (5.005 chiều), cơ chế **Hybrid Decision Gate (ML + Lexicon)**, thanh tiến trình trực quan, biểu đồ xác suất và bóc tách từ ngữ Explainable AI (XAI).
 
 ---
 

@@ -52,7 +52,7 @@ flowchart TD
    - Xem và duyệt video clip do Thành Trung quay (đảm bảo rõ nét Full HD, âm thanh rõ, test đúng câu phủ định khó).
    - Duyệt kịch bản phân vai và bộ câu hỏi phản biện.
 4. **Giám sát Kỹ thuật Hướng 2**:
-   - Giám sát việc tích hợp mô hình song song `Text + Lexicon` (5.005 cột) và đảm bảo `pytest tests/` đạt **39/39 tests pass 100%**.
+   - Giám sát việc tích hợp mô hình song song `Text + Lexicon` (5.005 cột) và đảm bảo `pytest tests/` đạt **43/43 tests pass 100%**.
 5. **Duyệt xuất xưởng (Final Sign-off)**:
    - Là người bấm nút nộp bài cuối cùng đại diện cho nhóm.
 
@@ -152,7 +152,7 @@ Bộ chọn trên Streamlit UI:
 
 * **Ưu điểm**:
   - Không phá vỡ bất kỳ code cũ nào của TV3.
-  - Giữ vững 39 unit tests pass 100%.
+  - Giữ vững 43 unit tests pass 100%.
   - Giúp Trung có thêm tính năng "ăn điểm" khi quay video và live demo.
 
 ---

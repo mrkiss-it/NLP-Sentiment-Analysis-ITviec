@@ -1,0 +1,56 @@
+{
+  "schema_version": 1,
+  "git_sha": "6642a7a04a3e4d32c90b0878f027fee60203e9bb",
+  "git_branch": "master",
+  "data_file": "data/processed/reviews_cleaned.xlsx",
+  "data_sha256": "1a911dcb30d0108332bdd767f6d96fd3adbcc87ded6e65ed8d00766f761dbf42",
+  "source_rows": 8417,
+  "modeling_rows": 8413,
+  "train_rows": 6730,
+  "test_rows": 1683,
+  "feature_count": 5005,
+  "final_test_macro_f1": 0.5507,
+  "feature_contract": {
+    "feature_mode": "text_plus_lexicon",
+    "text_column": "clean_advance_text",
+    "label_column": "sentiment",
+    "numeric_columns": [
+      "pos_w",
+      "neg_w",
+      "pos_e",
+      "neg_e",
+      "sentiment_ratio"
+    ],
+    "numeric_scaler": "MinMaxScaler(0,1) fit trên train",
+    "split_seed": 2026,
+    "test_size": 0.2,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 5000,
+    "min_df": 2,
+    "aspect_ratings_excluded": true,
+    "reason": "Aspect Ratings không có tại inference → data shortcut nếu đưa vào.",
+    "duplicate_audit": {
+      "input_rows": 8417,
+      "output_rows": 8413,
+      "duplicate_rows_removed": 4,
+      "conflicting_groups_removed": 1
+    }
+  },
+  "artifacts": {
+    "text_lexicon_feature_extractor.joblib": {
+      "sha256": "9aec3cdf4d79316fef88b3fc0213c264ea9fdc3e9dcc8ad36b83a42b5f52cec6",
+      "bytes": 197604
+    },
+    "text_lexicon_train_test_features.joblib": {
+      "sha256": "08b227e9d2cefd66cd8bdc2debc495464d7f101466a709988e54a4a819e9ce81",
+      "bytes": 4325145
+    },
+    "best_text_lexicon_model.joblib": {
+      "sha256": "6e845177182fbeebd9e71e6b8aaac315736ef80d3b2db4571dc23a40410ee2fc",
+      "bytes": 2701559
+    }
+  }
+}

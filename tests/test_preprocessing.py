@@ -134,3 +134,35 @@ def test_negation_scope_handling_complex_review(preprocessor):
     assert res["pos_w"] == 0, f"Không được nhận nhầm từ tích cực sau phủ định, thực tế: {res}"
     assert res["sentiment_ratio"] <= -0.8, f"Sentiment ratio phải tiêu cực rõ rệt, thực tế: {res['sentiment_ratio']}"
 
+
+def test_clean_text_for_transformer_preserves_context(preprocessor):
+    """
+    Kiểm tra tiền xử lý chuyên biệt cho Transformer:
+    - Bảo tồn dấu câu và ngữ pháp (. , !) cho cơ chế Self-Attention.
+    - Giữ nguyên Emoji tự nhiên cho bộ từ vựng BPE.
+    - Rút gọn ký tự lặp kéo dài về tối đa 2 ký tự.
+    - Xóa URL và Email gây nhiễu.
+    - Giữ nguyên teencode và thuật ngữ IT (không dịch thô).
+    """
+    raw_text = (
+        "Công ty IT service này vuiiiii quáaaa! Sếp tốt, ko bắt OT nhiều 😡. "
+        "Chi tiết xem tại https://itviec.com hoặc liên hệ hr@company.com nhé."
+    )
+    cleaned = preprocessor.clean_text_for_transformer(raw_text)
+
+    # 1. Bảo tồn dấu câu
+    assert "." in cleaned and "!" in cleaned, "Dấu câu phải được giữ lại cho Transformer"
+    # 2. Giữ nguyên Emoji
+    assert "😡" in cleaned, "Emoji phải được giữ nguyên cho BPE tokenizer của ViSoBERT"
+    # 3. Rút gọn ký tự lặp
+    assert "vuii" in cleaned and "quáa" in cleaned, "Ký tự lặp kéo dài phải được rút gọn về 2 ký tự"
+    assert "vuiiiii" not in cleaned and "quáaaa" not in cleaned
+    # 4. Xóa link và email
+    assert "https://" not in cleaned and "itviec.com" not in cleaned
+    assert "hr@company.com" not in cleaned
+    # 5. Giữ nguyên teencode và tiếng Anh IT (không dịch 'IT' thành 'nó', không dịch 'OT')
+    assert "IT service" in cleaned
+    assert "ko" in cleaned
+    assert "OT" in cleaned
+
+

@@ -13,6 +13,7 @@ class TextPreprocessor:
             dict_dir = os.path.join(os.path.dirname(current_dir), 'data', 'dictionaries')
         
         self.dict_dir = dict_dir
+        self.it_terms_dict = self._load_dict_from_file(os.path.join(dict_dir, 'it_terms.txt'))
         self.stopwords = self._load_set_from_file(os.path.join(dict_dir, 'vietnamese-stopwords.txt'))
         self.teencode_dict = self._load_dict_from_file(os.path.join(dict_dir, 'teencode.txt'))
         self.wrong_words_dict = self._load_dict_from_file(os.path.join(dict_dir, 'wrong-word.txt'))
@@ -83,11 +84,15 @@ class TextPreprocessor:
             if ' ' in k:
                 text = re.sub(r'\b' + re.escape(k) + r'\b', v, text, flags=re.IGNORECASE)
 
-        words = text.split()
+        # Đệm khoảng trắng quanh ký tự đặc biệt để tách từ không bị dính dấu câu
+        padded_text = re.sub(r'([^\w\s])', r' \1 ', text)
+        words = padded_text.split()
         normalized_words = []
         for word in words:
             w_lower = word.lower()
-            if w_lower in self.teencode_dict:
+            if w_lower in self.it_terms_dict:
+                normalized_words.append(self.it_terms_dict[w_lower])
+            elif w_lower in self.teencode_dict:
                 normalized_words.append(self.teencode_dict[w_lower])
             elif w_lower in self.wrong_words_dict:
                 normalized_words.append(self.wrong_words_dict[w_lower])
@@ -156,6 +161,35 @@ class TextPreprocessor:
             return " ".join(words)
 
         return tokenized
+
+    def clean_text_for_transformer(self, text: str) -> str:
+        """
+        Bước tiền xử lý tối ưu cho các mô hình Pretrained Transformer (ViSoBERT, PhoBERT):
+        - Chuẩn hóa Unicode NFC
+        - Xóa liên kết URL và địa chỉ Email gây nhiễu
+        - Chuẩn hóa ký tự lặp kéo dài về tối đa 2 ký tự (vd: 'vuiiiii' -> 'vuii')
+        - GIỮ NGUYÊN cấu trúc ngữ pháp và dấu câu (., !?) để bảo toàn cơ chế Self-Attention
+        - GIỮ NGUYÊN Emoji tự nhiên vì ViSoBERT có sẵn token embedding cho emoji
+        - GIỮ NGUYÊN teencode, từ lóng và thuật ngữ tiếng Anh IT (không dịch thô làm sai nghĩa)
+        """
+        if not isinstance(text, str) or not text.strip():
+            return ""
+
+        # 1. Chuẩn hóa Unicode NFC
+        text = self.normalize_unicode(text)
+
+        # 2. Xóa liên kết URL và Email
+        text = re.sub(r'https?://\S+|www\.\S+', ' ', text)
+        text = re.sub(r'\S+@\S+', ' ', text)
+
+        # 3. Rút gọn ký tự lặp quá đà về tối đa 2 ký tự (giữ sắc thái nhấn mạnh)
+        text = re.sub(r'([a-zA-ZÀ-ỹ])\1{2,}', r'\1\1', text)
+
+        # 4. Chuẩn hóa khoảng trắng nhưng giữ nguyên dấu câu và emoji
+        text = re.sub(r'\s+([.,!?:;])', r'\1', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        return text
 
     def calc_sentiment_features(self, text: str, raw_text: str = None) -> Dict[str, float]:
         """

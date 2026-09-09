@@ -111,7 +111,7 @@ with right:
 
             **03 · Trải nghiệm**
 
-            Nhập review mới và kết nối mô hình ngay khi TV3 bàn giao artifact.
+            Nhập review mới để mô hình Stacking Ensemble kết hợp Hybrid Lexicon phân tích thời gian thực.
             """
         )
         with st.container(key="kpi_negative"):

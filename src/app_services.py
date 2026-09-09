@@ -72,6 +72,8 @@ class PredictionResult:
     lexicon_stats: dict[str, Any] | None = None
     decision_type: str = "ml"
     explanation: str = ""
+    raw_ml_label: str | None = None
+    raw_ml_probabilities: dict[str, float] | None = None
 
 
 
@@ -274,6 +276,7 @@ def predict_review(
     if hasattr(model, "predict_proba"):
         probabilities = np.asarray(model.predict_proba(features))[0]
         prob_dict = {cls: float(p) for cls, p in zip(classes, probabilities)}
+    raw_ml_probabilities = dict(prob_dict) if prob_dict else None
 
     # 2. Trích xuất đặc trưng Lexicon và xử lý phạm vi phủ định (Negation Scope)
     lex_stats = preprocessor.calc_sentiment_features(text, raw_text=text)
@@ -354,5 +357,235 @@ def predict_review(
         lexicon_stats=lex_stats,
         decision_type=decision_type,
         explanation=explanation,
+        raw_ml_label=raw_label,
+        raw_ml_probabilities=raw_ml_probabilities,
     )
 
+
+# ── Hướng 2: Text + Lexicon (5.005 chiều) ──────────────────────────────────
+# Các hằng số và hàm bổ sung cho pipeline thứ hai song song với text-only.
+# Không sửa bất kỳ code phía trên.
+
+LEXICON_MANIFEST_PATH = PROJECT_ROOT / "models" / "text_lexicon_artifact_manifest.json"
+LEXICON_EXTRACTOR_PATH = PROJECT_ROOT / "models" / "text_lexicon_feature_extractor.joblib"
+LEXICON_MODEL_PATH = PROJECT_ROOT / "models" / "best_text_lexicon_model.joblib"
+
+
+@dataclass(frozen=True)
+class LexiconModelStatus:
+    """Readiness state của pipeline Text + Lexicon (Hướng 2 — 5.005 chiều)."""
+
+    ready: bool
+    model_path: Path | None
+    extractor_path: Path
+    message: str
+
+
+def get_lexicon_model_status(project_root: str | Path = PROJECT_ROOT) -> LexiconModelStatus:
+    """Kiểm tra artifact Hướng 2 mà không load dữ liệu không tin cậy."""
+    root = Path(project_root)
+    extractor_path = root / "models" / LEXICON_EXTRACTOR_PATH.name
+    model_path = root / "models" / LEXICON_MODEL_PATH.name
+    manifest_path = root / "models" / LEXICON_MANIFEST_PATH.name
+
+    if not extractor_path.exists():
+        return LexiconModelStatus(
+            False,
+            None,
+            extractor_path,
+            "Thiếu text_lexicon_feature_extractor.joblib. Chạy scripts/build_text_lexicon_artifacts.py.",
+        )
+    if not manifest_path.exists():
+        return LexiconModelStatus(
+            False,
+            None,
+            extractor_path,
+            "Thiếu text_lexicon_artifact_manifest.json.",
+        )
+
+    try:
+        manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        return LexiconModelStatus(False, None, extractor_path, f"Manifest không hợp lệ: {exc}")
+
+    feature_mode = manifest.get("feature_contract", {}).get("feature_mode")
+    if feature_mode != "text_plus_lexicon":
+        return LexiconModelStatus(
+            False,
+            None,
+            extractor_path,
+            f"Artifact không tuân theo feature contract text_plus_lexicon (thực tế: {feature_mode}).",
+        )
+    if not model_path.exists():
+        return LexiconModelStatus(
+            False,
+            None,
+            extractor_path,
+            "Thiếu best_text_lexicon_model.joblib. Chạy scripts/build_text_lexicon_artifacts.py.",
+        )
+
+    return LexiconModelStatus(
+        True,
+        model_path,
+        extractor_path,
+        "Pipeline Text + Lexicon (5.005 chiều) sẵn sàng.",
+    )
+
+
+def load_lexicon_inference_bundle(
+    status: LexiconModelStatus,
+) -> "tuple[Any, FeatureExtractor]":
+    """Load model và extractor Hướng 2 sau khi kiểm tra handoff contract."""
+    if not status.ready or status.model_path is None:
+        raise RuntimeError(status.message)
+
+    import joblib
+
+    from src.features import FeatureExtractor
+
+    model = joblib.load(status.model_path)
+
+    # Tương thích ngược: bổ sung multi_class cho LogisticRegression khi unpickle từ scikit-learn mới
+    for est in getattr(model, "estimators_", []):
+        if hasattr(est, "C") and not hasattr(est, "multi_class"):
+            setattr(est, "multi_class", "auto")
+    named = getattr(model, "named_estimators_", {})
+    if isinstance(named, dict):
+        for est in named.values():
+            if hasattr(est, "C") and not hasattr(est, "multi_class"):
+                setattr(est, "multi_class", "auto")
+    final_est = getattr(model, "final_estimator_", None)
+    if final_est is not None and hasattr(final_est, "C") and not hasattr(final_est, "multi_class"):
+        setattr(final_est, "multi_class", "auto")
+
+    extractor = FeatureExtractor.load_bundle(status.extractor_path)
+    return model, extractor
+
+
+def predict_review_lexicon(
+    text: str,
+    model: Any,
+    extractor: "FeatureExtractor",
+    preprocessor: "TextPreprocessor",
+) -> PredictionResult:
+    """Chạy inference Hướng 2 (Text + Lexicon 5.005 chiều) với Hybrid Decision Gate.
+
+    Điểm khác biệt so với predict_review (text-only):
+    - Tính 5 đặc trưng Lexicon từ văn bản gốc rồi ghép vào vector TF-IDF.
+    - Dùng extractor.transform_hybrid() thay vì extractor.transform().
+    - Logic Hybrid Decision Gate giữ nguyên để tận dụng tín hiệu phủ định từ vựng.
+    """
+    from src.features import LEXICON_FEATURES  # noqa: PLC0415
+
+    processed = preprocessor.clean_advance_text(text)
+    if not processed:
+        raise ValueError("Review không còn nội dung hợp lệ sau tiền xử lý.")
+
+    # Tính 5 đặc trưng Lexicon từ văn bản gốc
+    lex_stats = preprocessor.calc_sentiment_features(text, raw_text=text)
+    lex_values = {col: lex_stats.get(col, 0.0) for col in LEXICON_FEATURES}
+
+    # Xây DataFrame 1 hàng gồm văn bản đã xử lý + 5 cột lexicon
+    row_df = pd.DataFrame([{"clean_advance_text": processed, **lex_values}])
+
+    # Trích xuất đặc trưng 5.005 chiều qua transform_hybrid
+    features = extractor.transform_hybrid(row_df, text_column="clean_advance_text")
+    expected_width = getattr(model, "n_features_in_", None)
+    if expected_width is not None and int(expected_width) != features.shape[1]:
+        raise ValueError(
+            f"Model ({expected_width} chiều) và extractor ({features.shape[1]} chiều) không khớp. "
+            "Hãy chạy lại scripts/build_text_lexicon_artifacts.py."
+        )
+
+    # 1. Dự đoán từ mô hình học máy cơ sở
+    raw_label = str(model.predict(features)[0])
+    prob_dict: dict[str, float] = {}
+    classes = [str(v) for v in getattr(model, "classes_", [])]
+    if hasattr(model, "predict_proba"):
+        probabilities = np.asarray(model.predict_proba(features))[0]
+        prob_dict = {cls: float(p) for cls, p in zip(classes, probabilities)}
+    raw_ml_probabilities = dict(prob_dict) if prob_dict else None
+
+    # 2. Hybrid Decision Gate (đồng bộ logic với predict_review)
+    pos_w = lex_stats.get("pos_w", 0)
+    neg_w = lex_stats.get("neg_w", 0)
+    ratio = lex_stats.get("sentiment_ratio", 0.0)
+
+    final_label = raw_label
+    decision_type = "ml"
+    explanation = (
+        f"Dự đoán dựa trên mô hình Text + Lexicon ({SENTIMENT_LABELS.get(raw_label, raw_label)})."
+    )
+
+    neg_prob = prob_dict.get("Negative", 0.0)
+    neu_prob = prob_dict.get("Neutral", 0.0)
+    pos_prob = prob_dict.get("Positive", 0.0)
+
+    # Trường hợp A: Tín hiệu tiêu cực từ vựng rất rõ ràng
+    if neg_w >= 2 and ratio <= -0.4:
+        if raw_label != "Negative":
+            final_label = "Negative"
+            decision_type = "hybrid"
+            phrases_str = ", ".join(f"'{p}'" for p in lex_stats.get("neg_phrases", [])[:3])
+            explanation = (
+                f"Hiệu chỉnh Hybrid: Phát hiện {neg_w} cụm từ tiêu cực/phủ định ({phrases_str}) "
+                f"với tỷ lệ sắc thái {ratio:.2f}, khắc phục độ lệch lớp của mô hình ML."
+            )
+            if prob_dict:
+                prob_dict["Negative"] = max(0.65, neg_prob + 0.35)
+                remaining = 1.0 - prob_dict["Negative"]
+                tot_other = neu_prob + pos_prob
+                if tot_other > 0:
+                    prob_dict["Neutral"] = remaining * (neu_prob / tot_other)
+                    prob_dict["Positive"] = remaining * (pos_prob / tot_other)
+                else:
+                    prob_dict["Neutral"] = remaining * 0.5
+                    prob_dict["Positive"] = remaining * 0.5
+    # Trường hợp B: ML phân vân vùng ranh giới
+    elif neg_w > pos_w and ratio <= -0.2 and (
+        raw_label == "Neutral" or (neu_prob > 0 and abs(neu_prob - neg_prob) < 0.15)
+    ):
+        final_label = "Negative"
+        decision_type = "hybrid"
+        phrases_str = ", ".join(f"'{p}'" for p in lex_stats.get("neg_phrases", [])[:3])
+        explanation = (
+            f"Hiệu chỉnh Hybrid: Mô hình ML phân vân vùng ranh giới; từ điển ngữ nghĩa xác nhận "
+            f"{neg_w} cụm tiêu cực ({phrases_str})."
+        )
+        if prob_dict:
+            prob_dict["Negative"] = max(0.55, neg_prob + 0.20)
+            remaining = 1.0 - prob_dict["Negative"]
+            tot_other = neu_prob + pos_prob
+            if tot_other > 0:
+                prob_dict["Neutral"] = remaining * (neu_prob / tot_other)
+                prob_dict["Positive"] = remaining * (pos_prob / tot_other)
+    # Trường hợp C: Tín hiệu tích cực áp đảo nhưng ML rơi vào Neutral
+    elif pos_w >= 2 and ratio >= 0.5 and raw_label == "Neutral":
+        final_label = "Positive"
+        decision_type = "hybrid"
+        phrases_str = ", ".join(f"'{p}'" for p in lex_stats.get("pos_phrases", [])[:3])
+        explanation = (
+            f"Hiệu chỉnh Hybrid: Xác nhận {pos_w} cụm từ khen ngợi ({phrases_str}) "
+            f"với tỷ lệ sắc thái +{ratio:.2f}."
+        )
+        if prob_dict:
+            prob_dict["Positive"] = max(0.60, pos_prob + 0.25)
+            remaining = 1.0 - prob_dict["Positive"]
+            tot_other = neu_prob + neg_prob
+            if tot_other > 0:
+                prob_dict["Neutral"] = remaining * (neu_prob / tot_other)
+                prob_dict["Negative"] = remaining * (neg_prob / tot_other)
+
+    confidence: float | None = prob_dict.get(final_label) if prob_dict else None
+
+    return PredictionResult(
+        label=final_label,
+        processed_text=processed,
+        confidence=confidence,
+        probabilities=prob_dict if prob_dict else None,
+        lexicon_stats=lex_stats,
+        decision_type=decision_type,
+        explanation=explanation,
+        raw_ml_label=raw_label,
+        raw_ml_probabilities=raw_ml_probabilities,
+    )

@@ -31,6 +31,11 @@ pages = {
             title="Insight doanh nghiệp",
             icon=":material/domain:",
         ),
+        st.Page(
+            "app_pages/benchmark.py",
+            title="Hiệu năng & Benchmark",
+            icon=":material/leaderboard:",
+        ),
     ],
     "Trải nghiệm": [
         st.Page(
