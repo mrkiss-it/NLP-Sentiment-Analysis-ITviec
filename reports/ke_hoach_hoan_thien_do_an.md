@@ -18,7 +18,7 @@ flowchart TD
         
         TV3["🎨 DUY KHANG (Machine Learning Specialist)<br>⭐ VAI TRÒ: CHUYÊN TRÁCH THIẾT KẾ SLIDE<br>• 01 File Slide PowerPoint (đúng 15 slides)<br>• Trực quan hóa mô hình ML, Stacking, ViSoBERT"]
         
-        TV4["🎬 THÀNH TRUNG (UI/UX & Deployment Specialist)<br>⭐ VAI TRÒ: LIVE DEMO, VIDEO & KỊCH BẢN<br>• Trực tiếp thao tác Live Demo khi bảo vệ<br>• 01 Video Clip Demo Full HD (3-5 phút)<br>• 01 Kịch bản thuyết trình & Bộ hỏi đáp Q&A"]
+        TV4["🎬 THÀNH TRUNG (UI/UX & Deployment Specialist)<br>⭐ VAI TRÒ: LIVE DEMO, VIDEO & KỊCH BẢN<br>• Trực tiếp thao tác Live Demo khi bảo vệ<br>• 01 Video Clip Demo Full HD (3-5 phút)<br>• 01 Kịch bản thuyết trình chuẩn 12 phút & Bộ Q&A"]
     end
     
     TV2 -->|Nộp Báo cáo| TV1
@@ -87,7 +87,7 @@ flowchart TD
 
 ### 3. 🎨 DUY KHANG (TV3)
 * **Vị trí**: `Lead Presentation Designer (Chuyên trách Thiết kế Slide)`
-* **Sản phẩm bàn giao**: **01 File Slide Trình chiếu PowerPoint (`.pptx`)** gồm **đúng 15 slide** thiết kế chuẩn phong cách Dark-tech công nghệ, tinh gọn và cô đọng cho thời lượng bảo vệ 15–18 phút.
+* **Sản phẩm bàn giao**: **01 File Slide Trình chiếu PowerPoint (`.pptx`)** gồm **đúng 15 slide** thiết kế chuẩn phong cách Dark-tech công nghệ, tinh gọn và cô đọng cho thời lượng bảo vệ **chuẩn 12 phút** (tạo vùng đệm an toàn 3 phút dự phòng nói chậm, cam kết không vượt khung 15 phút của Hội đồng).
 
 #### Cấu trúc 15 Slide Duy Khang chịu trách nhiệm:
 1. **Slide 1: Trang bìa**: Tên đề tài, Giảng viên hướng dẫn: Thầy Đặng Văn Thìn, Nhóm 4 sinh viên thực hiện.
@@ -106,6 +106,16 @@ flowchart TD
 14. **Slide 14: Đánh giá thực nghiệm, Bài học & Hạn chế**: Tổng kết các thành tựu kỹ thuật đã đạt được; Những bài học kinh nghiệm về xử lý dữ liệu mất cân bằng và ngữ liệu tiếng Việt; Các giới hạn hiện tại của mô hình.
 15. **Slide 15: Kết luận, Hướng phát triển tương lai & Lời cảm ơn**: Định hướng mở rộng sang bài toán Phân tích cảm xúc theo khía cạnh (ABSA) và Tinh chỉnh toàn phần ViSoBERT; Lời cảm ơn chân thành đến GVHD Thầy Đặng Văn Thìn cùng Hội đồng đánh giá và sẵn sàng bước vào phần Q&A.
 
+#### ⏱️ Bảng Phân Bổ Thời Gian Chuẩn 12 Phút (Chiến lược Phòng thủ Buffer 3 phút):
+| Phần | Nội dung | Các Slide | Thời lượng mục tiêu | Người trình bày gợi ý |
+| :--- | :--- | :---: | :---: | :--- |
+| **Phần 1** | Mở đầu, Thách thức & Kiến trúc hệ thống | Slide 1 $\to$ 3 | **1.5 phút** (90s) | Duy Khang (hoặc TV đại diện) |
+| **Phần 2** | Tiền xử lý, EDA & Ablation Study | Slide 4 $\to$ 6 | **2.5 phút** (150s) | Văn Duy |
+| **Phần 3** | Mô hình ML, ViSoBERT, Leaderboard & Xử lý lỗi | Slide 7 $\to$ 10 | **3.5 phút** (210s) | Duy Khang |
+| **Phần 4** | Insight Doanh nghiệp, Web Demo Live & XAI | Slide 11 $\to$ 13 | **3.0 phút** (180s) | Thành Trung (thao tác Live Demo) |
+| **Phần 5** | Bài học, Giới hạn, Hướng phát triển & Kết luận | Slide 14 $\to$ 15 | **1.5 phút** (90s) | Thành Trung (hoặc cả nhóm) |
+| **TỔNG CỘNG** | **Toàn bộ bài báo cáo trước Hội đồng** | **15 Slides** | **12.0 phút** (720s) | **Dự phòng Buffer: 3 phút (An toàn tuyệt đối trong khung 15p)** |
+
 ---
 
 ### 4. 🎬 THÀNH TRUNG (TV4)
@@ -113,7 +123,7 @@ flowchart TD
 * **Sản phẩm bàn giao**:
   1. **01 Video Clip Demo Full HD (3 – 5 phút)** có thuyết minh rõ ràng.
   2. **Trực tiếp thao tác Live Demo** trên máy chiếu khi Hội đồng yêu cầu.
-  3. **01 File Kịch bản thuyết trình (Script)** phân vai cho cả nhóm (15–18 phút).
+  3. **01 File Kịch bản thuyết trình (Script)** phân vai cho cả nhóm, căn chuẩn **chính xác 12 phút** (phòng hờ thời gian chậm tối đa 15 phút).
   4. **01 Bộ tài liệu câu hỏi phản biện & câu trả lời mẫu (Q&A Defense Guide)**.
 
 #### Nhiệm vụ cụ thể của Thành Trung:
@@ -122,8 +132,9 @@ flowchart TD
    - *Phần 2 (1:00 - 2:30)*: Trang Company Insights, chọn công ty FPT/VNG, xem WordCloud.
    - *Phần 3 (2:30 - 4:30)*: Trang Real-time Prediction. Test câu khó: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi"* $\to$ hiển thị nhãn **Tiêu cực (71.1%)**, bóc tách XAI 3 cụm từ, và gạt nút so sánh giữa mô hình Text-only và Text + Lexicon.
    - *Phần 4 (4:30 - 5:00)*: Kết thúc, khẳng định app chạy ổn định.
-2. **Soạn Kịch bản Thuyết trình (Presentation Script)**:
-   - Phân vai lời thoại chi tiết theo từng slide cho Duy, Khang, Trung (căn chuẩn 15-18 phút).
+2. **Soạn Kịch bản Thuyết trình (Presentation Script) chuẩn 12 phút**:
+   - Phân vai lời thoại chi tiết theo từng slide cho Duy, Khang, Trung (khóa chặt mốc thời gian 12 phút, mỗi slide chỉ 40-50 giây, lướt đúng trọng tâm, tránh đọc chữ trên slide).
+   - Dự trù thời gian dôi dư 3 phút phòng khi nói chậm, thiết bị chập chờn hoặc Hội đồng ngắt lời.
 3. **Soạn Bộ câu hỏi phản biện (Q&A Guide)**:
    - Soạn sẵn 10 câu hỏi hóc búa của Hội đồng (Data Leakage, Shortcut learning, Imbalance, ViSoBERT zero-shot vs Stacking, XAI) kèm câu trả lời mẫu để Khang, Duy, Trung học thuộc và tự trả lời khi thầy cô hỏi.
 
@@ -156,11 +167,11 @@ Bộ chọn trên Streamlit UI:
 
 | Ngày | Việc của Trưởng nhóm (Hoàng Hôn) | Việc của Văn Duy (Báo cáo) | Việc của Duy Khang (Slide) | Việc của Thành Trung (Demo & Video) |
 | :---: | :--- | :--- | :--- | :--- |
-| **Ngày 1** | **Hoàn thành Hướng 2**, đóng gói model `Text + Lexicon`, update Streamlit | Đọc kỹ outline, nhận số liệu bảng biểu | Chọn template Dark-tech, lấy ảnh biểu đồ | Lập kịch bản phân vai 15 phút |
+| **Ngày 1** | **Hoàn thành Hướng 2**, đóng gói model `Text + Lexicon`, update Streamlit | Đọc kỹ outline, nhận số liệu bảng biểu | Chọn template Dark-tech, lấy ảnh biểu đồ | Lập kịch bản phân vai chuẩn 12 phút (buffer 3p) |
 | **Ngày 2** | Kiểm tra tiến độ sơ bộ của 3 bạn | **Viết xong Chương 1, 2, 3** | **Thiết kế xong Slide 1 $\to$ 8** | Viết xong bản thảo kịch bản lời thoại |
 | **Ngày 3** | Nhắc nhở nộp bản thảo đầu tiên | **Viết xong Chương 4, 5, 6**; gom thành bản thảo Word | **Thiết kế xong Slide 9 $\to$ 15** | **Quay xong Video Demo Full HD**; soạn xong bộ Q&A |
 | **Ngày 4** | 🔍 **KIỂM TRA & DUYỆT TẤT CẢ**: Soát lỗi Báo cáo, duyệt Slide, duyệt Video | Sửa lỗi báo cáo theo yêu cầu của Hoàng Hôn; xuất bản PDF | Sửa slide theo yêu cầu của Hoàng Hôn; xuất file PPTX | Cắt ghép video hoàn chỉnh; phát kịch bản cho cả nhóm |
-| **Ngày 5** | 🎯 **TỔNG DUYỆT (REHEARSAL)**: Chạy thử thuyết trình 2 lần bấm giờ; Trung thao tác Live Demo |  |  |  |
+| **Ngày 5** | 🎯 **TỔNG DUYỆT (REHEARSAL)**: Chạy thử thuyết trình 2 lần bấm giờ (mục tiêu ≤ 12 phút); Trung thao tác Live Demo |  |  |  |
 
 ---
 
@@ -180,7 +191,7 @@ Khi 3 bạn nộp bài vào Ngày 4, Hoàng Hôn chỉ cần mở checklist này
 ### 3. Video Demo & Kịch bản (Thành Trung nộp):
 - [ ] Video clip Full HD 1080p, độ dài 3 – 5 phút, âm thanh thuyết minh rõ ràng.
 - [ ] Video demo test đúng câu khó: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi"* $\to$ hiển thị **Tiêu cực (71.1%)** và bóc tách XAI.
-- [ ] Kịch bản nói phân vai rõ ràng, tổng thời gian 15 – 18 phút.
+- [ ] Kịch bản nói phân vai rõ ràng, tổng thời gian chuẩn 12 phút (vùng đệm an toàn 3 phút, cam kết không bao giờ vượt 15 phút).
 - [ ] Bộ câu hỏi Q&A có đủ câu trả lời mẫu cho các câu hỏi xoáy của Thầy cô.
 
 ---
