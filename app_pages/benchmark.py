@@ -261,7 +261,7 @@ with st.expander("Tại sao Stacking Ensemble vượt trội hơn các mô hình
         """
     )
 
-with st.expander("Tác động của 5 đặc trưng Lexicon (Ablation Study - Hướng 2)", icon=":material/psychology:"):
+with st.expander("Tác động của 5 đặc trưng Lexicon", icon=":material/psychology:"):
     st.markdown(
         """
         - **Khắc phục điểm yếu mất cân bằng dữ liệu:** Lớp Tiêu cực chỉ chiếm **6.8%** trong tập huấn luyện, khiến mô hình ML thuần TF-IDF dễ bỏ sót các sắc thái chê tinh vi.
