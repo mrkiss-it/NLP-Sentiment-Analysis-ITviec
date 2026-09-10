@@ -1,16 +1,24 @@
 from pathlib import Path
-import tomllib
+import sys
+
+import pytest
+
+try:
+    import tomllib
+except ModuleNotFoundError:
+    import toml as tomllib
 
 from streamlit.testing.v1 import AppTest
+
+PROJECT_ROOT = Path(__file__).resolve().parents[1]
+if str(PROJECT_ROOT) not in sys.path:
+    sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.app_services import get_model_status
 
 
-PROJECT_ROOT = Path(__file__).resolve().parents[1]
-
-
 def test_theme_config_locks_the_app_to_developer_dark_mode():
-    config = tomllib.loads((PROJECT_ROOT / ".streamlit" / "config.toml").read_text())
+    config = tomllib.loads((PROJECT_ROOT / ".streamlit" / "config.toml").read_text(encoding="utf-8"))
     theme = config["theme"]
 
     assert theme["base"] == "dark"
@@ -24,7 +32,7 @@ def test_theme_config_locks_the_app_to_developer_dark_mode():
 
 
 def test_dark_style_has_an_ultrawide_content_limit():
-    source = (PROJECT_ROOT / "src" / "app_theme.py").read_text()
+    source = (PROJECT_ROOT / "src" / "app_theme.py").read_text(encoding="utf-8")
 
     assert '[data-testid="stMainBlockContainer"]' in source
     assert "max-width: 1920px" in source
@@ -39,7 +47,7 @@ def test_dark_style_has_an_ultrawide_content_limit():
 
 def test_streamlit_entrypoint_renders_default_page():
     app = AppTest.from_file(PROJECT_ROOT / "app.py", default_timeout=90).run()
-    source = (PROJECT_ROOT / "app.py").read_text()
+    source = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
 
     assert not app.exception
     assert any("Hiểu tiếng nói" in title.value for title in app.title)
