@@ -1,0 +1,11 @@
+# Từ điển thuật ngữ công nghệ ITviec (tránh dịch sai ngữ cảnh)
+it	công nghệ thông tin
+pm	quản lý dự án
+hr	nhân sự
+lead	trưởng nhóm
+dev	lập trình viên
+developer	lập trình viên
+tester	kiểm thử viên
+qa	kiểm soát chất lượng
+qc	kiểm tra chất lượng
+ba	phân tích nghiệp vụ

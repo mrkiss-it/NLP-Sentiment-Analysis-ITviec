@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT - THÀNH VIÊN 4: THÀNH TRUNG
-**Phân công:** `Evaluation, Sentiment Insights & Deployment`  
-**Thời gian thực hiện:** 4 Ngày cốt lõi (Tuần 2 & Tuần 3)  
-**Mục tiêu chính:** Đánh giá toàn diện các mô hình (Confusion Matrix, Error Analysis), trích xuất Insight cảm xúc doanh nghiệp (WordCloud), xây dựng ứng dụng Web Demo (Streamlit/Gradio) và hoàn thiện các chương kết quả trong báo cáo.
+**Phân công:** `Evaluation, Sentiment Insights & Deployment`
+**Thời gian thực hiện:** 4 Ngày cốt lõi (Tuần 2 & Tuần 3) & Giai đoạn Nước rút
+**Mục tiêu chính:** Đánh giá toàn diện các mô hình (Confusion Matrix, Error Analysis), trích xuất Insight cảm xúc doanh nghiệp (WordCloud), xây dựng ứng dụng Web Demo (Streamlit), quay Video Demo và điều phối kịch bản thuyết trình.
 
 ---
 
@@ -34,31 +34,40 @@
 
 ### 🟢 Ngày 3: Xây dựng Ứng dụng Web Demo Phân loại Cảm xúc (Deployment)
 - [x] **Xây dựng ứng dụng Web tương tác bằng Streamlit:**
-  - Tạo file `app.py` trong thư mục gốc.
-  - Tải mô hình text-only tốt nhất (`models/best_sentiment_model.joblib`) và `models/text_feature_extractor.joblib`; kiểm tra feature contract trong `models/artifact_manifest.json`.
+  - Tạo file `app.py` và cấu trúc các trang trong `app_pages/`.
+  - Tải các artifact Text-only và Text + Lexicon; kiểm tra feature contract tương ứng trước khi inference.
   - Giao diện gồm:
     - **Ô nhập văn bản:** Cho phép người dùng nhập 1 câu review bất kỳ.
-    - **Nút "Dự đoán Cảm xúc":** Hệ thống tự động tiền xử lý (qua `TextPreprocessor`) $\rightarrow$ TF-IDF $\rightarrow$ Mô hình dự đoán.
-    - **Hiển thị kết quả:** Nhãn cảm xúc (`Tích cực`, `Tiêu cực`, `Trung tính`) kèm xác suất phần trăm (Confidence Score) và icon tương ứng.
-    - **Tab Dashboard:** Hiển thị biểu đồ phân tích cảm xúc và WordCloud của các công ty IT.
-- [x] Chạy thử nghiệm cục bộ và kiểm tra giao diện bằng Playwright ở desktop/mobile.
+    - **Nút "Phân tích cảm xúc":** Tự động tiền xử lý $\rightarrow$ TF-IDF/Text + Lexicon $\rightarrow$ Stacking $\rightarrow$ threshold/Hybrid Decision Gate.
+    - **Hiển thị kết quả:** Nhãn, xác suất ba lớp, token, đặc trưng TF-IDF và giải thích quy tắc quyết định.
+  - Giao diện dark mode gồm:
+    - **Trang Tổng quan (Overview):** Khái quát bài toán, cấu trúc dữ liệu, sơ đồ luồng pipeline.
+    - **Trang Dashboard Insight:** Biểu đồ phân tích cảm xúc và WordCloud của các công ty IT.
+    - **Trang Benchmark:** So sánh các hướng mô hình và chỉ số từng lớp.
+    - **Trang Dự đoán thời gian thực:** Chọn Text-only hoặc Text + Lexicon, xem xác suất và chẩn đoán đầu vào.
+    - **Trang Evaluation:** Confusion Matrix, sensitivity analysis và 15 mẫu lỗi thật.
+- [x] Chạy thử nghiệm cục bộ và kiểm tra giao diện bằng Playwright trên desktop.
 
-### 🟢 Ngày 4: Hoàn thiện các Chương Báo cáo (Chương 4, 5, 6)
-- [ ] Soạn thảo **Chương 4: Kết quả thực nghiệm & Đánh giá mô hình** (chèn bảng so sánh, Confusion Matrix, Error Analysis).
-- [ ] Soạn thảo **Chương 5: Phân tích Insight cảm xúc doanh nghiệp & Triển khai Demo**.
-- [ ] Soạn thảo **Chương 6: Kết luận & Hướng phát triển**.
-- [ ] Bàn giao toàn bộ nội dung cho **TV1 (Hoàng Hôn)** để tổng hợp báo cáo hoàn chỉnh.
+### 🟢 Giai đoạn Nước rút: Chuyên trách Live Demo, Quay Video & Soạn Kịch bản
+- [x] Hoàn thiện notebook phân tích insight 180 công ty IT (`05_company_sentiment_insights.ipynb`) và các ảnh WordCloud 300 DPI.
+- [x] Xây dựng hoàn chỉnh ứng dụng Web Demo Streamlit giao diện Dark mode chuyên nghiệp (`app.py`, `app_pages/`).
+- [ ] **CHUYÊN TRÁCH 100% LIVE DEMO, QUAY VIDEO VÀ SOẠN KỊCH BẢN**:
+  - **Quay 01 Video Clip Demo Full HD (3 – 5 phút)**: Giới thiệu trọn vẹn 3 phân hệ (Overview, Company Insights WordCloud, Real-time Prediction), thuyết minh rõ ràng và test đúng case study câu phủ định khó có giải thích XAI.
+  - **Trực tiếp thao tác Live Demo** trên máy chiếu khi Hội đồng bảo vệ đồ án yêu cầu.
+  - **Soạn 01 File Kịch bản Thuyết trình chi tiết (Presentation Script)**: Phân vai lời thoại từng phút cho cả nhóm (căn chuẩn thời gian 15-18 phút).
+  - **Soạn 01 Bộ tài liệu Câu hỏi Phản biện & Câu trả lời mẫu (Q&A Guide)**: Chuẩn bị 10 câu hỏi hóc búa của Hội đồng để Khang, Duy, Trung học thuộc và tự tin đối đáp.
+  - Nộp video và kịch bản cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu.
 
 ---
 
 ## 📦 II. ĐẦU VÀO & ĐẦU RA (INPUTS & OUTPUTS)
 
 * **Đầu vào (Inputs):**
-  - Mảng dự đoán `y_pred` và file mô hình từ TV3.
-  - File dữ liệu sạch từ TV1 & TV2.
+  - File mô hình từ TV3 và pipeline từ TV1 & TV2.
+  - Toàn bộ kết quả insight từ `05_company_sentiment_insights.ipynb`.
 * **Đầu ra (Outputs bàn giao):**
-  - Notebook hoàn chỉnh: [notebooks/05_company_sentiment_insights.ipynb](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/notebooks/05_company_sentiment_insights.ipynb).
-  - Ứng dụng Web Demo tương tác (`app.py`).
-  - Toàn bộ ảnh Confusion Matrix và WordCloud trong `reports/figures/`.
-  - Bảng phân tích lỗi sai (Error Analysis).
-  - Nội dung Chương 4, 5, 6 của Báo cáo.
+  - Notebook hoàn chỉnh: [notebooks/05_company_sentiment_insights.ipynb](../../notebooks/05_company_sentiment_insights.ipynb).
+  - Ứng dụng Web Demo Streamlit hoàn chỉnh (`app.py`).
+  - **01 Video Clip Demo Full HD (3–5 phút)** sẵn sàng nộp kèm đồ án hoặc chiếu dự phòng.
+  - **01 File Kịch bản Thuyết trình phân vai chi tiết** (15–18 phút).
+  - **01 Bộ tài liệu Hỏi - Đáp Phản biện (Q&A Defense Guide)**.

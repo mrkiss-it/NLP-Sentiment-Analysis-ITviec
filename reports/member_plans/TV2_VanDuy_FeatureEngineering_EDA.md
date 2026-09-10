@@ -38,10 +38,15 @@
     - Cách 2: Thiết lập `class_weight='balanced'` cho các mô hình.
 - [x] **Bàn giao:** Chuyển giao ma trận đặc trưng $X_{train}, X_{test}, y_{train}, y_{test}$ và file dữ liệu cho **TV3 (Duy Khang)**.
 
-### 🟢 Ngày 4 & Tuần 3: Viết Báo cáo & Kiểm thử chéo
-- [x] Soạn thảo **Mục 2.1, 2.2 (Tổng quan dữ liệu & EDA)** và **Mục 3.1 (Phương pháp trích xuất đặc trưng)** trong `reports/eda_feature_engineering.md`.
-- [x] Chèn các biểu đồ phân tích EDA vào file báo cáo.
-- [ ] Hỗ trợ TV1 rà soát, dọn dẹp code các Jupyter Notebook để đảm bảo chạy mượt từ đầu đến cuối không lỗi runtime.
+### 🟢 Giai đoạn Nước rút: Chuyên trách Viết Báo cáo Toàn văn (Lead Report Writer)
+- [x] Soạn thảo báo cáo EDA & Feature Engineering khoa học tại `reports/eda_feature_engineering.md`.
+- [x] Hoàn thành thí nghiệm Ablation 5-fold CV: chứng minh `Text + Lexicon` đạt **Macro F1 0.5658** (tăng so với Text-only 0.5579), tăng Recall Negative lên 48.24%.
+- [x] Xuất 10 biểu đồ chuẩn 300 DPI tại `reports/figures/` phục vụ báo cáo và slide.
+- [ ] **CHUYÊN TRÁCH 100% VIẾT BÁO CÁO TOÀN VĂN (Word / PDF)**:
+  - Soạn thảo đầy đủ 6 Chương theo khung đề cương chuẩn `reports/final_report_outline.md`.
+  - Tích hợp số liệu thực nghiệm của TV1 (tiền xử lý, từ điển), TV2 (EDA, ablation), TV3 (modeling, Stacking, ViSoBERT) và TV4 (insights, XAI, web demo).
+  - Định dạng chuẩn học thuật (Times New Roman 13, dãn dòng 1.3-1.5, lề chuẩn), xuất file Word `.docx` và file PDF hoàn chỉnh.
+  - Nộp bản thảo cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước khi xuất xưởng.
 
 ---
 
@@ -49,11 +54,11 @@
 
 * **Đầu vào (Inputs):**
   - File dữ liệu sạch từ TV1: `data/processed/reviews_cleaned.xlsx`.
+  - Kết quả mô hình từ TV3: `reports/modeling_hyperparameter_tuning.md`, `best_sentiment_model.joblib`.
+  - Kết quả insight từ TV4: `05_company_sentiment_insights.ipynb`, biểu đồ WordCloud.
 * **Đầu ra (Outputs bàn giao):**
   - Notebook hoàn chỉnh: [notebooks/01_data_exploration_eda.ipynb](../../notebooks/01_data_exploration_eda.ipynb).
-  - Module code: [src/features.py](../../src/features.py).
-  - File ma trận đặc trưng và bộ vectorizer đã fit: `models/train_test_features.joblib`, `models/text_feature_extractor.joblib`, `models/text_tfidf_vectorizer.joblib`.
-  - Artifact manifest: `models/artifact_manifest.json` và môi trường khóa tại `requirements.lock`.
-  - Tài liệu giải thích cho cả nhóm: `reports/overview_for_team.md`.
-  - Toàn bộ hình ảnh biểu đồ EDA trong `reports/figures/`.
-  - Nội dung Chương 2.1 - 2.2 và Chương 3.1 của Báo cáo.
+  - Module code: [src/features.py](../../src/features.py) và các scripts thực nghiệm trong `scripts/`.
+  - File ma trận đặc trưng: `models/train_test_features.joblib`, `models/hybrid_train_test_features.joblib`.
+  - Toàn bộ hình ảnh biểu đồ EDA 300 DPI trong `reports/figures/`.
+  - **01 Cuốn Báo cáo Đồ án Toàn văn Hoàn chỉnh (File Word & File PDF)** 6 Chương (35–45 trang).

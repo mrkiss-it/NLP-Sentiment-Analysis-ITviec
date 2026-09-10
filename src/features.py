@@ -321,6 +321,20 @@ def save_feature_split(
 
 def load_feature_split(filepath: str | os.PathLike[str]) -> dict:
     """Tải và kiểm tra tính nhất quán của artifact train/test schema v2."""
+    try:
+        from pandas.core.arrays.string_ import StringArray
+
+        if not getattr(StringArray, "_compat_patched", False):
+            def _compat_setstate(self, state):
+                if isinstance(state, tuple) and len(state) == 2:
+                    state = (state[0], state[1], {})
+                super(StringArray, self).__setstate__(state)
+
+            StringArray.__setstate__ = _compat_setstate
+            StringArray._compat_patched = True
+    except Exception:
+        pass
+
     artifact = joblib.load(filepath)
     required = {
         "schema_version",

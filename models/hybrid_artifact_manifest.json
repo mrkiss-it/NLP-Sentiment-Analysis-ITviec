@@ -1,0 +1,55 @@
+{
+  "schema_version": 1,
+  "git_sha": "aaaeb3232aa08e454e857b6612d1170c1ae5aef1",
+  "git_branch": "feature/aspect-hybrid-features",
+  "data_file": "data/processed/reviews_cleaned.xlsx",
+  "data_sha256": "5067cd21f5d7f3b3222c977e6d9bbd6def793f2da00ed4c8fa667531e6c2dbe6",
+  "source_rows": 8417,
+  "modeling_rows": 8413,
+  "train_rows": 6730,
+  "test_rows": 1683,
+  "feature_count": 5010,
+  "feature_contract": {
+    "feature_mode": "text_plus_structured",
+    "text_column": "clean_advance_text",
+    "label_column": "sentiment",
+    "numeric_columns": [
+      "pos_w",
+      "neg_w",
+      "pos_e",
+      "neg_e",
+      "sentiment_ratio",
+      "Salary & benefits",
+      "Training & learning",
+      "Management cares about me",
+      "Culture & fun",
+      "Office & workspace"
+    ],
+    "numeric_scaler": "MinMaxScaler(0,1) fit trên train",
+    "split_seed": 2026,
+    "test_size": 0.2,
+    "ngram_range": [
+      1,
+      2
+    ],
+    "max_features": 5000,
+    "min_df": 2,
+    "duplicate_audit": {
+      "input_rows": 8417,
+      "output_rows": 8413,
+      "duplicate_rows_removed": 4,
+      "conflicting_groups_removed": 1
+    },
+    "inference_requirement": "Cần đủ 5 điểm khía cạnh 1-5 lúc dự đoán (lexicon thì tính được từ text). Web Demo text-only không có điểm khía cạnh nên phải dùng artifact text-only."
+  },
+  "artifacts": {
+    "hybrid_feature_extractor.joblib": {
+      "sha256": "d0e5e3d6feecf834688a12655e03d1ca426996c08a0a57e2324e76c064a11294",
+      "bytes": 217908
+    },
+    "hybrid_train_test_features.joblib": {
+      "sha256": "5be9ef99b584110d692101ffc51cc9f681886aa07d208c38465a98784e141acc",
+      "bytes": 4762476
+    }
+  }
+}

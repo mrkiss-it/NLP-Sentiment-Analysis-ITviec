@@ -231,7 +231,6 @@ chăng_chắc
 chăng_nữa
 chơi
 chơi_họ
-chưa
 chưa_bao_giờ
 chưa_chắc
 chưa_có
@@ -1278,7 +1277,6 @@ theo_bước
 theo_như
 theo_tin
 thi_thoảng
-thiếu
 thiếu_gì
 thiếu_điểm
 thoạt
@@ -1714,7 +1712,6 @@ yêu_cầu
 áng
 áng_như
 âu_là
-ít
 ít_biết
 ít_có
 ít_hơn

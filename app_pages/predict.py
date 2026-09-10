@@ -14,7 +14,9 @@ if str(PROJECT_ROOT) not in sys.path:
 
 from src.app_services import (
     NEGATIVE_THRESHOLD, SENTIMENT_LABELS, SENTIMENT_ORDER,
-    get_model_status, load_inference_bundle, predict_review,
+    get_lexicon_model_status, get_model_status,
+    load_inference_bundle, load_lexicon_inference_bundle,
+    predict_review, predict_review_lexicon,
 )
 from src.app_theme import page_header, style_chart
 
@@ -26,6 +28,8 @@ EXAMPLES = {
     "Ca khó": "Thường xuyên OT, quản lý thiếu minh bạch và lương chưa tương xứng.",
 }
 COLORS = {"Positive": "green", "Neutral": "yellow", "Negative": "red"}
+MODEL_TEXT = "Text-only · 5.000 chiều"
+MODEL_LEXICON = "Text + Lexicon · 5.005 chiều"
 
 
 @st.cache_resource
@@ -42,6 +46,16 @@ def get_bundle(model_path: str, extractor_path: str):
     if str(status.extractor_path) != extractor_path:
         raise RuntimeError("Feature extractor đã thay đổi trong lúc tải app.")
     return load_inference_bundle(status)
+
+
+@st.cache_resource
+def get_lexicon_bundle(model_path: str, extractor_path: str):
+    status = get_lexicon_model_status()
+    if not status.ready or str(status.model_path) != model_path:
+        raise RuntimeError(status.message)
+    if str(status.extractor_path) != extractor_path:
+        raise RuntimeError("Lexicon extractor đã thay đổi trong lúc tải app.")
+    return load_lexicon_inference_bundle(status)
 
 
 def select_example():
@@ -70,9 +84,21 @@ page_header(
     "Thử một review, xem cách mô hình đọc văn bản và khám phá điều gì nằm sau mỗi dự đoán.",
 )
 status = get_model_status()
+lexicon_status = get_lexicon_model_status()
+selected_model = st.segmented_control(
+    "Mô hình suy luận",
+    [MODEL_TEXT, MODEL_LEXICON],
+    default=MODEL_TEXT,
+    key="model_selector",
+    on_change=invalidate_result,
+    width="stretch",
+    help="Text + Lexicon là hướng ablation bổ sung 5 đặc trưng từ điển vào vector TF-IDF.",
+)
+use_lexicon_model = selected_model == MODEL_LEXICON
+active_status = lexicon_status if use_lexicon_model else status
 with st.container(horizontal=True, key="lab_status", gap="small"):
-    st.badge("Model sẵn sàng" if status.ready else "Chờ model", color="green" if status.ready else "orange", icon=":material/memory:")
-    st.badge("Stacking · TF-IDF", color="blue")
+    st.badge("Model sẵn sàng" if active_status.ready else "Chờ model", color="green" if active_status.ready else "orange", icon=":material/memory:")
+    st.badge("Stacking · TF-IDF + Lexicon" if use_lexicon_model else "Stacking · TF-IDF", color="blue")
     st.badge(f"Ngưỡng tiêu cực {NEGATIVE_THRESHOLD:.0%}", color="gray")
 
 with st.container(key="prediction_workspace"):
@@ -102,31 +128,44 @@ with result.container(border=True, height="stretch", key="prediction_result"):
         invalidate_result()
         if not requested.strip():
             st.session_state["analysis_error"] = "Hãy nhập nội dung review trước khi phân tích."
-        elif not status.ready or status.model_path is None:
-            st.warning("Giao diện đã sẵn sàng nhưng model chưa được bàn giao.")
+        elif not active_status.ready or active_status.model_path is None:
+            st.warning(active_status.message)
             st.code(get_preprocessor().clean_advance_text(requested), language=None)
         else:
             try:
                 with st.spinner("Đang xử lý văn bản và tính xác suất…"):
                     started = perf_counter()
-                    model, extractor = get_bundle(str(status.model_path), str(status.extractor_path))
-                    prediction = predict_review(requested, model, extractor, get_preprocessor())
+                    if use_lexicon_model:
+                        model, extractor = get_lexicon_bundle(
+                            str(lexicon_status.model_path), str(lexicon_status.extractor_path)
+                        )
+                        prediction = predict_review_lexicon(
+                            requested, model, extractor, get_preprocessor()
+                        )
+                    else:
+                        model, extractor = get_bundle(str(status.model_path), str(status.extractor_path))
+                        prediction = predict_review(requested, model, extractor, get_preprocessor())
                     elapsed = perf_counter() - started
-                st.session_state["analysis_result"] = (requested, prediction, elapsed)
-            except (OSError, RuntimeError, TypeError, ValueError) as exc:
+                st.session_state["analysis_result"] = (requested, selected_model, prediction, elapsed)
+            except (AttributeError, OSError, RuntimeError, TypeError, ValueError) as exc:
                 st.session_state["analysis_error"] = str(exc)
 
     saved = st.session_state.get("analysis_result")
-    if saved and saved[0] != review_text:
+    if saved and (saved[0] != review_text or saved[1] != selected_model):
         saved = None
     error = st.session_state.get("analysis_error")
     if error:
         st.error(error, icon=":material/error:")
     elif saved:
-        _, prediction, elapsed = saved
+        _, _, prediction, elapsed = saved
         label_vi = SENTIMENT_LABELS.get(prediction.label, prediction.label)
         st.subheader(f"Kết quả: {label_vi}")
-        st.badge(label_vi, color=COLORS.get(prediction.label, "blue"))
+        with st.container(horizontal=True, gap="small"):
+            st.badge(label_vi, color=COLORS.get(prediction.label, "blue"))
+            if prediction.decision_type == "hybrid":
+                st.badge("Hybrid NLP + Lexicon", color="violet", icon=":material/auto_fix_high:")
+            elif prediction.decision_type == "threshold":
+                st.badge("Policy threshold", color="blue", icon=":material/tune:")
         for sentiment in SENTIMENT_ORDER:
             score = dict(prediction.class_probabilities).get(sentiment)
             if score is not None:
@@ -138,8 +177,13 @@ with result.container(border=True, height="stretch", key="prediction_result"):
         if prediction.threshold_applied:
             baseline = SENTIMENT_LABELS.get(prediction.baseline_label, prediction.baseline_label)
             st.caption(f":material/tune: {baseline} → Tiêu cực vì P(Tiêu cực) = {prediction.negative_probability:.1%} ≥ {NEGATIVE_THRESHOLD:.0%}.")
+        elif prediction.decision_type == "hybrid":
+            baseline = SENTIMENT_LABELS.get(prediction.baseline_label, prediction.baseline_label)
+            st.caption(f":material/auto_fix_high: Hybrid hiệu chỉnh từ {baseline} sang {label_vi} dựa trên tín hiệu từ điển và phủ định.")
         else:
             st.caption("Nhãn cuối trùng với dự đoán mặc định của model.")
+        if prediction.explanation:
+            st.info(prediction.explanation, icon=":material/info:")
         st.caption(f"{elapsed:.2f} giây · Thời gian xử lý lượt này, gồm tải model nếu chưa có cache")
         if prediction.active_features == 0:
             st.warning("Văn bản không khớp từ điển TF-IDF. Kết quả này thiếu bằng chứng từ nội dung.")
@@ -157,11 +201,11 @@ with st.container(border=True, key="nlp_evidence"):
     st.caption("03 / KHÁM PHÁ PIPELINE")
     st.subheader("Mô hình đã đọc review như thế nào?")
     if saved:
-        original, prediction, elapsed = saved
+        original, model_name, prediction, elapsed = saved
         with st.container(horizontal=True, key="nlp_metrics", gap="small"):
             st.metric("Token sau xử lý", len(prediction.processed_text.split()))
             st.metric("Đặc trưng có giá trị", prediction.active_features)
-            st.metric("Chiều vector TF-IDF", f"{prediction.feature_count:,}")
+            st.metric("Chiều vector đầu vào", f"{prediction.feature_count:,}")
         text_tab, vector_tab, decision_tab = st.tabs(["Văn bản & token", "Vector TF-IDF", "Quyết định & giới hạn"])
         with text_tab:
             st.caption("Unicode → emoji / teencode → tách từ → loại stopword")
@@ -181,6 +225,13 @@ with st.container(border=True, key="nlp_evidence"):
                 st.caption("Chưa có đặc trưng TF-IDF để hiển thị.")
         with decision_tab:
             st.write(f"**Quy tắc hiện tại:** nếu P(Tiêu cực) ≥ {NEGATIVE_THRESHOLD:.0%}, ưu tiên Tiêu cực; các trường hợp khác giữ nhãn mặc định.")
+            if prediction.lexicon_stats:
+                positive_phrases = prediction.lexicon_stats.get("pos_phrases", [])
+                negative_phrases = prediction.lexicon_stats.get("neg_phrases", [])
+                st.caption(
+                    f"Tín hiệu từ điển · tích cực: {', '.join(positive_phrases[:4]) or 'không có'} · "
+                    f"tiêu cực/phủ định: {', '.join(negative_phrases[:4]) or 'không có'}"
+                )
             st.caption("Các số phần trăm là đầu ra của model, không phải cam kết độ chính xác cho từng review. Nhãn học từ rating có thể khác sắc thái thực tế của văn bản.")
             st.page_link("app_pages/evaluation.py", label="Xem thực nghiệm và các trường hợp dự đoán sai", icon=":material/arrow_forward:")
     else:

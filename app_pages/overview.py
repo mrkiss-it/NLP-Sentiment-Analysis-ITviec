@@ -129,8 +129,12 @@ with st.container(horizontal=True, key="product_actions"):
         st.page_link("app_pages/insights.py", label="Mở dashboard insight", icon=":material/arrow_forward:")
     with st.container(border=True, height="stretch", key="product_model_card"):
         st.markdown("#### :material/auto_awesome: Phân tích một review")
-        st.write("Nhập phản hồi của bạn và xem mô hình nhận diện cảm xúc từ nội dung văn bản.")
+        st.write("Nhập phản hồi và so sánh pipeline Text-only với Text + Lexicon cùng cơ chế Hybrid.")
         st.page_link("app_pages/predict.py", label="Thử phân tích cảm xúc", icon=":material/arrow_forward:")
+    with st.container(border=True, height="stretch", key="product_benchmark_card"):
+        st.markdown("#### :material/leaderboard: So sánh mô hình")
+        st.write("Xem leaderboard, Macro F1 và hiệu năng từng lớp của các hướng thử nghiệm.")
+        st.page_link("app_pages/benchmark.py", label="Mở trang benchmark", icon=":material/arrow_forward:")
     with st.container(border=True, height="stretch", key="product_evaluation_card"):
         st.markdown("#### :material/science: Kiểm chứng mô hình")
         st.write("Đọc ma trận nhầm lẫn, khám phá ngưỡng và phân tích những review model còn nhầm.")

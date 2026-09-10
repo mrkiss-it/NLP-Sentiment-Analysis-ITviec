@@ -1,11 +1,11 @@
 {
   "schema_version": 1,
-  "git_sha": "532e659f81122c31d9db1991ca4c9edbbb19c2e8",
-  "git_branch": "feature/eda-features",
+  "git_sha": "585dafaacfb3367905dd04252fbaae2a303db8a9",
+  "git_branch": "feature/aspect-hybrid-features",
   "git_dirty": true,
   "data_file": "data/processed/reviews_cleaned.xlsx",
-  "data_sha256": "1cea4765a134a8720ba8a87af811725f39ad24fa1ec4a5d4d1aca65f6665fbdc",
-  "requirements_lock_sha256": "b8fdee867d08c76b77ce8c8e8279493755d058d7152eedef1fdede33e0356a65",
+  "data_sha256": "5067cd21f5d7f3b3222c977e6d9bbd6def793f2da00ed4c8fa667531e6c2dbe6",
+  "requirements_lock_sha256": "ecbb97773f00c524d94563532b9a8ada247b685626271d6112bd93b5b2f893c7",
   "source_rows": 8417,
   "modeling_rows": 8413,
   "train_rows": 6730,
@@ -41,11 +41,11 @@
   },
   "artifacts": {
     "text_tfidf_vectorizer.joblib": {
-      "sha256": "3195152a93a49d996741fe62a6bfc086191715d0b3d7539d0e335c937a6abb58",
+      "sha256": "c549d197de97f8ed0fb6875754067a7e55c02d812306728b074f64d6fe96f386",
       "bytes": 216793
     },
     "text_feature_extractor.joblib": {
-      "sha256": "dae7817edde37e1009a93b3756f7ee04dd9f8352f943e9a6d6d963876edbbab4",
+      "sha256": "d669be772e5523dc55f4b31f7702263d0ba561dec7b44568d248282ce998c852",
       "bytes": 216907
     },
     "train_test_features.joblib": {

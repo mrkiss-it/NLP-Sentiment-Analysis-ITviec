@@ -1,9 +1,7 @@
 import re
 import os
 import unicodedata
-import pandas as pd
-import numpy as np
-from typing import List, Dict, Set, Tuple
+from typing import Dict, Set
 
 class TextPreprocessor:
     """
@@ -15,6 +13,7 @@ class TextPreprocessor:
             dict_dir = os.path.join(os.path.dirname(current_dir), 'data', 'dictionaries')
         
         self.dict_dir = dict_dir
+        self.it_terms_dict = self._load_dict_from_file(os.path.join(dict_dir, 'it_terms.txt'))
         self.stopwords = self._load_set_from_file(os.path.join(dict_dir, 'vietnamese-stopwords.txt'))
         self.teencode_dict = self._load_dict_from_file(os.path.join(dict_dir, 'teencode.txt'))
         self.wrong_words_dict = self._load_dict_from_file(os.path.join(dict_dir, 'wrong-word.txt'))
@@ -85,11 +84,15 @@ class TextPreprocessor:
             if ' ' in k:
                 text = re.sub(r'\b' + re.escape(k) + r'\b', v, text, flags=re.IGNORECASE)
 
-        words = text.split()
+        # Đệm khoảng trắng quanh ký tự đặc biệt để tách từ không bị dính dấu câu
+        padded_text = re.sub(r'([^\w\s])', r' \1 ', text)
+        words = padded_text.split()
         normalized_words = []
         for word in words:
             w_lower = word.lower()
-            if w_lower in self.teencode_dict:
+            if w_lower in self.it_terms_dict:
+                normalized_words.append(self.it_terms_dict[w_lower])
+            elif w_lower in self.teencode_dict:
                 normalized_words.append(self.teencode_dict[w_lower])
             elif w_lower in self.wrong_words_dict:
                 normalized_words.append(self.wrong_words_dict[w_lower])
@@ -159,6 +162,35 @@ class TextPreprocessor:
 
         return tokenized
 
+    def clean_text_for_transformer(self, text: str) -> str:
+        """
+        Bước tiền xử lý tối ưu cho các mô hình Pretrained Transformer (ViSoBERT, PhoBERT):
+        - Chuẩn hóa Unicode NFC
+        - Xóa liên kết URL và địa chỉ Email gây nhiễu
+        - Chuẩn hóa ký tự lặp kéo dài về tối đa 2 ký tự (vd: 'vuiiiii' -> 'vuii')
+        - GIỮ NGUYÊN cấu trúc ngữ pháp và dấu câu (., !?) để bảo toàn cơ chế Self-Attention
+        - GIỮ NGUYÊN Emoji tự nhiên vì ViSoBERT có sẵn token embedding cho emoji
+        - GIỮ NGUYÊN teencode, từ lóng và thuật ngữ tiếng Anh IT (không dịch thô làm sai nghĩa)
+        """
+        if not isinstance(text, str) or not text.strip():
+            return ""
+
+        # 1. Chuẩn hóa Unicode NFC
+        text = self.normalize_unicode(text)
+
+        # 2. Xóa liên kết URL và Email
+        text = re.sub(r'https?://\S+|www\.\S+', ' ', text)
+        text = re.sub(r'\S+@\S+', ' ', text)
+
+        # 3. Rút gọn ký tự lặp quá đà về tối đa 2 ký tự (giữ sắc thái nhấn mạnh)
+        text = re.sub(r'([a-zA-ZÀ-ỹ])\1{2,}', r'\1\1', text)
+
+        # 4. Chuẩn hóa khoảng trắng nhưng giữ nguyên dấu câu và emoji
+        text = re.sub(r'\s+([.,!?:;])', r'\1', text)
+        text = re.sub(r'\s+', ' ', text).strip()
+
+        return text
+
     def calc_sentiment_features(self, text: str, raw_text: str = None) -> Dict[str, float]:
         """
         Trích xuất các thuộc tính thống kê Lexicon bằng thuật toán Greedy Longest Phrase Matching:
@@ -191,10 +223,18 @@ class TextPreprocessor:
         tokens = clean_text.split()
         n_tokens = len(tokens)
 
-        # 3. Quét cụm từ tham lam (Greedy Longest Matching):
-        # Ưu tiên khớp cụm dài nhất trước để giải quyết triệt để vấn đề phủ định (vd: "không toxic" vs "toxic")
+        # 3. Quét cụm từ tham lam (Greedy Longest Matching) kết hợp xử lý phạm vi phủ định (Negation Scope):
+        # - Ưu tiên cụm tiêu cực dài nhất
+        # - Nếu gặp từ tích cực nhưng có tiền tố phủ định đi trước (vd: "không được thân thiện"), tự động đảo chiều sang tiêu cực
+        NEGATION_WORDS = {
+            'không', 'chưa', 'chẳng', 'chả', 'ít', 'thiếu', 'kém', 'hạn chế',
+            'không hề', 'chưa hề', 'không được', 'chưa được', 'không có'
+        }
+
         pos_w = 0
         neg_w = 0
+        matched_pos = []
+        matched_neg = []
         i = 0
         max_k = self.max_phrase_len
 
@@ -202,16 +242,37 @@ class TextPreprocessor:
             matched = False
             for k in range(min(max_k, n_tokens - i), 0, -1):
                 phrase = " ".join(tokens[i : i + k])
-                if phrase in self.positive_words:
-                    pos_w += 1
-                    i += k
-                    matched = True
-                    break
-                elif phrase in self.negative_words:
+                if phrase in self.negative_words:
                     neg_w += 1
+                    matched_neg.append(phrase)
                     i += k
                     matched = True
                     break
+                elif phrase in self.positive_words:
+                    # Kiểm tra xem ngay trước cụm từ tích cực có từ/cụm phủ định không (khoảng cách 1-2 từ)
+                    is_negated = False
+                    neg_prefix = ''
+                    if i > 0 and tokens[i - 1] in NEGATION_WORDS:
+                        is_negated = True
+                        neg_prefix = tokens[i - 1]
+                    elif i > 1 and f"{tokens[i - 2]} {tokens[i - 1]}" in NEGATION_WORDS:
+                        is_negated = True
+                        neg_prefix = f"{tokens[i - 2]} {tokens[i - 1]}"
+                    elif i > 1 and tokens[i - 2] in NEGATION_WORDS and tokens[i - 1] in {'được', 'hề', 'quá', 'rất', 'thực sự'}:
+                        is_negated = True
+                        neg_prefix = f"{tokens[i - 2]} {tokens[i - 1]}"
+
+                    if is_negated:
+                        neg_w += 1
+                        matched_neg.append(f"{neg_prefix} {phrase}")
+                    else:
+                        pos_w += 1
+                        matched_pos.append(phrase)
+
+                    i += k
+                    matched = True
+                    break
+
             if not matched:
                 i += 1
 
@@ -231,8 +292,11 @@ class TextPreprocessor:
             'pos_e': pos_e,
             'neg_e': neg_e,
             'total_we': total_we,
-            'sentiment_ratio': round(sentiment_ratio, 4)
+            'sentiment_ratio': round(sentiment_ratio, 4),
+            'pos_phrases': matched_pos,
+            'neg_phrases': matched_neg
         }
+
 
     @staticmethod
     def map_sentiment_label(rating: int) -> str:

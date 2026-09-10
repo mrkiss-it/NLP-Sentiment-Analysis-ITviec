@@ -23,45 +23,53 @@
    - Chuẩn hóa mã Unicode NFC.
    - Xử lý biểu tượng cảm xúc (Emoji/Emojicon) thành từ ngữ mang sắc thái.
    - Chuẩn hóa viết tắt (teencode), thuật ngữ IT và sửa lỗi chính tả.
-   - Tách từ tiếng Việt (Word Segmentation) bằng `underthesea`.
-   - Lọc bỏ stopwords tiếng Việt.
-2.4. Chiến lược gán nhãn cảm xúc và tạo tập dữ liệu huấn luyện.
+   - Tách từ tiếng Việt (Word Segmentation) bằng `underthesea` và đối sánh cụm từ tham lam (Greedy Matching).
+   - Lọc bỏ stopwords tiếng Việt (tối ưu hóa bảo lưu từ phủ định và định lượng: `chưa`, `thiếu`, `ít`).
+   - Thuật toán nhận diện cửa sổ phạm vi phủ định (Negation Scope Detection).
+2.4. Chiến lược gán nhãn cảm xúc và tạo tập dữ liệu huấn luyện (Rating-derived Weak Labels và audit độc lập).
 
 ---
 
 ## CHƯƠNG 3: BIỂU DIỄN VĂN BẢN VÀ MÔ HÌNH HỌC MÁY (MODELING)
 3.1. Phương pháp trích xuất đặc trưng văn bản:
-   - TF-IDF Vectorizer (N-gram 1-2, sublinear TF, phân tích tham số tối ưu).
-   - Trích xuất đặc trưng Lexicon cảm xúc (đếm từ tích cực/tiêu cực).
+   - TF-IDF Vectorizer (N-gram 1-2, sublinear TF, phân tích tham số tối ưu 5.000 chiều).
+   - Trích xuất đặc trưng Lexicon cảm xúc (độ bao phủ 99.75%, xử lý phủ định).
    - Biểu diễn ngữ cảnh với Pretrained Language Model (ViSoBERT / PhoBERT).
-3.2. Thiết kế các mô hình học máy:
+3.2. Thí nghiệm đối chứng nhóm đặc trưng (Feature Ablation Study):
+   - So sánh 5-fold Stratified CV: Text-only (0.5579) vs. Text + Lexicon (0.5658) vs. Text + Aspect (0.7369) vs. Full Hybrid (0.7389).
+   - Phân tích rủi ro data shortcut của điểm khía cạnh và lý do duy trì pipeline Text-only.
+3.3. Thiết kế các mô hình học máy:
    - Mô hình 1: Multinomial Naive Bayes (Baseline).
    - Mô hình 2: Logistic Regression (với trọng số lớp cân bằng).
-   - Mô hình 3: Support Vector Machine (Linear SVM).
+   - Mô hình 3: Support Vector Machine (Linear SVM với Platt scaling / Calibrated proba).
    - Mô hình 4: Random Forest Classifier.
-   - Mô hình 5: Stacking Ensemble Classifier.
-   - Mô hình 6: Fine-tuned ViSoBERT (Deep Learning).
-3.3. Kỹ thuật xử lý mất cân bằng dữ liệu và tinh chỉnh siêu tham số (Hyperparameter Tuning với K-Fold Cross Validation).
+   - Mô hình 5: Stacking Ensemble Classifier (NB + LR + SVM).
+   - Mô hình 6: Zero-shot / Fine-tuned ViSoBERT (Deep Learning trên GPU).
+3.4. Kỹ thuật xử lý mất cân bằng dữ liệu (`class_weight='balanced'` vs. SMOTE) và tinh chỉnh siêu tham số (GridSearchCV với 5-Fold Stratified CV).
+3.5. Kiến trúc suy luận thực tế: Bộ máy ra quyết định lai (Hybrid Decision Gate) kết hợp xác suất ML và tri thức ngữ nghĩa tiên nghiệm.
 
 ---
 
 ## CHƯƠNG 4: KẾT QUẢ THỰC NGHIỆM VÀ ĐÁNH GIÁ (EVALUATION)
 4.1. Môi trường thực nghiệm và các thang đo đánh giá (Accuracy, Macro F1, Weighted F1, Precision, Recall).  
-4.2. Bảng tổng hợp so sánh hiệu năng giữa các mô hình.  
-4.3. Phân tích ma trận nhầm lẫn (Confusion Matrix).  
-4.4. Phân tích lỗi sai chuyên sâu (Error Analysis):
-   - Phân tích các trường hợp mô hình đoán sai (câu châm biếm, phủ định kép, câu chứa cả ý khen và chê).
+4.2. Bảng tổng hợp so sánh hiệu năng giữa các mô hình trên tập Cross-validation và tập Final Test độc lập đã khóa.  
+4.3. Phân tích ma trận nhầm lẫn (Confusion Matrix) và hiện tượng bẫy Accuracy trên dữ liệu mất cân bằng.  
+4.4. Phân tích lỗi sai chuyên sâu (Qualitative Error Analysis):
+   - Phân tích các trường hợp mô hình đoán sai (câu châm biếm, phủ định ghép nhiều vế, câu chứa cả ý khen và chê).
+   - Case study câu phủ định phức tạp: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi."* — So sánh trước và sau khi có Negation Scope & Hybrid Gate.
    - Đánh giá ảnh hưởng của bước tiền xử lý đối với độ chính xác của mô hình.
 
 ---
 
 ## CHƯƠNG 5: PHÂN TÍCH INSIGHT CẢM XÚC DOANH NGHIỆP & TRIỂN KHAI (BUSINESS INSIGHTS & DEMO)
 5.1. Trực quan hóa đám mây từ khóa (WordCloud) cảm xúc Tích cực và Tiêu cực.  
-5.2. Phân tích cảm xúc theo từng doanh nghiệp (Case Study 2-3 công ty IT tiêu biểu):
+5.2. Phân tích cảm xúc theo từng doanh nghiệp (Case Study các công ty IT tiêu biểu):
    - Tỷ lệ hài lòng / không hài lòng của nhân viên.
    - Các chủ đề được khen ngợi nhiều nhất (Điểm mạnh của công ty).
    - Các vấn đề bị phàn nàn nhiều nhất (Chế độ OT, Lương thưởng, Quy trình quản lý).  
-5.3. Xây dựng ứng dụng Demo trực quan (Gradio / Streamlit) cho bài toán phân loại cảm xúc.  
+5.3. Xây dựng ứng dụng Demo trực quan (Streamlit Dashboard):
+   - Giao diện Dark mode tối ưu hóa cho màn hình ultrawide.
+   - Dự đoán thời gian thực tích hợp Explainable AI (XAI) bóc tách từ ngữ sắc thái.
 5.4. Đề xuất giải pháp thực tế cho ban quản lý doanh nghiệp và phòng nhân sự (HR).
 
 ---

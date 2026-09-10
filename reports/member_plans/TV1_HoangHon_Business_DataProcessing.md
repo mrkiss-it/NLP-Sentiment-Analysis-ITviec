@@ -37,11 +37,15 @@
   - Xuất file kết quả sạch: `data/processed/reviews_cleaned.xlsx`.
 - [ ] **Bàn giao:** Chuyển giao file `reviews_cleaned.xlsx` cho **TV2 (Văn Duy)** và **TV3 (Duy Khang)**.
 
-### 🟢 Tuần 2 & 3: Quản lý, Viết Báo cáo & Thiết kế Slide
-- [ ] Họp rà soát tiến độ định kỳ mỗi tuần 2 lần.
-- [ ] Soạn thảo **Chương 1 (Tổng quan & Đặt vấn đề)** và **Mục 2.3 (Quy trình tiền xử lý)**.
-- [ ] Tổng hợp toàn văn Báo cáo (Word / PDF) theo chuẩn mẫu [final_report_outline.md](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/reports/final_report_outline.md).
-- [ ] Thiết kế bộ Slide thuyết trình (15-20 slide) và chủ trì buổi thuyết trình thử (Mock Presentation).
+### 🟢 Giai đoạn Nước rút: Kiểm soát Chất lượng, Giám sát Kỹ thuật & Nghiệm thu (QA Lead)
+- [x] Hoàn thiện pipeline tiền xử lý 2 tầng (`clean_basic_text` & `clean_advance_text`).
+- [x] Mở rộng bộ từ điển, đối sánh cụm từ tham lam (Greedy Matching 99.75%) và thuật toán nhận diện phạm vi phủ định (**Negation Scope Detection**).
+- [x] Tích hợp bộ máy **Hybrid Decision Gate** (`src/app_services.py`) xử lý trường hợp phủ định biên.
+- [ ] Giám sát triển khai **Phương án 2** (Mô hình `Text + Lexicon` 5.005 đặc trưng song song) và duy trì 39 unit tests pass 100%.
+- [ ] **Kiểm tra Báo cáo toàn văn**: Đọc soát, bắt lỗi số liệu và duyệt cuốn Báo cáo (Word/PDF 6 chương) do Văn Duy nộp.
+- [ ] **Kiểm tra Bộ Slide**: Duyệt bộ Slide trình chiếu (18-20 slides) do Duy Khang nộp.
+- [ ] **Kiểm tra Video & Kịch bản**: Duyệt Video Clip Demo Full HD (3-5 phút) và kịch bản thuyết trình do Thành Trung nộp.
+- [ ] **Duyệt xuất xưởng (Final Sign-off)**: Bấm nút nộp bài chính thức đại diện cho nhóm.
 
 ---
 
@@ -54,4 +58,5 @@
   - Code module hoàn chỉnh: [src/preprocessing.py](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/src/preprocessing.py).
   - Notebook hoàn chỉnh: [notebooks/02_text_preprocessing.ipynb](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/notebooks/02_text_preprocessing.ipynb).
   - File dữ liệu sạch: `data/processed/reviews_cleaned.xlsx` (có đủ cột `clean_basic_text`, `clean_advance_text`, `pos_w`, `neg_w`, `sentiment_ratio`, `sentiment`).
-  - File Báo cáo toàn văn hoàn thiện + File Slide PowerPoint thuyết trình.
+  - Kho mã nguồn Git chuẩn mực, sạch sẽ, đạt 39/39 tests pass.
+  - Biên bản nghiệm thu và phê duyệt chất lượng cho 3 sản phẩm: Báo cáo Word/PDF, Slide PPTX và Video Demo.

@@ -118,6 +118,30 @@ def test_prediction_diagnostics_use_fitted_tfidf_weights():
     assert not result.threshold_applied
 
 
+def test_predict_review_hybrid_on_complex_negation():
+    """Complex negation remains covered by the merged Hybrid decision path."""
+    from src.app_services import load_inference_bundle
+    from src.preprocessing import TextPreprocessor
+
+    status = get_model_status()
+    if not status.ready:
+        pytest.skip("Model chưa sẵn sàng để test.")
+
+    model, extractor = load_inference_bundle(status)
+    result = predict_review(
+        "Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi.",
+        model,
+        extractor,
+        TextPreprocessor(),
+    )
+
+    assert result.label == "Negative"
+    assert result.confidence is not None and result.confidence >= 0.5
+    assert result.decision_type in {"ml", "threshold", "hybrid"}
+    assert result.probabilities is not None
+    assert result.probabilities["Negative"] > result.probabilities["Positive"]
+
+
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 
 

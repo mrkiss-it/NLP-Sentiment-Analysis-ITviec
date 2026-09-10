@@ -41,8 +41,8 @@ Các phát hiện chính:
 
 - 8.417 review, 180 công ty.
 - Positive chiếm 73,76%; Negative chỉ 6,77%.
-- Lexicon hiện chỉ có tín hiệu ở khoảng 12,26% review.
-- Emoji features hiện bằng 0 trên toàn bộ dữ liệu.
+- Lexicon: Ban đầu chỉ bắt được khoảng 12,26% review; sau khi TV1 nâng cấp bộ từ điển và phương pháp đối sánh cụm từ tham lam (Greedy Matching), độ bao phủ đạt 99,75% và giúp cấu hình `Text + Lexicon` tăng Macro F1 lên 0,5658.
+- Emoji features hiện bằng 0 trên toàn bộ dữ liệu (do emoji đã được module tiền xử lý ánh xạ thành văn bản cảm xúc tiếng Việt ở tầng clean_basic_text).
 - Có 6 dòng thuộc các nhóm text trùng; một nhóm cùng text nhưng khác weak label.
 - Một số công ty có rất nhiều review, trong khi nhiều công ty có mẫu quá nhỏ để kết luận riêng.
 
@@ -112,16 +112,18 @@ Báo cáo cuối cần có thêm Precision, Recall, F1 từng lớp và confusio
 
 Với TF-IDF, vector SMOTE không tương ứng trực tiếp với một câu văn thật. Vì vậy class weight là baseline ưu tiên; SMOTE chỉ dùng nếu cross-validation chứng minh có lợi và phải nằm bên trong từng fold.
 
-## 8. Artifact TV2 bàn giao cho TV3
-
+## 8. Artifact TV2 bàn giao cho TV3 & Nhóm
+ 
 | Artifact | Ý nghĩa |
 |---|---|
 | `text_tfidf_vectorizer.joblib` | Từ điển và phép biến đổi TF-IDF text-only |
-| `text_feature_extractor.joblib` | Extractor đầy đủ, không chứa điểm khía cạnh |
-| `train_test_features.joblib` | Ma trận development/final-test, nhãn và feature contract |
-| `artifact_manifest.json` | Runtime, dataset hash, checksum và cấu hình |
+| `text_feature_extractor.joblib` | Extractor đầy đủ cho suy luận văn bản tự do |
+| `train_test_features.joblib` | Ma trận development/final-test (5.000 chiều), nhãn và feature contract |
+| `hybrid_train_test_features.joblib` | Ma trận kết hợp văn bản và đặc trưng số (5.010 chiều) phục vụ ablation |
+| `hybrid_feature_extractor.joblib` | Extractor kết hợp văn bản và đặc trưng số |
+| `artifact_manifest.json` / `hybrid_artifact_manifest.json` | Runtime, dataset hash, checksum và cấu hình |
 
-TV3 không được fit lại TF-IDF hoặc chia lại dữ liệu. Notebook modeling phải tải đúng artifact trên.
+TV3 dùng `train_test_features.joblib` cho pipeline NLP chính triển khai, và có thể dùng thêm `hybrid_train_test_features.joblib` để so sánh thực nghiệm. Không fit lại TF-IDF hay tự chia lại tập test.
 
 ## 9. Việc cần con người thực hiện
 

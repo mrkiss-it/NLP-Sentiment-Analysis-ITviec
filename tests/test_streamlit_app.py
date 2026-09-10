@@ -107,3 +107,55 @@ def test_company_insights_page_renders_real_dataset():
     assert not any(expander.label == "Khám phá review chi tiết" for expander in app.expander)
     assert len(app.radio(key="review_selection").options) == 8
     assert app.text_input(key="review_query").value == ""
+
+
+def test_lexicon_model_status_dataclass_fields():
+    from src.app_services import LexiconModelStatus, get_lexicon_model_status
+
+    status = get_lexicon_model_status()
+    assert isinstance(status, LexiconModelStatus)
+    assert isinstance(status.ready, bool)
+    assert isinstance(status.message, str) and status.message
+    assert "text_lexicon_feature_extractor" in str(status.extractor_path)
+    if status.model_path is not None:
+        assert "best_text_lexicon_model" in str(status.model_path)
+
+
+def test_predict_review_lexicon_returns_valid_prediction():
+    from src.app_services import (
+        PredictionResult,
+        get_lexicon_model_status,
+        load_lexicon_inference_bundle,
+        predict_review_lexicon,
+    )
+    from src.preprocessing import TextPreprocessor
+
+    status = get_lexicon_model_status()
+    if not status.ready:
+        pytest.skip("Artifact Text + Lexicon chưa sẵn sàng.")
+
+    model, extractor = load_lexicon_inference_bundle(status)
+    result = predict_review_lexicon(
+        "Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi.",
+        model,
+        extractor,
+        TextPreprocessor(),
+    )
+    assert isinstance(result, PredictionResult)
+    assert result.label == "Negative"
+    assert result.confidence is not None and 0.0 <= result.confidence <= 1.0
+    assert result.decision_type in {"ml", "threshold", "hybrid"}
+    assert result.probabilities is not None
+    assert result.probabilities.get("Negative", 0) > result.probabilities.get("Positive", 0)
+
+
+def test_benchmark_page_renders_leaderboard_and_metrics():
+    app = AppTest.from_file(
+        PROJECT_ROOT / "app_pages" / "benchmark.py", default_timeout=90
+    ).run()
+
+    assert not app.exception
+    assert any("Hiệu năng Mô hình" in title.value for title in app.title)
+    assert len(app.metric) >= 4
+    assert any("Stacking" in metric.value for metric in app.metric)
+    assert any("0.5507" in metric.value for metric in app.metric)

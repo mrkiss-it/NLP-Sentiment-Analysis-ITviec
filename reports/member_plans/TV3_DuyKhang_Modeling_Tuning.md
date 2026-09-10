@@ -36,9 +36,15 @@
   - Lưu file mô hình có kết quả tốt nhất vào: `models/best_sentiment_model.joblib`.
 - [ ] **Bàn giao:** Chuyển giao toàn bộ kết quả dự đoán (`y_pred_nb`, `y_pred_lr`, `y_pred_svm`, `y_pred_stack`, `y_pred_visobert`) cho **TV4 (Thành Trung)**.
 
-### 🟢 Ngày 4 & Tuần 3: Viết Báo cáo & Hoàn thiện Số liệu
-- [ ] Soạn thảo **Mục 3.2 (Thiết kế mô hình)** và **Mục 3.3 (Kỹ thuật tinh chỉnh siêu tham số)** trong báo cáo.
-- [ ] Xuất bảng so sánh hiệu năng tổng hợp (Accuracy, F1-Score) và vẽ biểu đồ cột so sánh F1-Score giữa các mô hình.
+### 🟢 Giai đoạn Nước rút: Chuyên trách Thiết kế Slide Thuyết trình (Lead Slide Designer)
+- [x] Hoàn thiện huấn luyện 4 mô hình ML cơ sở và mô hình Stacking Ensemble (`src/models.py`, `03_sentiment_modeling_ml.ipynb`).
+- [x] Chạy benchmark ViSoBERT trên GPU Runpod (`04_sentiment_modeling_deeplearning.ipynb`).
+- [x] Đóng gói mô hình `models/best_sentiment_model.joblib` và tài liệu `reports/modeling_hyperparameter_tuning.md`.
+- [ ] **CHUYÊN TRÁCH 100% THIẾT KẾ BỘ SLIDE THUYẾT TRÌNH (PowerPoint / Canva)**:
+  - Thiết kế trọn gói **18 – 20 slide** chuyên nghiệp theo phong cách Dark-tech hiện đại.
+  - Tích hợp toàn bộ biểu đồ 300 DPI từ `reports/figures/`, bảng so sánh mô hình, Confusion Matrix, sơ đồ kiến trúc Stacking và kết quả ViSoBERT.
+  - Bố cục thông thoáng, câu chữ ngắn gọn súc tích, làm nổi bật các điểm sáng kỹ thuật của nhóm.
+  - Nộp file trình chiếu `.pptx` cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước buổi báo cáo.
 
 ---
 
@@ -46,9 +52,10 @@
 
 * **Đầu vào (Inputs):**
   - Ma trận đặc trưng $X_{train}, X_{test}, y_{train}, y_{test}$ từ TV2.
+  - Toàn bộ hình ảnh biểu đồ trong `reports/figures/`.
+  - Nội dung đề cương báo cáo từ `reports/final_report_outline.md`.
 * **Đầu ra (Outputs bàn giao):**
   - Notebook hoàn chỉnh: [notebooks/03_sentiment_modeling_ml.ipynb](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/notebooks/03_sentiment_modeling_ml.ipynb) & [04_sentiment_modeling_deeplearning.ipynb](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/notebooks/04_sentiment_modeling_deeplearning.ipynb).
   - Module code: [src/models.py](file:///d:/Trí tuệ nhân tạo/HK2/Xử lý ngôn ngữ tự nhiên/Do_An_Sentiment_Analysis/src/models.py).
   - File mô hình đã huấn luyện: `models/best_sentiment_model.joblib`.
-  - Mảng dự đoán `y_pred` của các mô hình trên tập test gửi cho TV4.
-  - Nội dung Chương 3.2 - 3.3 của Báo cáo.
+  - **01 File Bộ Slide Trình chiếu PowerPoint hoàn chỉnh (`.pptx`)** gồm 18–20 slides đạt chuẩn thẩm mỹ cao.
