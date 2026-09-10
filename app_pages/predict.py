@@ -1,40 +1,36 @@
-"""Interactive review prediction page with a fail-closed model handoff."""
-
-from __future__ import annotations
+"""Interactive NLP workspace with real model probabilities and input diagnostics."""
 
 from pathlib import Path
+from time import perf_counter
 import sys
-from typing import TYPE_CHECKING
 
+import altair as alt
+import pandas as pd
 import streamlit as st
-
 
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 if str(PROJECT_ROOT) not in sys.path:
     sys.path.insert(0, str(PROJECT_ROOT))
 
 from src.app_services import (
-    SENTIMENT_LABELS,
-    get_model_status,
-    load_inference_bundle,
-    predict_review,
+    NEGATIVE_THRESHOLD, SENTIMENT_LABELS, SENTIMENT_ORDER,
+    get_model_status, load_inference_bundle, predict_review,
 )
+from src.app_theme import page_header, style_chart
 
-if TYPE_CHECKING:
-    from src.preprocessing import TextPreprocessor
-
-
+# Illustrative inputs, not an evaluation dataset. Retain a difficult case openly.
 EXAMPLES = {
-    "Tích cực": "Môi trường làm việc thân thiện, đồng nghiệp hỗ trợ và có nhiều cơ hội học hỏi.",
-    "Cân bằng": "Công việc ổn, phúc lợi bình thường nhưng quy trình còn khá chậm.",
-    "Tiêu cực": "Thường xuyên OT, quản lý thiếu minh bạch và lương chưa tương xứng.",
+    "Lời khen": "Môi trường làm việc thân thiện, đồng nghiệp hỗ trợ và có nhiều cơ hội học hỏi.",
+    "Ý kiến hỗn hợp": "Công việc ổn, phúc lợi bình thường nhưng quy trình còn khá chậm.",
+    "Lời phàn nàn": "Công ty rất tệ, quản lý yếu kém, lương thấp, thường xuyên bắt nhân viên OT không lương.",
+    "Ca khó": "Thường xuyên OT, quản lý thiếu minh bạch và lương chưa tương xứng.",
 }
+COLORS = {"Positive": "green", "Neutral": "yellow", "Negative": "red"}
 
 
 @st.cache_resource
-def get_preprocessor() -> TextPreprocessor:
+def get_preprocessor():
     from src.preprocessing import TextPreprocessor
-
     return TextPreprocessor()
 
 
@@ -48,105 +44,156 @@ def get_bundle(model_path: str, extractor_path: str):
     return load_inference_bundle(status)
 
 
-st.title("Phân tích cảm xúc review")
-st.caption("Nhập nội dung tự nhiên; hệ thống chỉ sử dụng văn bản, không dùng rating.")
+def select_example():
+    example = st.session_state.get("review_example")
+    if example in EXAMPLES:
+        text = EXAMPLES[example]
+        st.session_state["review_input"] = text
+        st.session_state["analysis_request"] = text
+        st.session_state.pop("analysis_result", None)
+        st.session_state.pop("analysis_error", None)
 
-status = get_model_status()
-with st.container(border=True, key="model_status_panel"):
-    with st.container(horizontal=True, vertical_alignment="center"):
-        if status.ready:
-            st.badge("Model sẵn sàng", icon=":material/check_circle:", color="green")
-        else:
-            st.badge("Chờ TV3 bàn giao model", icon=":material/schedule:", color="orange")
-        st.caption(status.message)
 
-st.subheader("Thử nhanh với review mẫu")
-example = st.pills(
-    "Review mẫu",
-    options=list(EXAMPLES),
-    selection_mode="single",
-    key="review_example",
-    label_visibility="collapsed",
+def request_analysis():
+    st.session_state["analysis_request"] = st.session_state.get("review_input", "")
+
+
+def invalidate_result():
+    st.session_state.pop("analysis_result", None)
+    st.session_state.pop("analysis_error", None)
+    st.session_state.pop("analysis_request", None)
+
+
+st.session_state.setdefault("review_input", "")
+page_header(
+    "PHÒNG THỬ NGHIỆM NLP", "Từ lời viết đến cảm xúc",
+    "Thử một review, xem cách mô hình đọc văn bản và khám phá điều gì nằm sau mỗi dự đoán.",
 )
-if example and st.session_state.get("last_review_example") != example:
-    st.session_state["review_input"] = EXAMPLES[example]
-    st.session_state["last_review_example"] = example
+status = get_model_status()
+with st.container(horizontal=True, key="lab_status", gap="small"):
+    st.badge("Model sẵn sàng" if status.ready else "Chờ model", color="green" if status.ready else "orange", icon=":material/memory:")
+    st.badge("Stacking · TF-IDF", color="blue")
+    st.badge(f"Ngưỡng tiêu cực {NEGATIVE_THRESHOLD:.0%}", color="gray")
 
-with st.form("sentiment_form", border=True):
+with st.container(key="prediction_workspace"):
+    editor, result = st.columns([1.05, 1], gap="medium")
+
+with editor.container(border=True, height="stretch", key="review_editor"):
+    st.caption("01 / NỘI DUNG ĐẦU VÀO")
+    st.subheader("Bạn muốn phân tích điều gì?")
+    st.caption("Chọn một ví dụ để chạy ngay, hoặc viết review của bạn.")
+    st.pills("Review mẫu", list(EXAMPLES), key="review_example", on_change=select_example,
+             selection_mode="single", label_visibility="collapsed")
     review_text = st.text_area(
-        "Nội dung review",
-        key="review_input",
-        placeholder="Ví dụ: Môi trường tốt nhưng công ty cần cải thiện chính sách OT...",
-        height=170,
-        max_chars=3000,
-        help="Có thể nhập tiếng Việt, tiếng Anh ngành IT, teencode và emoji.",
+        "Nội dung review", key="review_input", height=200, max_chars=3000,
+        placeholder="Ví dụ: Đồng nghiệp thân thiện nhưng công ty cần cải thiện chính sách OT…",
+        on_change=invalidate_result, persist_state="session",
     )
-    with st.container(horizontal=True, horizontal_alignment="right"):
-        submitted = st.form_submit_button(
-            "Phân tích cảm xúc",
-            type="primary",
-            icon=":material/auto_awesome:",
-        )
+    st.button("Phân tích cảm xúc", type="primary", icon=":material/arrow_forward:",
+              on_click=request_analysis, width="stretch", key="analyze_review")
+    st.caption("Chỉ dùng nội dung văn bản · Không cần rating hoặc tên công ty")
+    if st.session_state.get("review_example") == "Ca khó" and review_text == EXAMPLES["Ca khó"]:
+        st.caption(":material/science: Ca khó được giữ lại để khám phá giới hạn của mô hình. Các ví dụ không thay thế kết quả đánh giá trên test.")
 
-result_slot = st.container()
-if submitted:
-    if not review_text.strip():
-        result_slot.error("Hãy nhập nội dung review trước khi phân tích.", icon=":material/error:")
-    else:
-        preprocessor = get_preprocessor()
-        processed_preview = preprocessor.clean_advance_text(review_text)
-        if not status.ready or status.model_path is None:
-            with result_slot.container(border=True):
-                st.warning(
-                    "Giao diện đã sẵn sàng nhưng chưa thể dự đoán vì model chưa được bàn giao.",
-                    icon=":material/pending:",
-                )
-                st.markdown("**Văn bản sau tiền xử lý**")
-                st.code(processed_preview or "(không còn token hợp lệ)", language=None)
-                st.caption("Không có nhãn hoặc điểm số giả được sinh ra trong trạng thái này.")
+with result.container(border=True, height="stretch", key="prediction_result"):
+    st.caption("02 / KẾT QUẢ PHÂN TÍCH")
+    if "analysis_request" in st.session_state:
+        requested = st.session_state.pop("analysis_request")
+        invalidate_result()
+        if not requested.strip():
+            st.session_state["analysis_error"] = "Hãy nhập nội dung review trước khi phân tích."
+        elif not status.ready or status.model_path is None:
+            st.warning("Giao diện đã sẵn sàng nhưng model chưa được bàn giao.")
+            st.code(get_preprocessor().clean_advance_text(requested), language=None)
         else:
             try:
-                model, extractor = get_bundle(
-                    str(status.model_path), str(status.extractor_path)
-                )
-                prediction = predict_review(
-                    review_text, model, extractor, preprocessor
-                )
+                with st.spinner("Đang xử lý văn bản và tính xác suất…"):
+                    started = perf_counter()
+                    model, extractor = get_bundle(str(status.model_path), str(status.extractor_path))
+                    prediction = predict_review(requested, model, extractor, get_preprocessor())
+                    elapsed = perf_counter() - started
+                st.session_state["analysis_result"] = (requested, prediction, elapsed)
             except (OSError, RuntimeError, TypeError, ValueError) as exc:
-                result_slot.error(f"Không thể thực hiện dự đoán: {exc}", icon=":material/error:")
+                st.session_state["analysis_error"] = str(exc)
+
+    saved = st.session_state.get("analysis_result")
+    if saved and saved[0] != review_text:
+        saved = None
+    error = st.session_state.get("analysis_error")
+    if error:
+        st.error(error, icon=":material/error:")
+    elif saved:
+        _, prediction, elapsed = saved
+        label_vi = SENTIMENT_LABELS.get(prediction.label, prediction.label)
+        st.subheader(f"Kết quả: {label_vi}")
+        st.badge(label_vi, color=COLORS.get(prediction.label, "blue"))
+        for sentiment in SENTIMENT_ORDER:
+            score = dict(prediction.class_probabilities).get(sentiment)
+            if score is not None:
+                with st.container(key=f"probability_{sentiment.lower()}", gap="xsmall"):
+                    st.markdown(f"{SENTIMENT_LABELS[sentiment]} **{score:.1%}**")
+                    st.progress(float(score))
+        if not prediction.class_probabilities:
+            st.caption("Model không cung cấp xác suất; chỉ hiển thị nhãn dự đoán.")
+        if prediction.threshold_applied:
+            baseline = SENTIMENT_LABELS.get(prediction.baseline_label, prediction.baseline_label)
+            st.caption(f":material/tune: {baseline} → Tiêu cực vì P(Tiêu cực) = {prediction.negative_probability:.1%} ≥ {NEGATIVE_THRESHOLD:.0%}.")
+        else:
+            st.caption("Nhãn cuối trùng với dự đoán mặc định của model.")
+        st.caption(f"{elapsed:.2f} giây · Thời gian xử lý lượt này, gồm tải model nếu chưa có cache")
+        if prediction.active_features == 0:
+            st.warning("Văn bản không khớp từ điển TF-IDF. Kết quả này thiếu bằng chứng từ nội dung.")
+    else:
+        with st.container(key="prediction_empty"):
+            st.markdown("## :material/neurology:")
+            st.subheader("Một review, ba góc nhìn")
+            st.write("Xác suất của từng lớp sẽ xuất hiện ở đây, cùng quy tắc chọn nhãn.")
+            with st.container(horizontal=True, gap="small"):
+                for sentiment in SENTIMENT_ORDER:
+                    st.badge(SENTIMENT_LABELS[sentiment], color=COLORS[sentiment])
+            st.caption("Bắt đầu bằng một ví dụ ở bên trái. Bạn cũng có thể thử câu khó hoặc ý kiến trái chiều.")
+
+with st.container(border=True, key="nlp_evidence"):
+    st.caption("03 / KHÁM PHÁ PIPELINE")
+    st.subheader("Mô hình đã đọc review như thế nào?")
+    if saved:
+        original, prediction, elapsed = saved
+        with st.container(horizontal=True, key="nlp_metrics", gap="small"):
+            st.metric("Token sau xử lý", len(prediction.processed_text.split()))
+            st.metric("Đặc trưng có giá trị", prediction.active_features)
+            st.metric("Chiều vector TF-IDF", f"{prediction.feature_count:,}")
+        text_tab, vector_tab, decision_tab = st.tabs(["Văn bản & token", "Vector TF-IDF", "Quyết định & giới hạn"])
+        with text_tab:
+            st.caption("Unicode → emoji / teencode → tách từ → loại stopword")
+            st.code(prediction.processed_text, language=None, wrap_lines=True)
+            st.caption("Dấu gạch dưới nối các tiếng trong một từ ghép. Đây là đầu vào thực sự của TF-IDF.")
+        with vector_tab:
+            if prediction.top_features:
+                st.caption("10 đặc trưng có trọng số TF-IDF cao nhất của review này. Trọng số đầu vào không phải mức đóng góp nhân quả vào nhãn.")
+                features = pd.DataFrame(prediction.top_features, columns=["term", "weight"])
+                bars = alt.Chart(features).mark_bar(color="#7aa7ff", cornerRadiusEnd=5, size=14).encode(
+                    y=alt.Y("term:N", sort="-x", title=None),
+                    x=alt.X("weight:Q", title="Trọng số TF-IDF"),
+                    tooltip=[alt.Tooltip("term:N", title="Đặc trưng"), alt.Tooltip("weight:Q", title="Trọng số", format=".4f")],
+                ).properties(height=240)
+                st.altair_chart(style_chart(bars), width="stretch", theme=None)
             else:
-                label_vi = SENTIMENT_LABELS.get(prediction.label, prediction.label)
-                with result_slot.container(border=True):
-                    st.subheader(f"Kết quả: {label_vi}")
-                    if prediction.confidence is None:
-                        st.caption(
-                            "Model không cung cấp xác suất đã hiệu chỉnh, vì vậy app không hiển thị confidence."
-                        )
-                    else:
-                        st.metric("Độ tin cậy", f"{prediction.confidence:.1%}", border=True)
-                    with st.expander("Xem văn bản sau tiền xử lý", icon=":material/code:"):
-                        st.code(prediction.processed_text, language=None)
+                st.caption("Chưa có đặc trưng TF-IDF để hiển thị.")
+        with decision_tab:
+            st.write(f"**Quy tắc hiện tại:** nếu P(Tiêu cực) ≥ {NEGATIVE_THRESHOLD:.0%}, ưu tiên Tiêu cực; các trường hợp khác giữ nhãn mặc định.")
+            st.caption("Các số phần trăm là đầu ra của model, không phải cam kết độ chính xác cho từng review. Nhãn học từ rating có thể khác sắc thái thực tế của văn bản.")
+            st.page_link("app_pages/evaluation.py", label="Xem thực nghiệm và các trường hợp dự đoán sai", icon=":material/arrow_forward:")
+    else:
+        with st.container(horizontal=True, key="pipeline_steps", gap="small"):
+            for title, description in [
+                ("01 · Chuẩn hóa", "Unicode, emoji, teencode và từ ghép tiếng Việt."),
+                ("02 · TF-IDF", "Biến văn bản thành vector theo từ điển đã học."),
+                ("03 · Stacking", "Kết hợp các bộ phân loại để tính xác suất."),
+                ("04 · Chọn nhãn", "Áp dụng policy ưu tiên phát hiện tiêu cực."),
+            ]:
+                with st.container(border=True):
+                    st.markdown(f"**{title}**")
+                    st.caption(description)
+        st.caption("Phân tích một review để xem token và trọng số thực tế ở từng bước.")
 
-st.subheader("Pipeline suy luận")
-with st.container(horizontal=True):
-    with st.container(border=True, key="pipeline_review_card"):
-        st.markdown("#### :material/chat: 1. Review")
-        st.caption("Nội dung người dùng nhập, không yêu cầu rating hay thông tin công ty.")
-    with st.container(border=True, key="pipeline_clean_card"):
-        st.markdown("#### :material/cleaning_services: 2. Tiền xử lý")
-        st.caption("Chuẩn hóa Unicode, emoji, teencode, tách từ và loại stopword.")
-    with st.container(border=True, key="pipeline_vector_card"):
-        st.markdown("#### :material/hub: 3. TF-IDF")
-        st.caption("Biến văn bản thành vector 5.000 đặc trưng theo artifact đã khóa.")
-    with st.container(border=True, key="pipeline_result_card"):
-        st.markdown("#### :material/label: 4. Cảm xúc")
-        st.caption("Trả về Tích cực, Trung tính hoặc Tiêu cực khi model sẵn sàng.")
-
-with st.expander("Lưu ý khi diễn giải", icon=":material/info:"):
-    st.markdown(
-        """
-        - Nhãn huấn luyện được suy ra từ rating nên không phải ground truth do con người gán trực tiếp.
-        - Confidence chỉ hiển thị khi model có `predict_proba()`; app không tự chế điểm tin cậy.
-        - Kết quả phục vụ demo học thuật, không thay thế đánh giá nhân sự chuyên môn.
-        """
-    )
+st.caption("Demo nghiên cứu NLP · Nhãn học từ rating · Kết quả cần được đọc cùng ngữ cảnh, đặc biệt với review vừa khen vừa chê.")

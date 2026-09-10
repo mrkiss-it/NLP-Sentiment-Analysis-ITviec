@@ -200,13 +200,19 @@ python -m pip install -r requirements-app.lock
 python -m streamlit run app.py
 ```
 
-Ứng dụng gồm trang tổng quan, dashboard insight doanh nghiệp và giao diện
-phân tích review. Khi TV3 chưa bàn giao model, trang dự đoán hiển thị
+Ứng dụng gồm bốn trang: tổng quan, insight doanh nghiệp, phân tích review
+và đánh giá mô hình. Phòng lab hiển thị xác suất ba lớp, token sau xử lý và
+đặc trưng TF-IDF thực tế; trang đánh giá dùng kết quả đã xuất từ notebook 06
+để xem Confusion Matrix, khảo sát ngưỡng và đọc ví dụ dự đoán sai.
+Thanh khảo sát ngưỡng chỉ đọc số liệu, không thay đổi policy dự đoán.
+Khi TV3 chưa bàn giao model, trang dự đoán hiển thị
 trạng thái chờ và không sinh nhãn hoặc confidence giả.
 
 Giao diện được khóa ở chế độ tối theo phong cách developer tool với điểm nhấn
 xanh lam và xanh mint. Vùng nội dung được giới hạn chiều rộng để giữ tỷ lệ
 card và biểu đồ dễ đọc trên màn hình ultrawide.
+
+Chi tiết nghiệm thu UI và luồng trình diễn: [UI NLP Lab — 10/09/2026](reports/ui_nlp_lab_20260910.md).
 
 ---
 
@@ -220,5 +226,5 @@ card và biểu đồ dễ đọc trên màn hình ultrawide.
 | **2. Pipeline Tiền xử lý & Gán nhãn** | **TV1: Hoàng Hôn** | ✅ **100% (Hoàn thành)** | Hoàn thiện module `src/preprocessing.py`, notebook `02_text_preprocessing.ipynb`. Xuất thành công `data/processed/reviews_cleaned.xlsx` (8,417 mẫu, 23 cột, gán nhãn 3 lớp: *6,208 Positive, 1,639 Neutral, 570 Negative*). |
 | **3. Phân tích EDA & Đặc trưng TF-IDF** | **TV2: Văn Duy** | ✅ **100% (Hoàn thành & Bàn giao)** | Hoàn thiện `01_data_exploration_eda.ipynb`, `src/features.py`, xuất 9 biểu đồ 300 DPI tại `reports/figures/`, chia tập Stratified 80/20 (khóa Final Test chống rò rỉ dữ liệu), đóng gói artifacts (`train_test_features.joblib`, `text_tfidf_vectorizer.joblib`, `artifact_manifest.json`) và tài liệu `reports/eda_feature_engineering.md` + `reports/overview_for_team.md`. |
 | **4. Huấn luyện Mô hình Machine Learning** | **TV3: Duy Khang** | ✅ **100% (Hoàn thành phần ML)** | Hoàn thiện `src/models.py` (`tune_hyperparameters`, `get_stacking_model`, `plot_model_comparison`) và `03_sentiment_modeling_ml.ipynb`: huấn luyện + tinh chỉnh siêu tham số (GridSearchCV, 5-Fold CV) cho 4 thuật toán ML (Naive Bayes, Logistic Regression, Linear SVM, Random Forest) và Stacking Ensemble (NB+LR+SVM); chỉ đánh giá Final Test đúng 1 lần sau khi khóa mô hình bằng CV trên train (Stacking thắng với CV Macro F1 0,5619; Final-test Macro F1 0,5475). Lưu `models/best_sentiment_model.joblib`, biểu đồ so sánh & confusion matrix tại `reports/figures/`, chi tiết tại `reports/modeling_hyperparameter_tuning.md`. **ViSoBERT** (`04_sentiment_modeling_deeplearning.ipynb`) đã chạy benchmark zero-shot thật trên GPU (Runpod): Accuracy 0,6536, Macro F1 0,4036 — thấp hơn Stacking nhưng Recall lớp Negative cao hơn hẳn (75,44% so với 26,32%), gần như không nhận ra lớp Neutral (Recall 4,88%). |
-| **5. Đánh giá, Insight & Web Demo** | **TV4: Thành Trung** | ✅ **Hoàn thành phạm vi Insight & Web Demo** | Đã chạy `05_company_sentiment_insights.ipynb` trên 8.417 review, xuất 8 ảnh WordCloud/biểu đồ case study 300 DPI và hoàn thiện Web Demo Streamlit gồm tổng quan, insight doanh nghiệp và dự đoán bằng model thật. Confusion Matrix từ TV3 đã có tại `reports/figures/best_model_confusion_matrix.png`; phần Error Analysis chuyên sâu và nội dung báo cáo tổng hợp được theo dõi riêng. |
+| **5. Đánh giá, Insight & Web Demo** | **TV4: Thành Trung** | ✅ **Hoàn thành** | Đã chạy `05_company_sentiment_insights.ipynb` trên 8.417 review, xuất 8 ảnh WordCloud/biểu đồ case study 300 DPI và hoàn thiện Web Demo Streamlit gồm tổng quan, insight doanh nghiệp và dự đoán bằng model thật. `06_model_evaluation_error_analysis.ipynb` bổ sung Confusion Matrix, 15 mẫu lỗi thật và sensitivity analysis; policy `P(Negative) >= 0,30` được dùng nhất quán trong notebook và Web Demo mà không train lại model. Kết quả thực đo: Recall Negative tăng từ 26,32% lên 35,09%, không đạt mức 55–60% dự kiến. |
 | **6. Báo cáo tổng hợp & Slide thuyết trình** | **TV1 & Cả nhóm** | ⏳ **Giai đoạn tiếp theo** | Soạn thảo theo mẫu đề cương `reports/final_report_outline.md`. |

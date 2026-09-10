@@ -1,0 +1,57 @@
+﻿source_index,Company Name,Rating,raw_review_text,Nhãn thật,Baseline,Threshold 0.30,P(Negative),Cặp nhầm,Nhóm tín hiệu,Độ chắc chắn lỗi
+2642,FPT Software,2,"Dành cho Fresher . Công ty đông, đa dạng.
+Nhiều đơn vị, nhiều team công nghệ đa dạng. thích hợp cho fresher.
+Gái nhiều. . Mức lương và chế độ phụ thuộc vào từng đơn vị.
+OT, ON nhiều.
+Tăng lương chậm.
+Không có định hướng career path.",Negative,Neutral,Neutral,0.05787600698708682,Negative → Neutral,Phủ định hoặc sắc thái đảo chiều,0.9421239930129132
+2564,FPT Software,2,"Môi trường làm việc dành cho fresher . không gian làm việc rộng rãi, đồng nghiệp nếu gặp được người hợp với mình thì dự án rất là vui . Làm outsourcing và định hướng công ty là bán người nên làm một dự án khá là mệt khi toàn tuyển người là fresher cho đủ số lượng để chạy dự án
+OT tính không fair, lúc được tính, lúc lại không.",Negative,Neutral,Neutral,0.09154838873174596,Negative → Neutral,Phủ định hoặc sắc thái đảo chiều,0.908451611268254
+3144,FPT Software,2,"Môi trường tốt cho sinh viên mới ra trường . - Môi trường tốt để học tập, rèn luyện kỹ năng.
+- Phù hợp với những bạn đi theo hướng quản lý. . - OT rất nhiều và không được trả bonus xứng đáng tuỳ vào từng bộ phận.
+- Tăng lương chậm.
+- Không muốn giữ chân nhân tài, thích tuyển dụng fresher nên phần lớn chất lượng dự án kém.",Negative,Neutral,Neutral,0.09384877671559252,Negative → Neutral,Phủ định hoặc sắc thái đảo chiều,0.9061512232844074
+2668,FPT Software,2,"Môi trường làm việc năng động . Môi trường năng động, nhiều công nghệ mới
+Sếp tâm lý quan tâm nhân viên . OT OT OT OT OT, quá nhiều OT, mà lương thấp
+thưởng hơi ít",Negative,Positive,Positive,0.0028291576325490744,Negative → Positive,Từ lóng / ngữ cảnh ngành IT,0.9971708423674509
+3094,FPT Software,2,"Lương hơi thấp và đôi khi OT hơi nhiều . Môi trường làm việc năng động, tốt. Đội ngũ nhân viên trẻ . Lương hơi thấp và đôi khi OT hơi nhiều. Vị trí làm việc hơi xa.",Negative,Positive,Positive,0.0035532538531190963,Negative → Positive,Từ lóng / ngữ cảnh ngành IT,0.9964467461468809
+5220,NAB Innovation Centre Vietnam,2,"Good views, good benefits, just quite bad management . Hmm, breaking into the banking world. Get to know more people.
+They pay you well, Good hours. Even though working hours start a bit early . Rather than enforcing a sense of positivity, leadership should set a strong example through their actual actions and attitudes.",Negative,Positive,Positive,0.008082708352157197,Negative → Positive,Từ lóng / ngữ cảnh ngành IT,0.9919172916478428
+8096,VNG Corporation,3,"Quản lí kém cỏi, văn hóa công ty khá tệ, lương khá. . Lương tốt cho người mới.
+Có thưởng cuối năm.
+Có phụ cấp ăn trưa.
+Thường không phải OT, nếu có thì có trả OT cho thứ 7 chủ nhật. . Hoàn toàn không có training cho người mới.
+Quản lí không nắm được năng lực của cấp dưới, cũng không có hệ thống đánh giá lại nhân viên định kì (thường ở công ty khác là 1 năm 1-2 lần đánh giá). Nếu muốn lên lương tự đi hỏi.
+Quá trình làm việc không chuyên nghiệp, các bên trên họp với nhau rồi xong chỉnh yêu cầu nhưng không nói lại cho bên dưới, dẫn đến việc làm xong toàn bộ rồi mới biết đã chỉnh yêu cầu từ lâu phải làm lại rất nhiều. Yêu cầu toàn nói miệng mà không document lại.
+Code quá cũ và qua tay nhiều người, hơn nữa tiêu chí viết code cho chạy là được khiến càng ngày càng rối. Hơn nữa không ai refactor nổi vì yêu cầu spec không được ghi lại đàng hoàng như nói ở trên.
+Văn hóa công ty khá tệ. Không rõ những team khác như thế nào, nhưng vài tuần lại nghe cãi lộn to tiếng chửi bới om xòm.",Neutral,Negative,Negative,0.854224434802145,Neutral → Negative,Phủ định hoặc sắc thái đảo chiều,0.854224434802145
+950,ekino Vietnam,3,"Chỉ phù hợp cho các PHP developer . Đa số là internship và junior, hú một cái là đi nhậu và nhoi nhoi rất zui. Sáng có cà phê uống ngồi chém gió, trưa ăn cơm chung trong cty chém gió đủ chủ đề. Chiều về các ae đi đá banh nữa. Zui lắm. Nhưng hồi đó được cty bao cơm trưa, còn giờ thì không còn nữa.
+Không được trả lương, không quy ra ngày phép, chỉ cho bánh ăn. . Là cty outsource nên đều như nhau. Nếu bạn vào một dự án mà khách hàng trời ơi đất hỡi thì nên tìm đường lui. Vì lơi nhuận đến từ việc cty cho thuê bạn, nên cty cũng không làm gì được.
+Trong cty có 2 hiểu làm việc. Kiểu một là sẽ có 1 PM đứng ra nhận yêu cầu từ khách hàng rồi về chia việc lại cho ~5 internship hay junior. Kiểu còn lại là senior tham gia trực tiếp vào team khách hàng luôn, làm việc như là một nhân viên của khách hàng.
+Kiểu một thì đa số PM là 50% từ Dev đi lên và tay nghề thì chưa thể gọi là senior được. Kinh nghiệm về đàm phán không được cao, và đôi khi dẫn đến các bạn internship và junior phải OT không lương. Đây là kiểu làm việc chiếm đa số tại Ekino (~80%)
+Kiểu hai thì chỉ có senior đảm nhận. Bạn sẽ bị khách hàng bào, rất cực, và áp lực. Mình thấy vị trí này rất ít trong cty và thường xuyên bị đổi người. Chỉ có duy nhất một anh Golang Dev thần thánh trụ hơn 1 năm, nhưng cũng ra đi.
+Về phía quản lý và nhân sự, hồi 3 năm trước được đảm nhận bởi các anh chị có kinh nghiệm nên rất chuyên nghiệp. Lúc mình mới vào đó là ấn tượng đầu tiên của mình, nó rất mạnh. Nhưng hiện tại thì không còn nữa, chỉ 1-2 người core thôi, còn lại được thế bằng internship và junior.
+Về phía vệ sinh, đã được cải thiện trong những tháng gần đây. Cty đã thay mới lao công và quy trình dọn dẹp chi tiết hơn thay vì kiểu ""Chị cứ thấy dơ dơ ở đâu thì dọn giúp em nhe."" hay ""Em thấy đâu mà dơ dơ thì kêu chị nhe"" :)))
+Về phía cơ sở vật chất, Mình chỉ nói một câu. Nó tệ. (Không đến mức rất tệ)
+Về phần chắm công, Hiện tại cty chỉ kiểm tra check-in của nhân viên mà không có check-out. Một vài trường hợp như đi trễ 5p nhưng OT thêm 1 tiếng cũng bị cty báo vắng và trừ 0.5 ngày. Nên một vài nhân viên thấy trễ nên chiều vào luôn cũng không làm gì được họ. Nên có check-out sẽ tốt hơn.
+Về phần Technical, cty có tech stack mạnh về các thể loại PHP. Nên sẽ phù hợp hơn nếu bạn là một PHP dev.
+Lời nhắn nhủ với với các bạn internship, cty không có lộ trình đào tạo cho internship, chỉ nhảy thẳng vào dự án rồi cằm tay chỉ việc một vài tuần rồi làm việc luôn. Nên quy trình làm việc và một vài kỹ năng khác bạn sẽ không có.",Neutral,Negative,Negative,0.8045961335070835,Neutral → Negative,Phủ định hoặc sắc thái đảo chiều,0.8045961335070835
+3791,Hitachi Digital Services,3,"CTY phù hợp với những bạn mới ra trường . HR đảm bảo quyền lợi cho NV, BH full lương, có BH cho người thân khi làm >5 năm . Tăng lương cho những nhân viên lâu năm. Chênh lệch lương lớn giữa NV mới và cũ với cùng trình độ.
+OT được lương nếu KH đồng ý. Nếu không bạn phải tự OT không công.",Neutral,Negative,Negative,0.7383287694866189,Neutral → Negative,Phủ định hoặc sắc thái đảo chiều,0.7383287694866189
+4736,LG CNS Việt Nam,3,"Working environment is very good!! . Công ty có trang thiết bị cho nhân viên xịn xò, vừa bước vào nhận chỗ đã được nhận màn hình 35 inch xịn xò, laptop gram đắt tiền + performance tốt. Đồng nghiệp thân thiện, support lẫn nhau những lúc khó khăn. Thời gian làm việc thoải mái linh hoạt, môi trường mở làm việc với người nước ngoài, có cơ hội phát triển khả năng ngoại ngữ. Công ty luôn mua đồ ăn cho nhân viên để tiếp sức những lúc mệt mỏi. Đặc biệt hàng tháng sẽ có nhữung sự kiện để nâng cao tinh thần làm việc cho anh em như Developers' Day.... Đặc biệt là không phải OT, mang việc về nhà, giúp bản thân cân bằng được cuộc sống và công việc.
+we are paid overtime following Vietnam labor policy . N/A
+Company is very good and there's none of suggestion for improvement",Neutral,Positive,Positive,0.0016838604415734019,Neutral → Positive,Phủ định hoặc sắc thái đảo chiều,0.9983161395584266
+127,"AZPLAYS Co., LTD",3,"Công ty ổn áp, chỉ làm xa nhà chứ mọi phúc lợi đều tốt . Công ty luôn cấp phát trái cây bánh kẹo tuần 2 lần, đồ ăn tủ lạnh lúc nào cũng full ko lo đói
+Nếu vào mùa nhiều dự án mới phải OT, nhưng thời gian OT ít, lương x2, x3 tùy giờ nên cũng xứng đáng . Nếu công ty mở lại chi nhánh ở HCM thì tốt gần nhà hơn, nhưng mức lương khi làm xa thì lại cao hơn",Neutral,Positive,Positive,0.002407267004841464,Neutral → Positive,Khen và chê trong cùng review,0.9975927329951585
+7546,Trusting Social,3,"Đánh giá công ty Trusting Social . Môi trường làm việc thoải mái , có thể đưa ra ý kiến cá nhân một cách linh hoạt và chủ động.
+Cấp lãnh đạo rất giỏi , gần gũi và luôn lắng nghe chia sẽ từ phía cấp dưới / nhân viên.
+Công ty có phục vụ cơm trưa và ở khu vực phòng ăn luôn có nước ( sữa , cafe ,.. ) các loại bánh ngọt , trái cây được refill mỗi ngày, đây cũng là một ưu điểm rất đáng lưu ý.
+Công ty chưa có chính sách cụ thể và chi tiết về vấn đề làm thêm giờ. . Cần có chính sách chi tiết và cụ thể khi làm thêm giờ.
+Thêm nhiều hoạt động trải nghiệm / dã ngoại để thêm gần gũi và gắn kết các đội / các đơn vị với nhau.",Neutral,Positive,Positive,0.0025185455568724315,Neutral → Positive,Phủ định hoặc sắc thái đảo chiều,0.9974814544431275
+1828,FPT Software,5,"HR có tâm. . công ty phỏng vấn cũng dễ nhưng do chưa chuẩn bị kĩ nên tạch thôi các bạn tự tin pv
+pv tạch nhưng vẫn được thông báo :((
+HR có tâm <3 . nghe các bạn bảo vào cty OT nhiều phù hợp với các bạn chịu được áp lực",Positive,Negative,Negative,0.7885641309406586,Positive → Negative,Phủ định hoặc sắc thái đảo chiều,0.7885641309406586
+2559,FPT Software,4,"Quy trình tốt . Tuyển đầu vào yêu cầu tốt, phải thi 2 bài test: tiếng anh và technical. . Bài test không đánh giá được đúng năng lực của ứng viên, ngoại trừ bài test thì cần phải phỏng vấn thêm.
+OT nhiều quá thực sự không tốt, nếu OT đề nghi nên tăng lương cho người làm",Positive,Negative,Negative,0.6750087906030467,Positive → Negative,Phủ định hoặc sắc thái đảo chiều,0.6750087906030467
+1586,FPT Software,4,"Phù hợp cho ai muốn dưỡng già và đưa đón con trẻ đi học đúng giờ . Quy trình rỏ ràng và dev được tham gia vào estimate các task nên gần như đúng giờ là về. Lương mặt bằng chung tuy role hay title hơi ảo cơ mà lương ngon là được. Phục lợi ở càng lâu thì càng nhiều, nghỉ hè trả bằng tháng lương, hỗ trợ mua nhà, thưởng dự án bằng tháng lương, ...
+Gần như không có OT trừ khi có lỗi khi chạy production. Mình chưa OT ở đây bao giờ . Dự án quá cũ quá nên khó làm việc và học hỏi cái mới. Gần như chỉ có đồ nội bộ mới được build từ đầu. Vì là công ty Outsource nên chịu thôi. Cần tăng mức đóng bảo hiểm xã hội. Mình vô được đơn vị tốt nên không nói chứ bạn mình vô rồi chạy luôn nên cũng khá hên xui",Positive,Negative,Negative,0.46980371525981873,Positive → Negative,Phủ định hoặc sắc thái đảo chiều,0.46980371525981873

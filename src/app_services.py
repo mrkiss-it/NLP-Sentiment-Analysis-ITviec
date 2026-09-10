@@ -26,6 +26,7 @@ MODEL_CANDIDATES = (
 )
 
 SENTIMENT_ORDER = ("Positive", "Neutral", "Negative")
+NEGATIVE_THRESHOLD = 0.30
 SENTIMENT_LABELS = {
     "Positive": "Tích cực",
     "Neutral": "Trung tính",
@@ -63,11 +64,41 @@ class ModelStatus:
 
 @dataclass(frozen=True)
 class PredictionResult:
-    """A model prediction with optional calibrated probability."""
+    """A model prediction with optional model probability and policy metadata."""
 
     label: str
     processed_text: str
     confidence: float | None
+    negative_probability: float | None = None
+    threshold_applied: bool = False
+    baseline_label: str | None = None
+    class_probabilities: tuple[tuple[str, float], ...] = ()
+    feature_count: int = 0
+    active_features: int = 0
+    top_features: tuple[tuple[str, float], ...] = ()
+
+
+def apply_negative_threshold(
+    baseline_labels: Iterable[str],
+    probabilities: np.ndarray,
+    classes: Iterable[str],
+    threshold: float = NEGATIVE_THRESHOLD,
+) -> np.ndarray:
+    """Override predictions when Negative probability reaches the policy threshold."""
+    if not 0.0 <= threshold <= 1.0:
+        raise ValueError("Ngưỡng Negative phải nằm trong đoạn [0, 1].")
+
+    labels = np.asarray(list(baseline_labels), dtype=object)
+    scores = np.asarray(probabilities)
+    class_names = [str(value) for value in classes]
+    if scores.ndim != 2 or scores.shape[0] != labels.shape[0]:
+        raise ValueError("Ma trận xác suất không khớp với số lượng dự đoán.")
+    if "Negative" not in class_names or scores.shape[1] != len(class_names):
+        raise ValueError("Model không cung cấp xác suất hợp lệ cho lớp Negative.")
+
+    negative_index = class_names.index("Negative")
+    labels[scores[:, negative_index] >= threshold] = "Negative"
+    return labels.astype(str)
 
 
 def load_reviews(path: str | Path = REVIEWS_PATH) -> pd.DataFrame:
@@ -247,12 +278,53 @@ def predict_review(
             "Model và feature extractor không cùng số chiều đặc trưng."
         )
 
-    label = str(model.predict(features)[0])
+    baseline_label = str(model.predict(features)[0])
+    label = baseline_label
     confidence: float | None = None
+    negative_probability: float | None = None
+    threshold_applied = False
+    class_probabilities: tuple[tuple[str, float], ...] = ()
     if hasattr(model, "predict_proba"):
         probabilities = np.asarray(model.predict_proba(features))[0]
         classes = [str(value) for value in getattr(model, "classes_", [])]
+        class_probabilities = tuple(zip(classes, map(float, probabilities)))
+        if "Negative" in classes:
+            negative_probability = float(probabilities[classes.index("Negative")])
+            label = str(
+                apply_negative_threshold(
+                    [baseline_label],
+                    probabilities.reshape(1, -1),
+                    classes,
+                )[0]
+            )
+            threshold_applied = label == "Negative" and baseline_label != "Negative"
         if label in classes:
             confidence = float(probabilities[classes.index(label)])
 
-    return PredictionResult(label=label, processed_text=processed, confidence=confidence)
+    # These weights describe the input vector, not causal model attribution.
+    vectorizer = getattr(extractor, "vectorizer", None)
+    top_features: tuple[tuple[str, float], ...] = ()
+    if hasattr(features, "getrow"):
+        row = features.getrow(0)
+        active_features = int(row.count_nonzero())
+        if vectorizer is not None and hasattr(vectorizer, "get_feature_names_out"):
+            names = vectorizer.get_feature_names_out()
+            order = np.argsort(-row.data, kind="stable")[:10]
+            top_features = tuple(
+                (str(names[row.indices[i]]), float(row.data[i])) for i in order
+            )
+    else:
+        active_features = int(np.count_nonzero(features))
+
+    return PredictionResult(
+        label=label,
+        processed_text=processed,
+        confidence=confidence,
+        negative_probability=negative_probability,
+        threshold_applied=threshold_applied,
+        baseline_label=baseline_label,
+        class_probabilities=class_probabilities,
+        feature_count=int(features.shape[1]),
+        active_features=active_features,
+        top_features=top_features,
+    )

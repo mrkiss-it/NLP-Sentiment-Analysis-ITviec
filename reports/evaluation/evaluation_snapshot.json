@@ -1,0 +1,46 @@
+{
+  "labels": [
+    "Negative",
+    "Neutral",
+    "Positive"
+  ],
+  "test_count": 1683,
+  "threshold": 0.3,
+  "baseline_matrix": [
+    [
+      30,
+      49,
+      35
+    ],
+    [
+      17,
+      114,
+      197
+    ],
+    [
+      9,
+      69,
+      1163
+    ]
+  ],
+  "policy_matrix": [
+    [
+      40,
+      40,
+      34
+    ],
+    [
+      31,
+      100,
+      197
+    ],
+    [
+      19,
+      61,
+      1161
+    ]
+  ],
+  "model_sha256": "69602e69cb5fc3dc9180584350f3933da1b873535642ed93a69b5301d8c5151b",
+  "split_sha256": "e516a715fcd8315ef5bf84c709acf4bcf499168bfdbc333a7d1ab84dcde56378",
+  "method": "Post-hoc sensitivity on the previously evaluated final test; not independent validation."
+}

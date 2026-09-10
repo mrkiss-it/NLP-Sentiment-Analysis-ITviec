@@ -25,7 +25,7 @@ buttonRadius = "11px"
 font = "'DM Sans':https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&display=swap"
 codeFont = "'JetBrains Mono':https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap"
 codeFontSize = "14px"
-baseFontSize = 15
+baseFontSize = 16
 baseFontWeight = 400
 headingFontSizes = ["38px", "28px", "22px", "18px", "16px", "14px"]
 headingFontWeights = [600, 600, 600, 600, 600, 600]

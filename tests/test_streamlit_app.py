@@ -52,8 +52,8 @@ def test_streamlit_entrypoint_renders_default_page():
 
 def test_prediction_page_handles_model_handoff_state():
     app = AppTest.from_file(
-        PROJECT_ROOT / "app_pages" / "predict.py", default_timeout=90
-    ).run()
+        PROJECT_ROOT / "app.py", default_timeout=90
+    ).run().switch_page("app_pages/predict.py").run()
     app.text_area[0].set_value("Môi trường tốt nhưng thường xuyên OT không lương")
     app.button[0].click().run()
 
@@ -61,6 +61,28 @@ def test_prediction_page_handles_model_handoff_state():
     if not get_model_status().ready:
         assert any("model chưa được bàn giao" in item.value for item in app.warning)
         assert app.code
+
+
+def test_prediction_result_survives_rerun_but_clears_when_input_changes():
+    app = AppTest.from_file(PROJECT_ROOT / "app.py", default_timeout=90).run()
+    app.switch_page("app_pages/predict.py").run()
+    app.text_area[0].set_value("Môi trường tốt và đồng nghiệp thân thiện").run()
+    app.button(key="analyze_review").click().run()
+    assert not app.exception
+    if get_model_status().ready:
+        result = app.session_state["analysis_result"]
+        app.run()
+        assert app.session_state["analysis_result"] == result
+        app.text_area[0].set_value("Một nội dung khác chưa được phân tích").run()
+        assert "analysis_result" not in app.session_state
+
+
+def test_evaluation_page_loads_saved_evidence_without_model_inference():
+    app = AppTest.from_file(PROJECT_ROOT / "app.py", default_timeout=90).run()
+    app.switch_page("app_pages/evaluation.py").run()
+    assert not app.exception
+    assert any("Mô hình tốt đến đâu" in item.value for item in app.title)
+    assert any(metric.label == "Macro F1" for metric in app.metric)
 
 
 def test_company_insights_page_renders_real_dataset():
@@ -71,6 +93,17 @@ def test_company_insights_page_renders_real_dataset():
     assert not app.exception
     assert any("Insight cảm xúc" in title.value for title in app.title)
     assert app.metric
+    metric_labels = {metric.label for metric in app.metric}
+    assert {
+        "Review được phân tích",
+        "Lượt xuất hiện từ",
+        "Từ khóa dẫn đầu",
+    } <= metric_labels
     assert any(
-        "WordCloud chỉ được tạo" in caption.value for caption in app.caption
+        "Từ xuất hiện nhiều hơn" in caption.value
+        for caption in app.caption
     )
+    assert any(title.value == "Tiếng nói từ review" for title in app.subheader)
+    assert not any(expander.label == "Khám phá review chi tiết" for expander in app.expander)
+    assert len(app.radio(key="review_selection").options) == 8
+    assert app.text_input(key="review_query").value == ""
