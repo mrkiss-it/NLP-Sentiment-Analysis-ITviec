@@ -25,3 +25,7 @@ env/
 # models/*.safetensors
 
 .ua/
+
+# macOS
+.DS_Store
+**/.DS_Store
