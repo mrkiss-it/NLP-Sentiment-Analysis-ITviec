@@ -567,8 +567,8 @@ img_card(s6, FIG+"eda_feature_ablation_cv.png", MARGIN, top, Inches(7.1), Inches
 
 rx = MARGIN+Inches(7.3)
 rw = Inches(5.0)
-stat_chip(s6, rx, top, rw/2-Inches(0.09), Inches(1.15), "0.5579 → 0.5658", "CV Macro F1\nText-only → Text+Lexicon", GREEN)
-stat_chip(s6, rx+rw/2+Inches(0.09), top, rw/2-Inches(0.09), Inches(1.15), "45.6% → 48.2%", "Recall lớp Tiêu cực", ORANGE)
+stat_chip(s6, rx, top, rw/2-Inches(0.09), Inches(1.15), "0.5579 → 0.5664", "CV Macro F1\nText-only → Text+Lexicon", GREEN)
+stat_chip(s6, rx+rw/2+Inches(0.09), top, rw/2-Inches(0.09), Inches(1.15), "45.6% → 48.0%", "Recall lớp Tiêu cực", ORANGE)
 
 note = add_rect(s6, rx, top+Inches(1.35), rw, Inches(1.85), CARD, line=STROKE, radius=0.08)
 simple_text(s6, rx+Inches(0.2), top+Inches(1.5), rw-Inches(0.4), Inches(0.3), "5.005 CHIỀU ĐẶC TRƯNG", 10.5, BLUE, bold=True)
