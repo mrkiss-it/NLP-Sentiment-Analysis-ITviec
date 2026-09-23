@@ -111,17 +111,17 @@ flowchart TD
 
 ### 2. Phân chia tập dữ liệu & Thí nghiệm đối chứng đặc trưng (Ablation Study)
 - **Quy trình phân chia chuẩn mực**:
-  - Dữ liệu loại bỏ 6 dòng text trùng lặp bất nhất.
-  - **Tập Development (80% ~ 6.728 mẫu)**: Dùng để trích xuất từ vựng, chạy 5-Fold Stratified Cross-Validation tinh chỉnh siêu tham số.
-  - **Tập Final Test (20% ~ 1.683 mẫu)**: Hoàn toàn được khóa kín (blind hold-out), chỉ dùng để đánh giá kiểm chứng đúng 1 lần duy nhất cho mô hình đã hoàn thiện.
+  - Dữ liệu loại bỏ **4 dòng** sau bước audit trùng lặp (6 dòng nằm trong 3 nhóm trùng, mỗi nhóm 2 dòng: 2 nhóm cùng nhãn giữ lại 1 đại diện → loại 2 dòng; 1 nhóm khác nhãn bị loại toàn bộ → loại 2 dòng): 8.417 → **8.413 mẫu** đưa vào mô hình.
+  - **Tập Development (80% = 6.730 mẫu)**: Dùng để trích xuất từ vựng, chạy 5-Fold Stratified Cross-Validation tinh chỉnh siêu tham số.
+  - **Tập Final Test (20% = 1.683 mẫu)**: Hoàn toàn được khóa kín (blind hold-out), chỉ dùng để đánh giá kiểm chứng đúng 1 lần duy nhất cho mô hình đã hoàn thiện.
 
 #### Bảng kết quả Thí nghiệm đối chứng (Ablation Study trên 5-Fold CV):
 | Nhóm đặc trưng thử nghiệm | Số chiều | CV Macro F1 | Negative Recall | Nhận xét & Kết luận học thuật |
 | :--- | :---: | :---: | :---: | :--- |
-| **1. Text-only (TF-IDF N-gram 1-2)** | 5.000 | 0,5579 | 45,61% | Pipeline cơ sở chính thức cho ứng dụng chỉ nhận văn bản thô. |
-| **2. Text + Lexicon** | 5.005 | **0,5658** | **48,24%** | **Cải thiện ổn định (+0,0079 F1)**, tăng độ nhạy nhận diện review tiêu cực thêm 2,63 điểm phần trăm. |
-| **3. Text + Aspect Ratings** | 5.005 | 0,7369 | 63,16% | Tăng vọt điểm số nhưng tiềm ẩn nguy cơ rò rỉ thông tin. |
-| **4. Full Hybrid (Text + Lex + Aspect)** | 5.010 | **0,7433** | **65,79%** | Tabular Upper-bound lý thuyết (không đưa vào demo text-only). |
+| **1. Text-only (TF-IDF N-gram 1-2)** | 5.000 | 0,5579 | 45,63% | Pipeline cơ sở chính thức cho ứng dụng chỉ nhận văn bản thô. |
+| **2. Text + Lexicon** | 5.005 | **0,5664** | **48,03%** | **Cải thiện ổn định (+0,0084 F1, tốt hơn ở 4/5 fold)**, tăng độ nhạy nhận diện review tiêu cực thêm 2,40 điểm phần trăm. |
+| **3. Text + Aspect Ratings** | 5.005 | 0,7369 | 69,52% | Tăng vọt điểm số nhưng tiềm ẩn nguy cơ rò rỉ thông tin. |
+| **4. Full Hybrid (Text + Lex + Aspect)** | 5.010 | **0,7433** | **70,61%** | Tabular Upper-bound lý thuyết (không đưa vào demo text-only). |
 
 > ⚠️ **Luận điểm khoa học về hiện tượng Data Shortcut**:  
 > Điểm khía cạnh (Lương thưởng, Đào tạo, Quản lý, Môi trường, OT) có tương quan tuyến tính rất mạnh với điểm Rating tổng (nguồn gốc của weak label). Nếu đưa 5 điểm này vào làm feature, mô hình sẽ bị "lười biếng", chuyển thành bài toán học bảng (tabular learning) thay vì học cách thấu hiểu ngôn ngữ tự nhiên từ văn bản. Do đó, nhóm **kiên quyết duy trì mô hình text-only và text + lexicon** cho ứng dụng thực tế.
@@ -135,13 +135,22 @@ Nhóm huấn luyện 4 thuật toán phân loại cơ sở kết hợp kỹ thu�
 - **Tầng cơ sở (Base estimators)**: Multinomial Naive Bayes, Logistic Regression, Linear SVM (được Calibrated để xuất xác suất).
 - **Tầng kết hợp (Meta-classifier)**: Logistic Regression học cách tối ưu trọng số kết hợp dự đoán từ 3 mô hình nền.
 
-| Mô hình | CV Macro F1 (Dev) | Final Test Accuracy | Final Test Macro F1 | Negative Recall (Test) |
-| :--- | :---: | :---: | :---: | :---: |
-| Multinomial Naive Bayes | 0,5234 | 72,49% | 0,5012 | 42,11% |
-| Random Forest Classifier | 0,5310 | 76,89% | 0,5180 | 28,07% |
-| Logistic Regression (Balanced) | 0,5542 | 76,17% | 0,5415 | 40,35% |
-| Linear SVM (Calibrated) | 0,5580 | 76,95% | 0,5440 | 36,84% |
-| **Stacking Ensemble (Mô hình chọn)** | **0,5619** | **77,66%** | **0,5475** | **26,32%** *(argmax)*<br>**35,09%** *(với Threshold 0,30)* |
+Việc **chọn mô hình được quyết định hoàn toàn bằng 5-Fold CV trên tập Development**; tập Final Test chỉ được mở đúng 1 lần cho mô hình đã khóa. Vì vậy chỉ Stacking Ensemble có số liệu Final Test — 4 mô hình cơ sở không được đánh giá trên tập này.
+
+| Mô hình | Siêu tham số tốt nhất (GridSearchCV) | CV Macro F1 (Dev, 5-Fold) |
+| :--- | :--- | :---: |
+| Multinomial Naive Bayes | `alpha=0.1` | 0,4890 |
+| Random Forest Classifier | `n_estimators=200`, `max_depth=20` | 0,5515 |
+| Linear SVM (Calibrated) | `C=0.1`, `class_weight='balanced'` | 0,5561 |
+| Logistic Regression (Balanced) | `C=1.0`, `penalty=l2`, `solver=lbfgs` | 0,5567 |
+| **Stacking Ensemble (Mô hình chọn)** | Meta-classifier LR trên NB + LR + SVM | **0,5619** |
+
+#### Kết quả Final Test của mô hình đã khóa (Stacking Ensemble, 1.683 mẫu):
+| Chỉ số | Baseline (argmax) | Threshold 0,30 |
+| :--- | :---: | :---: |
+| Accuracy | 77,66% | 77,30% |
+| Macro F1 | 0,5475 | **0,5507** |
+| Negative Recall | 26,32% | **35,09%** |
 
 ### 2. Thử nghiệm Deep Learning Transformer: ViSoBERT
 - **Hạ tầng thực nghiệm**: Chạy trên Cloud GPU Runpod (NVIDIA A40 / RTX 4090).
@@ -234,14 +243,14 @@ Thật POS [   9    69  1163 ]       Thật POS [  19    61  1161 ]
 
 ## 📂 IX. DANH MỤC LIÊN KẾT TÀI NGUYÊN BÀN GIAO (ARTIFACT DIRECTORY)
 
-| Danh mục | Đường dẫn tập tin / Tài nguyên | Mô tả nội dung |
+| Danh mục | Đường dẫn trong repo (tính từ thư mục gốc) | Mô tả nội dung |
 | :--- | :--- | :--- |
-| **Slide Thuyết trình** | [NLP_ITviec_Sentiment_Slides.pptx](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/reports/slides/NLP_ITviec_Sentiment_Slides.pptx) | File trình chiếu 15 slide Dark-tech chuẩn hóa |
-| **Kịch bản Thuyết trình** | [KICH_BAN_THUYET_TRINH_VA_DEMO.md](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/reports/slides/KICH_BAN_THUYET_TRINH_VA_DEMO.md) | Lời thoại chi tiết từng slide và kịch bản demo |
-| **Ngân hàng Q&A** | [NGAN_HANG_CAU_HOI_PHAN_BIEN_NLP_VA_DEMO.md](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/reports/slides/NGAN_HANG_CAU_HOI_PHAN_BIEN_NLP_VA_DEMO.md) | Bộ câu hỏi phản biện & câu trả lời mẫu cho Hội đồng |
-| **Ứng dụng Streamlit** | [app.py](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/app.py) | Điểm khởi chạy Web Demo (`streamlit run app.py`) |
-| **Pipeline Tiền xử lý** | [preprocessing.py](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/src/preprocessing.py) | Module làm sạch 2 tầng, Unicode, Teencode & Negation Scope |
-| **Trích xuất đặc trưng** | [features.py](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/src/features.py) | Module TF-IDF N-gram, Lexicon & Ablation Study |
-| **Mô hình hóa** | [models.py](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/src/models.py) | Huấn luyện Base Models & Stacking Ensemble Classifier |
-| **Bộ kiểm thử tự động** | [tests/](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/tests) | 55 unit tests bao phủ kiểm thử tiền xử lý, mô hình và UI |
-| **Đề cương Báo cáo** | [final_report_outline.md](file:///d:/Tr%C3%AD%20tu%E1%BB%87%20nh%C3%A2n%20t%E1%BA%A1o/HK2/X%E1%BB%AD%20l%C3%BD%20ng%C3%B4n%20ng%E1%BB%AF%20t%E1%BB%B1%20nhi%C3%AAn/Do_An_Sentiment_Analysis/reports/final_report_outline.md) | Đề cương 6 chương chuẩn quy cách báo cáo toàn văn |
+| **Slide Thuyết trình** | `reports/slides/NLP_ITviec_Sentiment_Slides.pptx` | File trình chiếu 15 slide Dark-tech chuẩn hóa |
+| **Kịch bản Thuyết trình** | `reports/slides/KICH_BAN_THUYET_TRINH_VA_DEMO.md` | Lời thoại chi tiết từng slide và kịch bản demo |
+| **Ngân hàng Q&A** | `reports/slides/NGAN_HANG_CAU_HOI_PHAN_BIEN_NLP_VA_DEMO.md` | Bộ câu hỏi phản biện & câu trả lời mẫu cho Hội đồng |
+| **Ứng dụng Streamlit** | `app.py` | Điểm khởi chạy Web Demo (`streamlit run app.py`) |
+| **Pipeline Tiền xử lý** | `src/preprocessing.py` | Module làm sạch 2 tầng, Unicode, Teencode & Negation Scope |
+| **Trích xuất đặc trưng** | `src/features.py` | Module TF-IDF N-gram, Lexicon & Ablation Study |
+| **Mô hình hóa** | `src/models.py` | Huấn luyện Base Models & Stacking Ensemble Classifier |
+| **Bộ kiểm thử tự động** | `tests/` | 55 unit tests bao phủ kiểm thử tiền xử lý, mô hình và UI |
+| **Đề cương Báo cáo** | `reports/final_report_outline.md` | Đề cương 6 chương chuẩn quy cách báo cáo toàn văn |

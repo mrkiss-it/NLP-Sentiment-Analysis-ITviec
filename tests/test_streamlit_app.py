@@ -50,7 +50,7 @@ def test_streamlit_entrypoint_renders_default_page():
     source = (PROJECT_ROOT / "app.py").read_text(encoding="utf-8")
 
     assert not app.exception
-    assert any("Hiểu tiếng nói" in title.value for title in app.title)
+    assert any("Khám phá góc nhìn nhân sự" in title.value for title in app.title)
     assert "st.logo(" in source
     assert "TV4 · Phạm Thành Trung" not in source
     assert (PROJECT_ROOT / "assets" / "sentiment-lab-logo.svg").is_file()
@@ -97,7 +97,7 @@ def test_unified_evaluation_view_loads_saved_evidence_without_model_inference():
         "Chất lượng mô hình"
     ).run()
     assert not app.exception
-    assert any("Từ lựa chọn mô hình" in item.value for item in app.title)
+    assert any("Hiệu năng và chất lượng mô hình" in item.value for item in app.title)
     assert any(metric.label == "Macro F1" for metric in app.metric)
 
 

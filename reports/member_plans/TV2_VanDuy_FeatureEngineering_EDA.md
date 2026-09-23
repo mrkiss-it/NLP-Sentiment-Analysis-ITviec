@@ -40,13 +40,20 @@
 
 ### 🟢 Giai đoạn Nước rút: Chuyên trách Viết Báo cáo Toàn văn (Lead Report Writer)
 - [x] Soạn thảo báo cáo EDA & Feature Engineering khoa học tại `reports/eda_feature_engineering.md`.
-- [x] Hoàn thành thí nghiệm Ablation 5-fold CV: chứng minh `Text + Lexicon` đạt **Macro F1 0.5658** (tăng so với Text-only 0.5579), tăng Recall Negative lên 48.24%.
-- [x] Xuất 10 biểu đồ chuẩn 300 DPI tại `reports/figures/` phục vụ báo cáo và slide.
-- [ ] **CHUYÊN TRÁCH 100% VIẾT BÁO CÁO TOÀN VĂN (Word / PDF)**:
-  - Soạn thảo đầy đủ 6 Chương theo khung đề cương chuẩn `reports/final_report_outline.md`.
-  - Tích hợp số liệu thực nghiệm của TV1 (tiền xử lý, từ điển), TV2 (EDA, ablation), TV3 (modeling, Stacking, ViSoBERT) và TV4 (insights, XAI, web demo).
-  - Định dạng chuẩn học thuật (Times New Roman 13, dãn dòng 1.3-1.5, lề chuẩn), xuất file Word `.docx` và file PDF hoàn chỉnh.
-  - Nộp bản thảo cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước khi xuất xưởng.
+- [x] Hoàn thành thí nghiệm Ablation 5-fold CV: chứng minh `Text + Lexicon` đạt **Macro F1 0.5664** (tăng so với Text-only 0.5579), tăng Recall Negative từ 45.63% lên 48.03% (nguồn: `reports/aspect_hybrid_ablation.csv`).
+- [x] Xuất bộ biểu đồ chuẩn 300 DPI tại `reports/figures/` phục vụ báo cáo và slide.
+- [x] **CHUYÊN TRÁCH 100% VIẾT BÁO CÁO TOÀN VĂN (Word / PDF)**:
+  - [x] Soạn thảo đầy đủ 6 Chương theo khung đề cương chuẩn [reports/final_report_outline.md](../final_report_outline.md).
+  - [x] Tích hợp số liệu thực nghiệm của TV1 (tiền xử lý, từ điển), TV2 (EDA, ablation), TV3 (modeling, Stacking, ViSoBERT) và TV4 (insights, XAI, web demo).
+  - [x] Định dạng chuẩn học thuật: Times New Roman 13, giãn dòng 1.4, lề trái 3cm / trên - dưới - phải 2cm, khổ A4, có mục lục tự động, danh mục từ viết tắt, danh mục bảng và danh mục hình.
+  - [x] Xuất song song [BAO_CAO_DO_AN_NLP_ITVIEC.docx](../BAO_CAO_DO_AN_NLP_ITVIEC.docx) và [BAO_CAO_DO_AN_NLP_ITVIEC.pdf](../BAO_CAO_DO_AN_NLP_ITVIEC.pdf) — 36 bảng, 22 hình 300 DPI.
+  - [x] Sinh lại được hoàn toàn bằng `python scripts/build_final_report.py` (nội dung tại `scripts/report/content.py`, bộ kết xuất tại `scripts/report/render.py`).
+  - [ ] Nộp bản thảo cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước khi xuất xưởng.
+
+> **Ghi chú số liệu**: mọi con số trong báo cáo lấy trực tiếp từ artifact đã chạy thật
+> (`reports/aspect_hybrid_ablation.csv`, `reports/tv2_*.csv`, `reports/evaluation/*`,
+> `models/*_manifest.json`). Không dùng số ước lượng. Những chỗ số liệu giữa các tài liệu
+> nội bộ lệch nhau đều được lấy theo tệp kết quả gốc.
 
 ---
 
@@ -61,4 +68,4 @@
   - Module code: [src/features.py](../../src/features.py) và các scripts thực nghiệm trong `scripts/`.
   - File ma trận đặc trưng: `models/train_test_features.joblib`, `models/hybrid_train_test_features.joblib`.
   - Toàn bộ hình ảnh biểu đồ EDA 300 DPI trong `reports/figures/`.
-  - **01 Cuốn Báo cáo Đồ án Toàn văn Hoàn chỉnh (File Word & File PDF)** 6 Chương (35–45 trang).
+  - **01 Cuốn Báo cáo Đồ án Toàn văn Hoàn chỉnh (File Word & File PDF)** 6 Chương: `reports/BAO_CAO_DO_AN_NLP_ITVIEC.docx` và `.pdf` (59 trang kể cả phần mở đầu, tài liệu tham khảo và phụ lục; riêng 6 chương nội dung là 47 trang).

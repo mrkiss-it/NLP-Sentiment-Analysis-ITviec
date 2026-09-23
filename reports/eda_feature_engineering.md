@@ -1,5 +1,9 @@
 # Tổng quan dữ liệu, phân tích khám phá và trích xuất đặc trưng
 
+> Tài liệu kỹ thuật nguồn cho **Mục 2.1, 2.2 và 3.1** của báo cáo toàn văn
+> [`reports/BAO_CAO_DO_AN_NLP_ITVIEC.docx`](BAO_CAO_DO_AN_NLP_ITVIEC.docx)
+> (đề cương: [`final_report_outline.md`](final_report_outline.md)).
+
 ## 2.1. Tổng quan bộ dữ liệu ITviec Reviews
 
 Bộ dữ liệu sau tiền xử lý tại `data/processed/reviews_cleaned.xlsx` gồm **8.417 review** và **23 trường**, không có dòng trùng hoàn toàn. Cấu trúc dữ liệu bao gồm sáu nhóm trường:
@@ -130,7 +134,7 @@ TF-IDF cao hơn 0,0161 Macro F1 và cải thiện ở 4 trên 5 fold. Kết qu�
 
 ### Ablation nhóm đặc trưng
 
-Thí nghiệm ablation nhằm trả lời ba câu hỏi. Thứ nhất, mô hình học được bao nhiêu từ nội dung văn bản so với từ các điểm số có sẵn. Thứ hai, đặc trưng từ điển cảm xúc sau khi nâng độ bao phủ lên 99,54% có cải thiện kết quả hay không. Thứ ba, việc bổ sung năm điểm khía cạnh có cải thiện riêng hai lớp thiểu số Neutral và Negative hay không.
+Thí nghiệm ablation nhằm trả lời ba câu hỏi. Thứ nhất, mô hình học được bao nhiêu từ nội dung văn bản so với từ các điểm số có sẵn. Thứ hai, đặc trưng từ điển cảm xúc sau khi nâng độ bao phủ lên 99,75% có cải thiện kết quả hay không. Thứ ba, việc bổ sung năm điểm khía cạnh có cải thiện riêng hai lớp thiểu số Neutral và Negative hay không.
 
 Năm nhóm đặc trưng được so sánh trên cùng bộ fold, cùng seed và cùng bộ phân loại:
 
