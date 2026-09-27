@@ -592,7 +592,7 @@ simple_text(s6, rx+Inches(0.2), top+Inches(1.82), rw-Inches(0.4), Inches(1.3),
 warn = add_rect(s6, rx, top+Inches(3.35), rw, Inches(1.4), CARD2, line=RED, radius=0.08)
 simple_text(s6, rx+Inches(0.2), top+Inches(3.5), rw-Inches(0.4), Inches(0.3), "⚠ VÌ SAO LOẠI BỎ ASPECT RATINGS?", 10.8, RED, bold=True)
 simple_text(s6, rx+Inches(0.2), top+Inches(3.82), rw-Inches(0.4), Inches(0.9),
-            "Dù Text+Aspect đạt Macro F1 0.7433, đặc trưng này gần trùng nhãn mục tiêu → rủi ro Data Shortcut, không phản ánh khả năng hiểu ngôn ngữ thật của mô hình.",
+            "Dù Text+Aspect đạt Macro F1 0.7369 (Full Hybrid 0.7433), đặc trưng này gần trùng nhãn mục tiêu → rủi ro Data Shortcut, không phản ánh khả năng hiểu ngôn ngữ thật của mô hình.",
             10.8, TXT_SUB, line_spacing=1.15)
 
 # =====================================================================
