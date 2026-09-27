@@ -14,11 +14,11 @@
 ## Nghiệm thu cục bộ
 
 - `python -m pytest -q tests/test_streamlit_app.py`: 5 passed.
-- Playwright MCP: mở tổng quan, insight, dự đoán; nhập review thật và nhận kết quả Tích cực.
+- Kiểm thử tự động (Playwright E2E UI Test): mở tổng quan, insight, dự đoán; nhập review thật và nhận kết quả Tích cực.
 - Chọn FPT Software: 2.014 review; đổi WordCloud giữa nhóm cảm xúc tích cực và tiêu cực; số liệu và biểu đồ cập nhật đúng phạm vi.
 - Kiểm tra viewport 390, 768, 1440, 3440px: không tràn ngang trang; canvas ultrawide tối đa 1920px.
 - Sidebar mở trên viewport 390px vẫn nằm gọn trong khung 300px và đủ nội dung trạng thái; khi đóng, nội dung chính không có horizontal scroll.
-- Ảnh QA lưu tại `.playwright-mcp/` (được Git ignore).
+- Ảnh chụp kiểm thử giao diện được lưu trữ nội bộ trong quá trình kiểm thử.
 - Có cảnh báo Vega về miền dữ liệu rỗng trong lúc chart đang tải; chart render dữ liệu sau đó. Mở trang con bằng URL trực tiếp có các request dò đường dẫn 404 của Streamlit; điều hướng bằng sidebar đã kiểm tra không có lỗi console mới.
 
 ## Chạy, bàn giao và rollback

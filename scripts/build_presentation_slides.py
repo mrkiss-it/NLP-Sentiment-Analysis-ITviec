@@ -16,7 +16,11 @@ Requires reports/figures/*.png to already exist (see
 reports/modeling_hyperparameter_tuning.md / notebooks for how they're built).
 """
 import os
+import sys
 from pathlib import Path
+
+if hasattr(sys.stdout, "reconfigure"):
+    sys.stdout.reconfigure(encoding="utf-8", errors="replace")
 
 from pptx import Presentation
 from pptx.util import Inches, Pt, Emu
@@ -115,7 +119,7 @@ prs.slide_width = SLIDE_W
 prs.slide_height = SLIDE_H
 BLANK = prs.slide_layouts[6]
 
-SLIDE_NO = {"n": 0}
+SLIDE_NO = {"n": 1}
 
 # ---------------------------------------------------------------- helpers
 def no_line(shape):
@@ -200,7 +204,7 @@ def base_slide(kicker, title, page_note=""):
     # footer
     SLIDE_NO["n"] += 1
     simple_text(slide, MARGIN, SLIDE_H - Inches(0.42), Inches(7), Inches(0.3),
-                "Phân tích Cảm xúc Đánh giá ITviec  ·  Nhóm 4", 9.5, TXT_DIM)
+                "Phân tích Cảm xúc Đánh giá ITviec  ·  Nhóm 12", 9.5, TXT_DIM)
     simple_text(slide, SLIDE_W - Inches(1.4), SLIDE_H - Inches(0.42), Inches(0.85), Inches(0.3),
                 f"{SLIDE_NO['n']:02d} / 15", 9.5, TXT_DIM, align=PP_ALIGN.RIGHT)
     return slide, Inches(1.65)
@@ -387,7 +391,7 @@ simple_text(s1, MARGIN + Inches(0.62), Inches(0.6), Inches(6), Inches(0.4),
             "SENTIMENT LAB  ·  NLP CAPSTONE 2026", 12, TXT_SUB, bold=True)
 
 simple_text(s1, MARGIN, Inches(1.6), Inches(11.8), Inches(0.4),
-            "ĐỒ ÁN TỐT NGHIỆP — MÔN XỬ LÝ NGÔN NGỮ TỰ NHIÊN", 14, BLUE, bold=True)
+            "ĐỒ ÁN CUỐI KỲ— MÔN XỬ LÝ NGÔN NGỮ TỰ NHIÊN", 14, BLUE, bold=True)
 add_text(s1, MARGIN, Inches(2.05), Inches(12.2), Inches(1.35),
          [[("PHÂN TÍCH CẢM XÚC ĐÁNH GIÁ NHÂN VIÊN", 33, TXT, True, FONT)],
           [("NGÀNH CÔNG NGHỆ THÔNG TIN TRÊN ITVIEC", 33, TXT, True, FONT)]],
@@ -402,20 +406,29 @@ card_w = Inches(3.85); card_h = Inches(1.55); gap = Inches(0.22)
 gv_card = add_rect(s1, MARGIN, info_y, Inches(7.92), card_h, CARD, line=STROKE, radius=0.1)
 simple_text(s1, MARGIN+Inches(0.25), info_y+Inches(0.16), Inches(3.4), Inches(0.3), "GIẢNG VIÊN HƯỚNG DẪN", 10.5, BLUE, bold=True)
 simple_text(s1, MARGIN+Inches(0.25), info_y+Inches(0.52), Inches(3.4), Inches(0.5), "Thầy Đặng Văn Thìn", 18, TXT, bold=True)
-simple_text(s1, MARGIN+Inches(0.25), info_y+Inches(0.98), Inches(3.4), Inches(0.4), "Khoa Công nghệ Thông tin", 11, TXT_SUB)
+simple_text(s1, MARGIN+Inches(0.25), info_y+Inches(0.98), Inches(3.4), Inches(0.4), "Khoa Khoa học Máy tính", 11, TXT_SUB)
 
-simple_text(s1, MARGIN+Inches(4.1), info_y+Inches(0.16), Inches(3.6), Inches(0.3), "NHÓM THỰC HIỆN — NHÓM 4", 10.5, GREEN, bold=True)
-members = ["Hoàng Hôn  ·  Trưởng nhóm / Tech Lead", "Văn Duy  ·  Data & Research Specialist",
-           "Duy Khang  ·  Machine Learning Specialist", "Thành Trung  ·  UI/UX & Deployment Specialist"]
-my = info_y+Inches(0.52)
+simple_text(s1, MARGIN+Inches(4.1), info_y+Inches(0.16), Inches(3.6), Inches(0.3), "NHÓM THỰC HIỆN — NHÓM 12", 10.5, GREEN, bold=True)
+members = [
+    "Trần Hoàng Hôn (26410046) · Trưởng nhóm / Tech Lead",
+    "Nguyễn Duy Khang (26410055) · ML Specialist",
+    "Vũ Văn Duy (26410031) · Data & Research",
+    "Phạm Thành Trung (26410141) · UI/UX & Demo",
+]
+my = info_y+Inches(0.48)
 for m in members:
-    simple_text(s1, MARGIN+Inches(4.1), my, Inches(3.7), Inches(0.26), m, 10.8, TXT_SUB)
-    my += Inches(0.245)
+    simple_text(s1, MARGIN+Inches(4.1), my, Inches(3.7), Inches(0.26), m, 10.2, TXT_SUB)
+    my += Inches(0.25)
 
 stat_chip(s1, Inches(9.15), info_y, Inches(1.55), card_h/2 - Inches(0.05), "8.417", "review", BLUE)
 stat_chip(s1, Inches(10.85), info_y, Inches(1.55), card_h/2 - Inches(0.05), "7", "mô hình", GREEN)
 stat_chip(s1, Inches(9.15), info_y+card_h/2+Inches(0.1), Inches(1.55), card_h/2 - Inches(0.05), "0.5619", "CV Macro F1", YELLOW)
 stat_chip(s1, Inches(10.85), info_y+card_h/2+Inches(0.1), Inches(1.55), card_h/2 - Inches(0.05), "55/55", "test passed", ORANGE)
+
+# GitHub repo & Demo card
+add_rect(s1, MARGIN, Inches(5.9), Inches(11.8), Inches(0.88), CARD, line=STROKE, radius=0.08)
+simple_text(s1, MARGIN+Inches(0.25), Inches(5.98), Inches(6.0), Inches(0.25), "KHO LƯU TRỮ MÃ NGUỒN GITHUB & DEMO", 9.5, BLUE, bold=True)
+simple_text(s1, MARGIN+Inches(0.25), Inches(6.25), Inches(11.3), Inches(0.38), "https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec", 13.5, GREEN, bold=True)
 
 # =====================================================================
 # SLIDE 2 — ĐẶT VẤN ĐỀ & THÁCH THỨC DỮ LIỆU
@@ -916,7 +929,7 @@ add_rect(s15, Inches(7.75), top, Inches(4.85), Inches(0.06), BLUE)
 brand_mark(s15, Inches(7.75)+Inches(0.3), top+Inches(0.3), s=0.55)
 simple_text(s15, Inches(7.75)+Inches(0.3), top+Inches(1.05), Inches(4.25), Inches(0.4), "LỜI CẢM ƠN", 15, BLUE, bold=True)
 simple_text(s15, Inches(7.75)+Inches(0.3), top+Inches(1.5), Inches(4.25), Inches(1.1),
-            "Nhóm 4 xin chân thành cảm ơn Thầy Đặng Văn Thìn đã tận tình hướng dẫn, cùng Hội đồng đánh giá đã dành thời gian theo dõi phần trình bày của nhóm.",
+            "Nhóm 12 xin chân thành cảm ơn Thầy Đặng Văn Thìn và các bạn đã dành thời gian theo dõi phần trình bày của nhóm.",
             12.5, TXT_SUB, line_spacing=1.25)
 add_rect(s15, Inches(7.75)+Inches(0.3), top+Inches(2.85), Inches(4.25), Pt(1), STROKE)
 simple_text(s15, Inches(7.75)+Inches(0.3), top+Inches(3.05), Inches(4.25), Inches(0.4), "TIẾP THEO BƯỚC VÀO", 11, TXT_DIM, bold=True)
@@ -927,3 +940,24 @@ simple_text(s15, Inches(7.75)+Inches(0.3), top+Inches(4.15), Inches(4.25), Inche
 os.makedirs(OUT_PATH.parent, exist_ok=True)
 prs.save(str(OUT_PATH))
 print("SAVED:", OUT_PATH.name, "| slides:", len(prs.slides))
+
+# Export PDF qua PowerPoint COM và tự động đồng bộ sang thư mục nộp bài
+pdf_path = OUT_PATH.with_suffix(".pdf")
+try:
+    import win32com.client as win32
+    ppt = win32.Dispatch("PowerPoint.Application")
+    pres = ppt.Presentations.Open(str(OUT_PATH.resolve()), WithWindow=False)
+    pres.SaveAs(str(pdf_path.resolve()), 32)
+    pres.Close()
+    ppt.Quit()
+    print("SAVED:", pdf_path.name, "[via PowerPoint COM]")
+except Exception as exc:
+    print("[info] PowerPoint COM export unavailable:", exc)
+
+import shutil
+sub_slide_dir = REPO_ROOT.parent / "Nhóm 12 - Phân tích cảm xúc đánh giá trên ITViec" / "Nhóm 12 - Phân tích cảm xúc đánh giá trên ITViec - Slides"
+if sub_slide_dir.exists():
+    shutil.copy2(OUT_PATH, sub_slide_dir / "Slide thuyết trình.pptx")
+    if pdf_path.exists():
+        shutil.copy2(pdf_path, sub_slide_dir / "Slide thuyết trình.pdf")
+    print(f"[sync] Đồng bộ slide thành công sang: {sub_slide_dir.name}")

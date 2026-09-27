@@ -18,12 +18,12 @@ flowchart TD
         
         TV3["🎨 DUY KHANG (Machine Learning Specialist)<br>⭐ VAI TRÒ: CHUYÊN TRÁCH THIẾT KẾ SLIDE<br>• 01 File Slide PowerPoint (đúng 15 slides)<br>• Trực quan hóa mô hình ML, Stacking, ViSoBERT"]
         
-        TV4["🎬 THÀNH TRUNG (UI/UX & Deployment Specialist)<br>⭐ VAI TRÒ: LIVE DEMO, VIDEO & KỊCH BẢN<br>• Trực tiếp thao tác Live Demo khi bảo vệ<br>• 01 Video Clip Demo Full HD (3-5 phút)<br>• 01 Kịch bản thuyết trình chuẩn 12 phút & Bộ Q&A"]
+        TV4["🎬 THÀNH TRUNG (UI/UX & Deployment Specialist)<br>⭐ VAI TRÒ: LIVE DEMO, VIDEO & DEPLOYMENT<br>• Trực tiếp thao tác Live Demo khi bảo vệ<br>• 01 Video Clip Demo Full HD (3-5 phút)<br>• Hoàn thiện ứng dụng Web Streamlit"]
     end
     
     TV2 -->|Nộp Báo cáo| TV1
     TV3 -->|Nộp Slide| TV1
-    TV4 -->|Nộp Video & Kịch bản| TV1
+    TV4 -->|Nộp Video & Web Demo| TV1
 ```
 
 ---
@@ -48,13 +48,13 @@ flowchart TD
 2. **Kiểm tra Bộ Slide thuyết trình**:
    - Duyệt file Slide PowerPoint do Duy Khang nộp.
    - Đảm bảo đúng phong cách Dark-tech, bố cục thoáng, không chứa đoạn văn dài, đủ các biểu đồ 300 DPI từ `reports/figures/`.
-3. **Kiểm tra Video Demo & Kịch bản**:
+3. **Kiểm tra Video Demo & Ứng dụng**:
    - Xem và duyệt video clip do Thành Trung quay (đảm bảo rõ nét Full HD, âm thanh rõ, test đúng câu phủ định khó).
-   - Duyệt kịch bản phân vai và bộ câu hỏi phản biện.
+   - Kiểm tra tính ổn định của ứng dụng Web Demo Streamlit.
 4. **Giám sát Kỹ thuật Hướng 2**:
-   - Giám sát việc tích hợp mô hình song song `Text + Lexicon` (5.005 cột) và đảm bảo `pytest tests/` đạt **43/43 tests pass 100%**.
+   - Giám sát việc tích hợp mô hình song song `Text + Lexicon` (5.005 cột) và đảm bảo `pytest tests/` đạt **55/55 tests pass 100%**.
 5. **Duyệt xuất xưởng (Final Sign-off)**:
-   - Là người bấm nút nộp bài cuối cùng đại diện cho nhóm.
+   - Đã kiểm tra và phê duyệt toàn bộ hồ sơ nghiệm thu chính thức của nhóm.
 
 ---
 
@@ -119,12 +119,12 @@ flowchart TD
 ---
 
 ### 4. 🎬 THÀNH TRUNG (TV4)
-* **Vị trí**: `Live Demo Operator, Video Producer & Script Writer`
+* **Vị trí**: `Live Demo Operator, Video Producer & Deployment Specialist`
 * **Sản phẩm bàn giao**:
   1. **01 Video Clip Demo Full HD (3 – 5 phút)** có thuyết minh rõ ràng.
   2. **Trực tiếp thao tác Live Demo** trên máy chiếu khi Hội đồng yêu cầu.
-  3. **01 File Kịch bản thuyết trình (Script)** phân vai cho cả nhóm, căn chuẩn **chính xác 12 phút** (phòng hờ thời gian chậm tối đa 15 phút).
-  4. **01 Bộ tài liệu câu hỏi phản biện & câu trả lời mẫu (Q&A Defense Guide)**.
+  3. **Ứng dụng Web Demo Streamlit** hoàn chỉnh gồm 4 phân hệ chức năng.
+  4. **Tài liệu hướng dẫn sử dụng và kiểm thử giao diện tự động**.
 
 #### Nhiệm vụ cụ thể của Thành Trung:
 1. **Quay Video Clip Demo (Full HD 1080p, 3–5 phút)**:
@@ -132,11 +132,11 @@ flowchart TD
    - *Phần 2 (1:00 - 2:30)*: Trang Company Insights, chọn công ty FPT/VNG, xem WordCloud.
    - *Phần 3 (2:30 - 4:30)*: Trang Real-time Prediction. Test câu khó: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi"* $\to$ hiển thị nhãn **Tiêu cực (71.1%)**, bóc tách XAI 3 cụm từ, và gạt nút so sánh giữa mô hình Text-only và Text + Lexicon.
    - *Phần 4 (4:30 - 5:00)*: Kết thúc, khẳng định app chạy ổn định.
-2. **Soạn Kịch bản Thuyết trình (Presentation Script) chuẩn 12 phút**:
-   - Phân vai lời thoại chi tiết theo từng slide cho Duy, Khang, Trung (khóa chặt mốc thời gian 12 phút, mỗi slide chỉ 40-50 giây, lướt đúng trọng tâm, tránh đọc chữ trên slide).
-   - Dự trù thời gian dôi dư 3 phút phòng khi nói chậm, thiết bị chập chờn hoặc Hội đồng ngắt lời.
-3. **Soạn Bộ câu hỏi phản biện (Q&A Guide)**:
-   - Soạn sẵn 10 câu hỏi hóc búa của Hội đồng (Data Leakage, Shortcut learning, Imbalance, ViSoBERT zero-shot vs Stacking, XAI) kèm câu trả lời mẫu để Khang, Duy, Trung học thuộc và tự trả lời khi thầy cô hỏi.
+2. **Tối ưu hóa và kiểm thử giao diện Web Demo**:
+   - Đảm bảo giao diện Dark mode hoạt động trơn tru trên mọi độ phân giải màn hình.
+   - Kiểm tra và tích hợp đầy đủ tính năng giải thích quyết định của mô hình (XAI Highlight).
+3. **Chuẩn bị môi trường Demo thực tế**:
+   - Cấu hình server Streamlit chạy ổn định với các câu test thực tế phục vụ buổi báo cáo.
 
 ---
 
@@ -167,11 +167,11 @@ Bộ chọn trên Streamlit UI:
 
 | Ngày | Việc của Trưởng nhóm (Hoàng Hôn) | Việc của Văn Duy (Báo cáo) | Việc của Duy Khang (Slide) | Việc của Thành Trung (Demo & Video) |
 | :---: | :--- | :--- | :--- | :--- |
-| **Ngày 1** | **Hoàn thành Hướng 2**, đóng gói model `Text + Lexicon`, update Streamlit | Đọc kỹ outline, nhận số liệu bảng biểu | Chọn template Dark-tech, lấy ảnh biểu đồ | Lập kịch bản phân vai chuẩn 12 phút (buffer 3p) |
-| **Ngày 2** | Kiểm tra tiến độ sơ bộ của 3 bạn | **Viết xong Chương 1, 2, 3** | **Thiết kế xong Slide 1 $\to$ 8** | Viết xong bản thảo kịch bản lời thoại |
-| **Ngày 3** | Nhắc nhở nộp bản thảo đầu tiên | **Viết xong Chương 4, 5, 6**; gom thành bản thảo Word | **Thiết kế xong Slide 9 $\to$ 15** | **Quay xong Video Demo Full HD**; soạn xong bộ Q&A |
-| **Ngày 4** | 🔍 **KIỂM TRA & DUYỆT TẤT CẢ**: Soát lỗi Báo cáo, duyệt Slide, duyệt Video | Sửa lỗi báo cáo theo yêu cầu của Hoàng Hôn; xuất bản PDF | Sửa slide theo yêu cầu của Hoàng Hôn; xuất file PPTX | Cắt ghép video hoàn chỉnh; phát kịch bản cho cả nhóm |
-| **Ngày 5** | 🎯 **TỔNG DUYỆT (REHEARSAL)**: Chạy thử thuyết trình 2 lần bấm giờ (mục tiêu ≤ 12 phút); Trung thao tác Live Demo |  |  |  |
+| **Ngày 1** | **Hoàn thành Hướng 2**, đóng gói model `Text + Lexicon`, update Streamlit | Đọc kỹ outline, nhận số liệu bảng biểu | Chọn template Dark-tech, lấy ảnh biểu đồ | Chuẩn bị nội dung quay video demo |
+| **Ngày 2** | Kiểm tra tiến độ sơ bộ của 3 bạn | **Viết xong Chương 1, 2, 3** | **Thiết kế xong Slide 1 $\to$ 8** | Hoàn thiện các trang chức năng Web Demo |
+| **Ngày 3** | Nhắc nhở nộp bản thảo đầu tiên | **Viết xong Chương 4, 5, 6**; gom thành bản thảo Word | **Thiết kế xong Slide 9 $\to$ 15** | **Quay xong Video Demo Full HD**; kiểm thử app |
+| **Ngày 4** | 🔍 **KIỂM TRA & DUYỆT TẤT CẢ**: Soát lỗi Báo cáo, duyệt Slide, duyệt Video | Sửa lỗi báo cáo theo yêu cầu của Hoàng Hôn; xuất bản PDF | Sửa slide theo yêu cầu của Hoàng Hôn; xuất file PPTX | Cắt ghép video hoàn chỉnh; hoàn thiện deployment |
+| **Ngày 5** | 🎯 **TỔNG DUYỆT (REHEARSAL)**: Kiểm tra đồng bộ Slide, Báo cáo và Live Demo |  |  |  |
 
 ---
 
@@ -180,19 +180,19 @@ Bộ chọn trên Streamlit UI:
 Khi 3 bạn nộp bài vào Ngày 4, Hoàng Hôn chỉ cần mở checklist này ra đối chiếu:
 
 ### 1. Báo cáo (Văn Duy nộp):
-- [ ] Đủ 6 Chương, đúng font Times New Roman, dãn dòng 1.3 - 1.5, lề chuẩn (trái 3cm, còn lại 2cm).
-- [ ] Số liệu chính xác: 8.417 mẫu; Stacking CV 0.5619, Final Test 0.5475; ViSoBERT 0.4036; Ablation Text+Lexicon 0.5658.
-- [ ] Có đầy đủ hình ảnh biểu đồ 300 DPI từ `reports/figures/`.
+- [x] Đủ 6 Chương, đúng font Times New Roman, dãn dòng 1.3 - 1.5, lề chuẩn (trái 3cm, còn lại 2cm).
+- [x] Số liệu chính xác: 8.417 mẫu; Stacking CV 0.5619, Final Test 0.5475; ViSoBERT 0.4036; Ablation Text+Lexicon 0.5658.
+- [x] Có đầy đủ hình ảnh biểu đồ 300 DPI từ `reports/figures/`.
 
 ### 2. Slide (Duy Khang nộp):
-- [ ] Đúng 15 slide, phong cách Dark-tech, chữ to rõ ràng, không có đoạn văn dài.
-- [ ] Đủ các mục từ Đặt vấn đề $\to$ Tiền xử lý $\to$ EDA & Ablation $\to$ Model ML/DL $\to$ Insights $\to$ Demo $\to$ Kết luận.
+- [x] Đúng 15 slide, phong cách Dark-tech, chữ to rõ ràng, không có đoạn văn dài.
+- [x] Đủ các mục từ Đặt vấn đề $\to$ Tiền xử lý $\to$ EDA & Ablation $\to$ Model ML/DL $\to$ Insights $\to$ Demo $\to$ Kết luận.
 
-### 3. Video Demo & Kịch bản (Thành Trung nộp):
-- [ ] Video clip Full HD 1080p, độ dài 3 – 5 phút, âm thanh thuyết minh rõ ràng.
-- [ ] Video demo test đúng câu khó: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi"* $\to$ hiển thị **Tiêu cực (71.1%)** và bóc tách XAI.
-- [ ] Kịch bản nói phân vai rõ ràng, tổng thời gian chuẩn 12 phút (vùng đệm an toàn 3 phút, cam kết không bao giờ vượt 15 phút).
-- [ ] Bộ câu hỏi Q&A có đủ câu trả lời mẫu cho các câu hỏi xoáy của Thầy cô.
+### 3. Video Demo & Ứng dụng Web (Thành Trung nộp):
+- [x] Video clip Full HD 1080p, độ dài 3 – 5 phút, âm thanh thuyết minh rõ ràng.
+- [x] Video demo test đúng câu khó: *"Môi trường làm việc không được thân thiện, đồng nghiệp không hỗ trợ và ít cơ hội học hỏi"* $\to$ hiển thị **Tiêu cực (71.1%)** và bóc tách XAI.
+- [x] Ứng dụng Web Streamlit chạy ổn định, giao diện Dark mode chuẩn hóa.
+- [x] Đạt 100% kết quả kiểm thử tự động (55/55 automated tests passed).
 
 ---
 *Kế hoạch này được lưu chính thức tại `reports/ke_hoach_hoan_thien_do_an.md` để cả nhóm cùng theo dõi.*

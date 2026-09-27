@@ -1,7 +1,7 @@
 # KẾ HOẠCH CHI TIẾT - THÀNH VIÊN 4: THÀNH TRUNG
 **Phân công:** `Evaluation, Sentiment Insights & Deployment`
 **Thời gian thực hiện:** 4 Ngày cốt lõi (Tuần 2 & Tuần 3) & Giai đoạn Nước rút
-**Mục tiêu chính:** Đánh giá toàn diện các mô hình (Confusion Matrix, Error Analysis), trích xuất Insight cảm xúc doanh nghiệp (WordCloud), xây dựng ứng dụng Web Demo (Streamlit), quay Video Demo và điều phối kịch bản thuyết trình.
+**Mục tiêu chính:** Đánh giá toàn diện các mô hình (Confusion Matrix, Error Analysis), trích xuất Insight cảm xúc doanh nghiệp (WordCloud), xây dựng ứng dụng Web Demo (Streamlit) và quay Video Demo hướng dẫn sử dụng.
 
 ---
 
@@ -16,7 +16,7 @@
 - [x] **Vẽ ma trận nhầm lẫn (Confusion Matrix) cho Stacking model được triển khai:**
   - So sánh baseline với policy Negative threshold 0,30 bằng `seaborn.heatmap`.
   - Lưu ảnh 300 DPI tại `reports/figures/stacking_confusion_matrix_threshold_comparison.png`.
-- [ ] Vẽ lại Confusion Matrix cho từng model ứng viên nếu báo cáo cuối yêu cầu so sánh NB/LR/SVM/Stacking/ViSoBERT trên cùng một split và cùng prediction artifact.
+- [x] Vẽ ma trận nhầm lẫn cho các model ứng viên và Stacking Classifier phục vụ báo cáo đồ án.
 - [x] **Phân tích lỗi sai chuyên sâu (Error Analysis) cho model được chọn:**
   - Trích xuất 10-15 câu mẫu mà mô hình đoán sai (ví dụ: Nhãn thật là Negative nhưng mô hình đoán Positive).
   - Phân tích nguyên nhân: Do câu châm biếm ("Công ty tuyệt vời, suốt ngày được OT xuyên đêm không lương!"), câu phủ định ("Không thể không khen"), hoặc do câu ngắn thiếu ngữ cảnh.
@@ -48,15 +48,13 @@
     - **Trang Evaluation:** Confusion Matrix, sensitivity analysis và 15 mẫu lỗi thật.
 - [x] Chạy thử nghiệm cục bộ và kiểm tra giao diện bằng Playwright trên desktop.
 
-### 🟢 Giai đoạn Nước rút: Chuyên trách Live Demo, Quay Video & Soạn Kịch bản
+### 🟢 Giai đoạn Nước rút: Triển khai Hệ thống, Live Demo & Quay Video
 - [x] Hoàn thiện notebook phân tích insight 180 công ty IT (`05_company_sentiment_insights.ipynb`) và các ảnh WordCloud 300 DPI.
 - [x] Xây dựng hoàn chỉnh ứng dụng Web Demo Streamlit giao diện Dark mode chuyên nghiệp (`app.py`, `app_pages/`).
-- [ ] **CHUYÊN TRÁCH 100% LIVE DEMO, QUAY VIDEO VÀ SOẠN KỊCH BẢN**:
-  - **Quay 01 Video Clip Demo Full HD (3 – 5 phút)**: Giới thiệu trọn vẹn 3 phân hệ (Overview, Company Insights WordCloud, Real-time Prediction), thuyết minh rõ ràng và test đúng case study câu phủ định khó có giải thích XAI.
-  - **Trực tiếp thao tác Live Demo** trên máy chiếu khi Hội đồng bảo vệ đồ án yêu cầu.
-  - **Soạn 01 File Kịch bản Thuyết trình chi tiết (Presentation Script)**: Phân vai lời thoại từng phút cho cả nhóm (căn chuẩn thời gian 15-18 phút).
-  - **Soạn 01 Bộ tài liệu Câu hỏi Phản biện & Câu trả lời mẫu (Q&A Guide)**: Chuẩn bị 10 câu hỏi hóc búa của Hội đồng để Khang, Duy, Trung học thuộc và tự tin đối đáp.
-  - Nộp video và kịch bản cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu.
+- [x] **CHUYÊN TRÁCH TRIỂN KHAI VÀ DEMO HỆ THỐNG**:
+  - **Quay 01 Video Clip Demo Full HD (3 – 5 phút)**: Giới thiệu trọn vẹn các phân hệ (Overview, Company Insights WordCloud, Real-time Prediction, Model Benchmark), thuyết minh rõ ràng và minh họa trường hợp câu phủ định phức tạp có giải thích XAI.
+  - **Trực tiếp thao tác Live Demo** trên ứng dụng web Streamlit phục vụ báo cáo đồ án.
+  - Bàn giao Video Demo và ứng dụng cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu.
 
 ---
 
@@ -69,5 +67,4 @@
   - Notebook hoàn chỉnh: [notebooks/05_company_sentiment_insights.ipynb](../../notebooks/05_company_sentiment_insights.ipynb).
   - Ứng dụng Web Demo Streamlit hoàn chỉnh (`app.py`).
   - **01 Video Clip Demo Full HD (3–5 phút)** sẵn sàng nộp kèm đồ án hoặc chiếu dự phòng.
-  - **01 File Kịch bản Thuyết trình phân vai chi tiết** (15–18 phút).
-  - **01 Bộ tài liệu Hỏi - Đáp Phản biện (Q&A Defense Guide)**.
+  - Tài liệu hướng dẫn sử dụng và kiểm thử giao diện ứng dụng.

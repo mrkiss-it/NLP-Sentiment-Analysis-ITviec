@@ -53,11 +53,11 @@ gantt
 
 ## 🎯 BẢNG GIAO HẸN SẢN PHẨM CUỐI CÙNG (DELIVERABLES)
 
-| STT | Sản phẩm bàn giao | Người phụ trách chính | Hạn chót |
-| :---: | :--- | :--- | :---: |
-| 1 | File dữ liệu sạch `data/processed/reviews_cleaned.xlsx` | **TV1 (Hoàng Hôn)** | Hết Ngày 6 |
-| 2 | Báo cáo EDA + Module trích xuất đặc trưng `src/features.py` | **TV2 (Văn Duy)** | Hết Ngày 7 |
-| 3 | Bảng so sánh 4+ mô hình ML, Stacking, ViSoBERT + File model `.joblib` | **TV3 (Duy Khang)** | Hết Ngày 12 |
-| 4 | Bộ WordCloud cảm xúc theo công ty + Confusion Matrix + Web Demo | **TV4 (Thành Trung)** | Hết Ngày 14 |
-| 5 | Bản thảo Báo cáo đầy đủ 6 chương (Word/PDF) | **TV1 (Hoàng Hôn)** & Nhóm | Ngày 18 |
-| 6 | Slide thuyết trình + Chuẩn bị phản biện | **TV1 (Hoàng Hôn)** & Nhóm | Ngày 20 |
+| STT | Sản phẩm bàn giao | Người phụ trách chính | Hạn chót | Trạng thái |
+| :---: | :--- | :--- | :---: | :---: |
+| 1 | File dữ liệu sạch `data/processed/reviews_cleaned.xlsx` | **TV1 (Hoàng Hôn)** | Hết Ngày 6 | ✅ **100% (Hoàn thành)** |
+| 2 | Báo cáo EDA + Module trích xuất đặc trưng `src/features.py` | **TV2 (Văn Duy)** | Hết Ngày 7 | ✅ **100% (Hoàn thành)** |
+| 3 | Bảng so sánh 4+ mô hình ML, Stacking, ViSoBERT + File model `.joblib` | **TV3 (Duy Khang)** | Hết Ngày 12 | ✅ **100% (Hoàn thành)** |
+| 4 | Bộ WordCloud cảm xúc theo công ty + Confusion Matrix + Web Demo | **TV4 (Thành Trung)** | Hết Ngày 14 | ✅ **100% (Hoàn thành)** |
+| 5 | Báo cáo toàn văn đầy đủ 6 chương (Word/PDF) | **TV2 (Văn Duy)** & Nhóm | Ngày 18 | ✅ **100% (Hoàn thành)** |
+| 6 | Bộ Slide trình chiếu 15 trang chuẩn hóa (PPTX/PDF) | **TV3 (Duy Khang)** & Nhóm | Ngày 20 | ✅ **100% (Hoàn thành)** |

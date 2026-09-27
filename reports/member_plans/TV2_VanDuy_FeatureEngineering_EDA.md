@@ -48,7 +48,7 @@
   - [x] Định dạng chuẩn học thuật: Times New Roman 13, giãn dòng 1.4, lề trái 3cm / trên - dưới - phải 2cm, khổ A4, có mục lục tự động, danh mục từ viết tắt, danh mục bảng và danh mục hình.
   - [x] Xuất song song [BAO_CAO_DO_AN_NLP_ITVIEC.docx](../BAO_CAO_DO_AN_NLP_ITVIEC.docx) và [BAO_CAO_DO_AN_NLP_ITVIEC.pdf](../BAO_CAO_DO_AN_NLP_ITVIEC.pdf) — 36 bảng, 22 hình 300 DPI.
   - [x] Sinh lại được hoàn toàn bằng `python scripts/build_final_report.py` (nội dung tại `scripts/report/content.py`, bộ kết xuất tại `scripts/report/render.py`).
-  - [ ] Nộp bản thảo cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước khi xuất xưởng.
+  - [x] Nộp bản thảo cho **Trưởng nhóm (Hoàng Hôn)** duyệt nghiệm thu trước khi xuất xưởng.
 
 > **Ghi chú số liệu**: mọi con số trong báo cáo lấy trực tiếp từ artifact đã chạy thật
 > (`reports/aspect_hybrid_ablation.csv`, `reports/tv2_*.csv`, `reports/evaluation/*`,

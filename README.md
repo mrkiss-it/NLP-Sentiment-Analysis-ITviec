@@ -3,6 +3,8 @@
 ## 1. Giới thiệu Đề tài
 Dự án tập trung chuyên sâu vào bài toán **Phân tích Cảm xúc (Sentiment Analysis)** từ dữ liệu đánh giá của nhân viên và ứng viên trên nền tảng **ITviec**.
 
+* **Nhóm thực hiện:** **Nhóm 12** — Môn Xử lý ngôn ngữ tự nhiên (HK2/2026)
+* **Giảng viên hướng dẫn:** Thầy Đặng Văn Thìn
 * **Repository:** [https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec](https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec)
 
 ### Mục tiêu chính:
@@ -94,12 +96,12 @@ flowchart TD
 
 ## 3. Phân chia Công việc Nhóm (Team Assignment)
 
-| Thành viên | Phân công | Kế hoạch chi tiết |
+| Thành viên & MSSV | Phân công | Kế hoạch chi tiết |
 | :--- | :--- | :--- |
-| **👑 TV1: Hoàng Hôn** *(Trưởng nhóm)* | `Business & Data Processing` | [Xem kế hoạch TV1](reports/member_plans/TV1_HoangHon_Business_DataProcessing.md) |
-| **👨‍💻 TV2: Văn Duy** | `Feature Engineering & EDA` | [Xem kế hoạch TV2](reports/member_plans/TV2_VanDuy_FeatureEngineering_EDA.md) |
-| **👨‍💻 TV3: Duy Khang** | `Modeling & Hyperparameter Tuning` | [Xem kế hoạch TV3](reports/member_plans/TV3_DuyKhang_Modeling_Tuning.md) |
-| **👨‍💻 TV4: Thành Trung** | `Evaluation, Sentiment Insights & Deployment` | [Xem kế hoạch TV4](reports/member_plans/TV4_ThanhTrung_Evaluation_Deployment.md) |
+| **👑 TV1: Trần Hoàng Hôn (26410046)** *(Trưởng nhóm)* | `Business & Data Processing` | [Xem kế hoạch TV1](reports/member_plans/TV1_HoangHon_Business_DataProcessing.md) |
+| **👨‍💻 TV2: Vũ Văn Duy (26410031)** | `Feature Engineering & EDA` | [Xem kế hoạch TV2](reports/member_plans/TV2_VanDuy_FeatureEngineering_EDA.md) |
+| **👨‍💻 TV3: Nguyễn Duy Khang (26410055)** | `Modeling & Hyperparameter Tuning` | [Xem kế hoạch TV3](reports/member_plans/TV3_DuyKhang_Modeling_Tuning.md) |
+| **👨‍💻 TV4: Phạm Thành Trung (26410141)** | `Evaluation, Sentiment Insights & Deployment` | [Xem kế hoạch TV4](reports/member_plans/TV4_ThanhTrung_Evaluation_Deployment.md) |
 
 * Toàn bộ kế hoạch tổng hợp: [reports/project_plan_and_work_assignment.md](reports/project_plan_and_work_assignment.md)
 
@@ -243,4 +245,4 @@ Chi tiết nghiệm thu UI và luồng trình diễn: [UI NLP Lab — 10/09/2026
 | **4. Huấn luyện Mô hình Machine Learning** | **TV3: Duy Khang** | ✅ **100% (Hoàn thành phần ML)** | Hoàn thiện `src/models.py` (`tune_hyperparameters`, `get_stacking_model`, `plot_model_comparison`) và `03_sentiment_modeling_ml.ipynb`: huấn luyện + tinh chỉnh siêu tham số (GridSearchCV, 5-Fold CV) cho 4 thuật toán ML (Naive Bayes, Logistic Regression, Linear SVM, Random Forest) và Stacking Ensemble (NB+LR+SVM); chỉ đánh giá Final Test đúng 1 lần sau khi khóa mô hình bằng CV trên train (Stacking thắng với CV Macro F1 0,5619; Final-test Macro F1 0,5475). Lưu `models/best_sentiment_model.joblib`, biểu đồ so sánh & confusion matrix tại `reports/figures/`, chi tiết tại `reports/modeling_hyperparameter_tuning.md`. **ViSoBERT** (`04_sentiment_modeling_deeplearning.ipynb`) đã chạy benchmark zero-shot thật trên GPU (Runpod): Accuracy 0,6536, Macro F1 0,4036. |
 | **5. Đánh giá, Insight & Web Demo** | **TV4: Thành Trung** | ✅ **100% (Hoàn thành)** | Hoàn thiện `05_company_sentiment_insights.ipynb` trên 8.417 review và 8 ảnh WordCloud/biểu đồ 300 DPI. `06_model_evaluation_error_analysis.ipynb` bổ sung Confusion Matrix, 15 mẫu lỗi thật và sensitivity analysis. Web Demo tích hợp Text-only, Text + Lexicon/Hybrid, benchmark và chẩn đoán TF-IDF. Policy `P(Negative) >= 0,30` tăng Recall Negative thực đo từ 26,32% lên 35,09%, không đạt mức 55–60% dự kiến. |
 | **6. Báo cáo đồ án toàn văn (Word/PDF)** | **TV2: Văn Duy** | ✅ **100% (Hoàn thành)** | Báo cáo 6 chương bám đúng đề cương `reports/final_report_outline.md`: [BAO_CAO_DO_AN_NLP_ITVIEC.docx](reports/BAO_CAO_DO_AN_NLP_ITVIEC.docx) và [.pdf](reports/BAO_CAO_DO_AN_NLP_ITVIEC.pdf) — Times New Roman 13, giãn dòng 1.4, lề trái 3cm/còn lại 2cm, 36 bảng và 22 hình 300 DPI. Sinh lại được bằng `python scripts/build_final_report.py`; mọi số liệu lấy trực tiếp từ artifact đã chạy thật. |
-| **7. Slide thuyết trình & Kịch bản bảo vệ** | **TV3 & TV4** | ⏳ **Đang triển khai** | Slide 15 trang tại `reports/slides/` và kịch bản demo 12 phút. |
+| **7. Slide thuyết trình bảo vệ đồ án** | **TV3 & TV4** | ✅ **100% (Hoàn thành)** | Bộ Slide 15 trang Dark-tech chuẩn hóa tại [reports/slides/NLP_ITviec_Sentiment_Slides.pptx](reports/slides/NLP_ITviec_Sentiment_Slides.pptx) và bản PDF. |

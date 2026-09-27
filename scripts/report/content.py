@@ -21,13 +21,15 @@ META = {
     "advisor_label": "Giảng viên hướng dẫn:",
     "advisor": "Thầy Đặng Văn Thìn",
     "team_label": "Nhóm sinh viên thực hiện:",
-    "team_name": "Nhóm 9",
+    "team_name": "Nhóm 12",
     "members": [
         ("1. Trần Hoàng Hôn - 26410046 (Trưởng nhóm)", True),
         ("2. Nguyễn Duy Khang - 26410055", False),
         ("3. Vũ Văn Duy - 26410031", False),
         ("4. Phạm Thành Trung - 26410141", False),
     ],
+    "github_label": "Kho lưu trữ mã nguồn GitHub:",
+    "github": "https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec",
     "author": "Trần Hoàng Hôn, Nguyễn Duy Khang, Vũ Văn Duy, Phạm Thành Trung",
     "place_date": "TP. Hồ Chí Minh - Tháng 09/2026",
 }
@@ -38,7 +40,7 @@ B = BLOCKS.append
 # ==========================================================================
 # PHẦN MỞ ĐẦU
 # ==========================================================================
-B(("h1", "MỤC LỤC"))
+B(("toc_title", "MỤC LỤC"))
 B(("toc",))
 B(("pagebreak",))
 
@@ -70,69 +72,71 @@ B(("table", "Bảng 0.1. Danh mục từ viết tắt và thuật ngữ sử d�
 B(("pagebreak",))
 
 B(("h1", "DANH MỤC BẢNG"))
-B(("lines", [
-   "Bảng 0.1. Danh mục từ viết tắt và thuật ngữ sử dụng trong báo cáo",
-   "Bảng 2.1. Sáu nhóm trường của bộ dữ liệu sau tiền xử lý",
-   "Bảng 2.2. Quy tắc ánh xạ điểm đánh giá sang nhãn cảm xúc yếu",
-   "Bảng 2.3. Thống kê giá trị khuyết thiếu và kết quả audit trùng lặp",
-   "Bảng 2.4. Phân bố số sao đánh giá",
-   "Bảng 2.5. Phân bố nhãn cảm xúc",
-   "Bảng 2.6. Thống kê độ dài hai trường nội dung chính (đơn vị: từ)",
-   "Bảng 2.7. Thống kê token rỗng và review quá ngắn sau tiền xử lý",
-   "Bảng 2.8. Tương quan Spearman giữa điểm khía cạnh và điểm tổng thể",
-   "Bảng 2.9. Chẩn đoán chất lượng nhãn yếu qua trường Recommend?",
-   "Bảng 2.10. Quy mô các bộ từ điển tiếng Việt sử dụng trong pipeline",
-   "Bảng 3.1. So sánh cấu hình n-gram của TF-IDF trên 5-fold CV",
-   "Bảng 3.2. So sánh TF-IDF và Bag-of-Words trên cùng bộ fold",
-   "Bảng 3.3. Kết quả thí nghiệm đối chứng năm nhóm đặc trưng",
-   "Bảng 3.4. Kiểm định chênh lệch theo từng cặp fold so với Text-only",
-   "Bảng 3.5. Kích thước ma trận đặc trưng của hai cấu hình bàn giao",
-   "Bảng 3.6. So sánh ba chiến lược xử lý mất cân bằng lớp",
-   "Bảng 3.7. Cấu hình bốn mô hình học máy cơ sở",
-   "Bảng 3.8. Kết quả 5-fold CV với tham số mặc định",
-   "Bảng 3.9. Lưới siêu tham số và kết quả GridSearchCV",
-   "Bảng 3.10. Xếp hạng CV Macro F1 sau tinh chỉnh",
-   "Bảng 4.1. Kết quả tổng hợp của Stacking Ensemble trên tập kiểm tra cuối",
-   "Bảng 4.2. Chỉ số theo từng lớp của Stacking Ensemble trên tập kiểm tra cuối",
-   "Bảng 4.3. Ma trận nhầm lẫn của phương án argmax mặc định",
-   "Bảng 4.4. So sánh Stacking Ensemble và ViSoBERT zero-shot",
-   "Bảng 4.5. Chỉ số theo từng lớp của ViSoBERT zero-shot",
-   "Bảng 4.6. So sánh phương án argmax và chính sách ngưỡng 0,30",
-   "Bảng 4.7. Ma trận nhầm lẫn khi áp dụng chính sách ngưỡng 0,30",
-   "Bảng 4.8. Phân tích độ nhạy theo ngưỡng quyết định lớp Negative",
-   "Bảng 5.1. Phân bố cảm xúc trên toàn bộ dữ liệu",
-   "Bảng 5.2. Kết quả phân tích hai doanh nghiệp có nhiều review nhất",
-   "Bảng 5.3. Bốn phân hệ của ứng dụng web demo",
-   "Bảng 6.1. Đối chiếu mục tiêu đề ra và kết quả đạt được",
-   "Bảng A.1. Notebook và script thực nghiệm",
-   "Bảng A.2. Module mã nguồn",
-   "Bảng A.3. Artifact mô hình và tệp kết quả"]))
+B(("toc_list", [
+    ("Bảng 0.1. Danh mục từ viết tắt và thuật ngữ sử dụng trong báo cáo", 6),
+    ("Bảng 2.1. Sáu nhóm trường của bộ dữ liệu sau tiền xử lý", 14),
+    ("Bảng 2.2. Quy tắc ánh xạ điểm đánh giá sang nhãn cảm xúc yếu", 15),
+    ("Bảng 2.3. Thống kê giá trị khuyết thiếu và kết quả audit trùng lặp", 16),
+    ("Bảng 2.4. Phân bố số sao đánh giá", 16),
+    ("Bảng 2.5. Phân bố nhãn cảm xúc", 17),
+    ("Bảng 2.6. Thống kê độ dài hai trường nội dung chính (đơn vị: từ)", 18),
+    ("Bảng 2.7. Thống kê token rỗng và review quá ngắn sau tiền xử lý", 19),
+    ("Bảng 2.8. Tương quan Spearman giữa điểm khía cạnh và điểm tổng thể", 19),
+    ("Bảng 2.9. Chẩn đoán chất lượng nhãn yếu qua trường Recommend?", 22),
+    ("Bảng 2.10. Quy mô các bộ từ điển tiếng Việt sử dụng trong pipeline", 24),
+    ("Bảng 3.1. So sánh cấu hình n-gram của TF-IDF trên 5-fold CV", 27),
+    ("Bảng 3.2. So sánh TF-IDF và Bag-of-Words trên cùng bộ fold", 28),
+    ("Bảng 3.3. Kết quả thí nghiệm đối chứng năm nhóm đặc trưng", 29),
+    ("Bảng 3.4. Kiểm định chênh lệch theo từng cặp fold so với Text-only", 31),
+    ("Bảng 3.5. Kích thước ma trận đặc trưng của hai cấu hình bàn giao", 32),
+    ("Bảng 3.6. So sánh ba chiến lược xử lý mất cân bằng lớp", 33),
+    ("Bảng 3.7. Cấu hình bốn mô hình học máy cơ sở", 34),
+    ("Bảng 3.8. Kết quả 5-fold CV với tham số mặc định", 36),
+    ("Bảng 3.9. Lưới siêu tham số và kết quả GridSearchCV", 36),
+    ("Bảng 3.10. Xếp hạng CV Macro F1 sau tinh chỉnh", 37),
+    ("Bảng 4.1. Kết quả tổng hợp của Stacking Ensemble trên tập kiểm tra cuối", 40),
+    ("Bảng 4.2. Chỉ số theo từng lớp của Stacking Ensemble trên tập kiểm tra cuối", 38),
+    ("Bảng 4.3. Ma trận nhầm lẫn của phương án argmax mặc định", 41),
+    ("Bảng 4.4. So sánh Stacking Ensemble và ViSoBERT zero-shot", 42),
+    ("Bảng 4.5. Chỉ số theo từng lớp của ViSoBERT zero-shot", 43),
+    ("Bảng 4.6. So sánh phương án argmax và chính sách ngưỡng 0,30", 44),
+    ("Bảng 4.7. Ma trận nhầm lẫn khi áp dụng chính sách ngưỡng 0,30", 44),
+    ("Bảng 4.8. Phân tích độ nhạy theo ngưỡng quyết định lớp Negative", 45),
+    ("Bảng 5.1. Phân bố cảm xúc trên toàn bộ dữ liệu", 49),
+    ("Bảng 5.2. Kết quả phân tích hai doanh nghiệp có nhiều review nhất", 50),
+    ("Bảng 5.3. Bốn phân hệ của ứng dụng web demo", 54),
+    ("Bảng 6.1. Đối chiếu mục tiêu đề ra và kết quả đạt được", 57),
+    ("Bảng A.1. Notebook và script thực nghiệm", 62),
+    ("Bảng A.2. Module mã nguồn", 63),
+    ("Bảng A.3. Artifact mô hình và tệp kết quả", 63),
+]))
 B(("pagebreak",))
 
 B(("h1", "DANH MỤC HÌNH VẼ"))
-B(("lines", [
-   "Hình 2.1. Phân bố số sao đánh giá",
-   "Hình 2.2. Phân bố ba nhãn cảm xúc",
-   "Hình 2.3. Phân bố độ dài nội dung review",
-   "Hình 2.4. Ma trận tương quan giữa các điểm đánh giá",
-   "Hình 2.5. Điểm khía cạnh phân tách theo nhãn cảm xúc",
-   "Hình 2.6. Phân bố review theo doanh nghiệp và theo thời gian",
-   "Hình 2.7. Chẩn đoán chất lượng nhãn yếu và độ bao phủ từ điển",
-   "Hình 3.1. So sánh cấu hình n-gram của TF-IDF",
-   "Hình 3.2. Thí nghiệm đối chứng năm nhóm đặc trưng trên tập phát triển",
-   "Hình 3.3. Chỉ số theo lớp thiểu số của từng nhóm đặc trưng",
-   "Hình 3.4. So sánh CV Macro F1 giữa các mô hình sau tinh chỉnh",
-   "Hình 4.1. Ma trận nhầm lẫn của mô hình Stacking Ensemble",
-   "Hình 4.2. So sánh ma trận nhầm lẫn trước và sau chính sách ngưỡng",
-   "Hình 4.3. Độ nhạy của các chỉ số theo ngưỡng quyết định lớp Negative",
-   "Hình 5.1. Đám mây từ khóa của nhóm review tích cực",
-   "Hình 5.2. Đám mây từ khóa của nhóm review tiêu cực",
-   "Hình 5.3. Phân bố cảm xúc tại FPT Software",
-   "Hình 5.4. Từ khóa tích cực tại FPT Software",
-   "Hình 5.5. Từ khóa tiêu cực tại FPT Software",
-   "Hình 5.6. Phân bố cảm xúc tại NashTech",
-   "Hình 5.7. Từ khóa tích cực tại NashTech",
-   "Hình 5.8. Từ khóa tiêu cực tại NashTech"]))
+B(("toc_list", [
+    ("Hình 2.1. Phân bố số sao đánh giá", 17),
+    ("Hình 2.2. Phân bố ba nhãn cảm xúc", 17),
+    ("Hình 2.3. Phân bố độ dài nội dung review", 18),
+    ("Hình 2.4. Ma trận tương quan giữa các điểm đánh giá", 20),
+    ("Hình 2.5. Điểm khía cạnh phân tách theo nhãn cảm xúc", 20),
+    ("Hình 2.6. Phân bố review theo doanh nghiệp và theo thời gian", 21),
+    ("Hình 2.7. Chẩn đoán chất lượng nhãn yếu và độ bao phủ từ điển", 22),
+    ("Hình 3.1. So sánh cấu hình n-gram của TF-IDF", 28),
+    ("Hình 3.2. Thí nghiệm đối chứng năm nhóm đặc trưng trên tập phát triển", 30),
+    ("Hình 3.3. Chỉ số theo lớp thiểu số của từng nhóm đặc trưng", 30),
+    ("Hình 3.4. So sánh CV Macro F1 giữa các mô hình sau tinh chỉnh", 38),
+    ("Hình 4.1. Ma trận nhầm lẫn của mô hình Stacking Ensemble", 41),
+    ("Hình 4.2. So sánh ma trận nhầm lẫn trước và sau chính sách ngưỡng", 45),
+    ("Hình 4.3. Độ nhạy của các chỉ số theo ngưỡng quyết định lớp Negative", 46),
+    ("Hình 5.1. Đám mây từ khóa của nhóm review tích cực", 49),
+    ("Hình 5.2. Đám mây từ khóa của nhóm review tiêu cực", 50),
+    ("Hình 5.3. Phân bố cảm xúc tại FPT Software", 51),
+    ("Hình 5.4. Từ khóa tích cực tại FPT Software", 51),
+    ("Hình 5.5. Từ khóa tiêu cực tại FPT Software", 51),
+    ("Hình 5.6. Phân bố cảm xúc tại NashTech", 52),
+    ("Hình 5.7. Từ khóa tích cực tại NashTech", 52),
+    ("Hình 5.8. Từ khóa tiêu cực tại NashTech", 53),
+]))
 B(("pagebreak",))
 
 # ==========================================================================
@@ -249,6 +253,9 @@ B(("p", "Báo cáo gồm sáu chương. **Chương 1** trình bày bối cảnh,
        "định tính. **Chương 5** trình bày kết quả khai thác thông tin ở cấp doanh nghiệp và "
        "ứng dụng web triển khai. **Chương 6** tổng kết đóng góp, nêu hạn chế và hướng phát "
        "triển."))
+B(("p", "Toàn bộ mã nguồn dự án, sổ tay thực nghiệm Jupyter, file slides trình chiếu "
+       "và ứng dụng web Streamlit demo được lưu trữ công khai tại kho GitHub: "
+       "**https://github.com/mrkiss-it/NLP-Sentiment-Analysis-ITviec**."))
 B(("pagebreak",))
 
 # ==========================================================================
@@ -622,8 +629,8 @@ B(("p", "TF-IDF được fit trên cột `clean_advance_text` với `max_feature
 B(("p", "Cấu hình n-gram được chọn bằng thực nghiệm thay vì theo mặc định."))
 B(("table", "Bảng 3.1. So sánh cấu hình n-gram của TF-IDF trên 5-fold CV",
    ["Cấu hình", "Macro F1 trung bình", "Độ lệch chuẩn"],
-   [["Unigram `(1, 1)`", "0,5396", "0,0073"],
-    ["**Unigram + bigram `(1, 2)`**", "**0,5579**", "0,0127"]],
+   [["Unigram (1, 1)", "0,5396", "0,0073"],
+    ["**Unigram + bigram (1, 2)**", "**0,5579**", "0,0127"]],
    ["l", "r", "r"]))
 B(("figure", "Hình 3.1. So sánh cấu hình n-gram của TF-IDF",
    "reports/figures/eda_tfidf_ngram_comparison.png"))

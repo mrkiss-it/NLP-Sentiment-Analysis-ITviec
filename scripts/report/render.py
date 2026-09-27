@@ -26,13 +26,34 @@ BODY_PT = 13
 LEADING = 1.4
 INDENT = 1.0 * CM
 
-FONT_DIR = Path("/System/Library/Fonts/Supplemental")
-FONT_FILES = {
-    "": FONT_DIR / "Times New Roman.ttf",
-    "b": FONT_DIR / "Times New Roman Bold.ttf",
-    "i": FONT_DIR / "Times New Roman Italic.ttf",
-    "bi": FONT_DIR / "Times New Roman Bold Italic.ttf",
-}
+def _find_times_fonts() -> dict[str, Path]:
+    candidates = [
+        {
+            "": Path("C:/Windows/Fonts/times.ttf"),
+            "b": Path("C:/Windows/Fonts/timesbd.ttf"),
+            "i": Path("C:/Windows/Fonts/timesi.ttf"),
+            "bi": Path("C:/Windows/Fonts/timesbi.ttf"),
+        },
+        {
+            "": Path("/System/Library/Fonts/Supplemental/Times New Roman.ttf"),
+            "b": Path("/System/Library/Fonts/Supplemental/Times New Roman Bold.ttf"),
+            "i": Path("/System/Library/Fonts/Supplemental/Times New Roman Italic.ttf"),
+            "bi": Path("/System/Library/Fonts/Supplemental/Times New Roman Bold Italic.ttf"),
+        },
+        {
+            "": Path("/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman.ttf"),
+            "b": Path("/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold.ttf"),
+            "i": Path("/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Italic.ttf"),
+            "bi": Path("/usr/share/fonts/truetype/msttcorefonts/Times_New_Roman_Bold_Italic.ttf"),
+        },
+    ]
+    for c in candidates:
+        if c[""].exists():
+            return c
+    return candidates[0]
+
+
+FONT_FILES = _find_times_fonts()
 
 _INLINE = re.compile(r"(\*\*.+?\*\*|\*[^*]+?\*|`[^`]+?`)")
 
@@ -44,9 +65,11 @@ def split_inline(text: str):
         if not part:
             continue
         if part.startswith("**") and part.endswith("**"):
-            out.append((part[2:-2], True, False, False))
+            inner = part[2:-2].replace("`", "")
+            out.append((inner, True, False, False))
         elif part.startswith("*") and part.endswith("*"):
-            out.append((part[1:-1], False, True, False))
+            inner = part[1:-1].replace("`", "")
+            out.append((inner, False, True, False))
         elif part.startswith("`") and part.endswith("`"):
             out.append((part[1:-1], False, False, True))
         else:
@@ -56,6 +79,14 @@ def split_inline(text: str):
 
 def strip_inline(text: str) -> str:
     return re.sub(r"[*`]", "", text)
+
+
+def make_caption_anchor(caption: str) -> str:
+    m = re.search(r"(Bảng|Hình)\s+([0-9A-Za-z]+)\.([0-9]+)", caption)
+    if m:
+        prefix = "tbl" if m.group(1) == "Bảng" else "fig"
+        return f"{prefix}_{m.group(2)}_{m.group(3)}"
+    return "anchor_" + re.sub(r"[^a-zA-Z0-9_]", "_", caption[:20])
 
 
 # Khổ hiển thị tối đa của hình trong khung soạn thảo
@@ -216,6 +247,19 @@ def build_docx(blocks, out_path: Path, meta: dict):
         for el in (r1, r2, r3, r4, r5):
             par._p.append(el)
 
+    bm_counter = {"id": 100}
+
+    def add_bookmark(par, name):
+        bm_counter["id"] += 1
+        bm_id = str(bm_counter["id"])
+        bm_start = OxmlElement("w:bookmarkStart")
+        bm_start.set(qn("w:id"), bm_id)
+        bm_start.set(qn("w:name"), name)
+        par._p.insert(0, bm_start)
+        bm_end = OxmlElement("w:bookmarkEnd")
+        bm_end.set(qn("w:id"), bm_id)
+        par._p.append(bm_end)
+
     # ---- footer: số trang căn giữa ----
     footer_par = sec.footer.paragraphs[0]
     footer_par.alignment = WD_ALIGN_PARAGRAPH.CENTER
@@ -273,7 +317,7 @@ def build_docx(blocks, out_path: Path, meta: dict):
     cover_line(meta["doc_kind"], 20, True, 6, caps=True)
     cover_line(meta["course"], 15, True, 16, caps=True)
     cover_line(meta["topic_label"], 14, True, 4, caps=True)
-    cover_line(f'"{meta["title"].upper()}"', 15, True, 22)
+    cover_line(meta["title"].upper(), 15, True, 22)
 
     cover_line(meta["advisor_label"], 13, True, 2, caps=True, align=LEFT)
     cover_line(meta["advisor"], 13, True, 12, align=LEFT)
@@ -281,8 +325,10 @@ def build_docx(blocks, out_path: Path, meta: dict):
     cover_line(meta["team_name"], 13, True, 2, align=LEFT)
     for text, bold in meta["members"]:
         cover_line(text, 13, bold, 2, align=LEFT)
+    if "github" in meta:
+        cover_line(f"Mã nguồn GitHub: {meta['github']}", 11, False, 2, align=LEFT)
 
-    cover_line("", 13, False, 20)
+    cover_line("", 13, False, 14)
     cover_line(meta["place_date"], 14, True, 0, caps=True)
     doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
 
@@ -291,18 +337,30 @@ def build_docx(blocks, out_path: Path, meta: dict):
         kind = block[0]
 
         if kind == "pagebreak":
-            doc.add_paragraph().add_run().add_break(WD_BREAK.PAGE)
+            p = doc.add_paragraph()
+            p.paragraph_format.space_before = Pt(0)
+            p.paragraph_format.space_after = Pt(0)
+            p.paragraph_format.line_spacing = Pt(1)
+            r = p.add_run()
+            r.font.size = Pt(1)
+            r.add_break(WD_BREAK.PAGE)
 
         elif kind == "toc":
             par = doc.add_paragraph()
             par.paragraph_format.first_line_indent = Cm(0)
             field(par, r' TOC \o "1-3" \h \z \u ')
-            plain("(Mở bằng Microsoft Word và nhấn Ctrl+A rồi F9 để cập nhật mục lục.)",
-                  indent=False, italic=True, size=11)
 
         elif kind in ("h1", "h2", "h3"):
             level = int(kind[1])
             par = doc.add_heading(level=level)
+            if level == 1:
+                par.paragraph_format.space_before = Pt(14)
+                par.paragraph_format.space_after = Pt(8)
+                par.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            else:
+                par.paragraph_format.space_before = Pt(9)
+                par.paragraph_format.space_after = Pt(3)
+                par.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.LEFT
             add_runs(par, block[1])
             for run in par.runs:
                 run.font.color.rgb = RGBColor(0, 0, 0)
@@ -331,23 +389,144 @@ def build_docx(blocks, out_path: Path, meta: dict):
                 par = doc.add_paragraph(style=style)
                 add_runs(par, item)
                 par.paragraph_format.line_spacing = LEADING
+                par.paragraph_format.space_before = Pt(1)
                 par.paragraph_format.space_after = Pt(3)
-                par.paragraph_format.left_indent = Cm(1.0)
+                par.paragraph_format.left_indent = Cm(1.6)
+                par.paragraph_format.first_line_indent = Cm(-0.6)
                 par.paragraph_format.alignment = WD_ALIGN_PARAGRAPH.JUSTIFY
                 for run in par.runs:
                     run.font.name = "Times New Roman"
                     run.font.size = Pt(BODY_PT)
+
+        elif kind == "toc_title":
+            par = doc.add_paragraph()
+            add_runs(par, block[1])
+            pfm = par.paragraph_format
+            pfm.first_line_indent = Cm(0)
+            pfm.space_before = Pt(18)
+            pfm.space_after = Pt(10)
+            pfm.alignment = WD_ALIGN_PARAGRAPH.CENTER
+            for run in par.runs:
+                run.font.color.rgb = RGBColor(0, 0, 0)
+                run.font.name = "Times New Roman"
+                run.font.size = Pt(14)
+                run.bold = True
+
+        elif kind == "toc_list":
+            from docx.enum.text import WD_TAB_ALIGNMENT, WD_TAB_LEADER
+            for item in block[1]:
+                if isinstance(item, (list, tuple)):
+                    title_text, page_str = item[0], str(item[1])
+                else:
+                    title_text, page_str = str(item), ""
+                anc = make_caption_anchor(title_text)
+                par = doc.add_paragraph()
+                pfm = par.paragraph_format
+                pfm.first_line_indent = Cm(0)
+                pfm.space_before = Pt(0)
+                pfm.space_after = Pt(1)
+                pfm.line_spacing = 1.05
+                pfm.tab_stops.add_tab_stop(Cm(16), WD_TAB_ALIGNMENT.RIGHT, WD_TAB_LEADER.DOTS)
+
+                hyperlink = OxmlElement("w:hyperlink")
+                hyperlink.set(qn("w:anchor"), anc)
+                hyperlink.set(qn("w:history"), "1")
+
+                r = OxmlElement("w:r")
+                rPr = OxmlElement("w:rPr")
+                rFonts = OxmlElement("w:rFonts")
+                rFonts.set(qn("w:ascii"), "Times New Roman")
+                rFonts.set(qn("w:hAnsi"), "Times New Roman")
+                rPr.append(rFonts)
+                sz = OxmlElement("w:sz")
+                sz.set(qn("w:val"), "22")  # 11pt
+                rPr.append(sz)
+                color = OxmlElement("w:color")
+                color.set(qn("w:val"), "000000")
+                rPr.append(color)
+                r.append(rPr)
+                t = OxmlElement("w:t")
+                t.text = title_text
+                r.append(t)
+                hyperlink.append(r)
+
+                if page_str:
+                    r_tab = OxmlElement("w:r")
+                    r_tab.append(OxmlElement("w:tab"))
+                    hyperlink.append(r_tab)
+
+                    r_fld1 = OxmlElement("w:r")
+                    fc1 = OxmlElement("w:fldChar")
+                    fc1.set(qn("w:fldCharType"), "begin")
+                    r_fld1.append(fc1)
+                    hyperlink.append(r_fld1)
+
+                    r_instr = OxmlElement("w:r")
+                    instr = OxmlElement("w:instrText")
+                    instr.set(qn("xml:space"), "preserve")
+                    instr.text = f" PAGEREF {anc} \\h "
+                    r_instr.append(instr)
+                    hyperlink.append(r_instr)
+
+                    r_fld2 = OxmlElement("w:r")
+                    fc2 = OxmlElement("w:fldChar")
+                    fc2.set(qn("w:fldCharType"), "separate")
+                    r_fld2.append(fc2)
+                    hyperlink.append(r_fld2)
+
+                    r_page = OxmlElement("w:r")
+                    r_page_pr = OxmlElement("w:rPr")
+                    r_page_pr.append(rFonts)
+                    r_page_pr.append(sz)
+                    r_page_pr.append(color)
+                    r_page.append(r_page_pr)
+                    t_page = OxmlElement("w:t")
+                    t_page.text = str(page_str)
+                    r_page.append(t_page)
+                    hyperlink.append(r_page)
+
+                    r_fld3 = OxmlElement("w:r")
+                    fc3 = OxmlElement("w:fldChar")
+                    fc3.set(qn("w:fldCharType"), "end")
+                    r_fld3.append(fc3)
+                    hyperlink.append(r_fld3)
+
+                par._p.append(hyperlink)
 
         elif kind == "table":
             _, caption, headers, rows, aligns = block
             cap = plain(caption, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER,
                         size=12, italic=True, space_before=6, space_after=4)
             cap.paragraph_format.keep_with_next = True
-            tbl = doc.add_table(rows=1, cols=len(headers))
+            add_bookmark(cap, make_caption_anchor(caption))
+
+            ncol = len(headers)
+            weights = []
+            for i in range(ncol):
+                longest = max([len(strip_inline(str(headers[i])))] +
+                              [len(strip_inline(str(r[i]))) for r in rows] or [1])
+                weights.append(max(longest, 4) ** 0.62)
+            total = sum(weights)
+            widths_cm = [16.0 * w / total for w in weights]
+
+            tbl = doc.add_table(rows=1, cols=ncol)
             tbl.style = "Table Grid"
             tbl.alignment = WD_TABLE_ALIGNMENT.CENTER
+            tbl.autofit = False
+
+            # Đặt khoảng cách đệm (cell padding) cho ô bảng
+            tblPr = tbl._tbl.tblPr
+            tblCellMar = OxmlElement("w:tblCellMar")
+            for m, val in (("top", 100), ("bottom", 100), ("left", 140), ("right", 140)):
+                node = OxmlElement(f"w:{m}")
+                node.set(qn("w:w"), str(val))
+                node.set(qn("w:type"), "dxa")
+                tblCellMar.append(node)
+            tblPr.append(tblCellMar)
+
             hdr = tbl.rows[0].cells
             for i, head in enumerate(headers):
+                hdr[i].width = Cm(widths_cm[i])
                 hdr[i].text = ""
                 par = hdr[i].paragraphs[0]
                 add_runs(par, head)
@@ -362,9 +541,14 @@ def build_docx(blocks, out_path: Path, meta: dict):
                 shd.set(qn("w:val"), "clear")
                 shd.set(qn("w:fill"), "E8EDF3")
                 hdr[i]._tc.get_or_add_tcPr().append(shd)
+
             for row in rows:
-                cells = tbl.add_row().cells
+                new_row = tbl.add_row()
+                tr_pr = new_row._tr.get_or_add_trPr()
+                tr_pr.append(OxmlElement("w:cantSplit"))
+                cells = new_row.cells
                 for i, val in enumerate(row):
+                    cells[i].width = Cm(widths_cm[i])
                     cells[i].text = ""
                     par = cells[i].paragraphs[0]
                     add_runs(par, str(val))
@@ -379,8 +563,13 @@ def build_docx(blocks, out_path: Path, meta: dict):
                     for run in par.runs:
                         run.font.name = "Times New Roman"
                         run.font.size = Pt(12)
-            # lặp lại dòng tiêu đề khi bảng tràn trang
+
+            for i, w in enumerate(widths_cm):
+                tbl.columns[i].width = Cm(w)
+
+            # Lặp lại dòng tiêu đề khi bảng tràn trang
             tr_pr = tbl.rows[0]._tr.get_or_add_trPr()
+            tr_pr.append(OxmlElement("w:cantSplit"))
             hdr_el = OxmlElement("w:tblHeader")
             hdr_el.set(qn("w:val"), "true")
             tr_pr.append(hdr_el)
@@ -400,6 +589,7 @@ def build_docx(blocks, out_path: Path, meta: dict):
             cap = plain(caption, indent=False, align=WD_ALIGN_PARAGRAPH.CENTER,
                         size=12, italic=True, space_after=10)
             cap.paragraph_format.keep_with_next = False
+            add_bookmark(cap, make_caption_anchor(caption))
 
         else:  # pragma: no cover
             raise ValueError(f"Khối không hỗ trợ: {kind}")
@@ -436,11 +626,11 @@ def build_pdf(blocks, out_path: Path, meta: dict):
     quote = ParagraphStyle("quote", parent=body_flat, leftIndent=INDENT,
                            fontName="TNR-Italic", spaceBefore=4, spaceAfter=8)
     h1 = ParagraphStyle("h1", fontName="TNR-Bold", fontSize=14, leading=14 * 1.3,
-                        alignment=TA_LEFT, spaceBefore=16, spaceAfter=10, firstLineIndent=0)
-    h2 = ParagraphStyle("h2", parent=h1, fontSize=13, leading=13 * 1.3,
-                        spaceBefore=12, spaceAfter=6)
-    h3 = ParagraphStyle("h3", parent=h2, fontName="TNR-BoldItalic",
-                        spaceBefore=10, spaceAfter=5)
+                        alignment=TA_CENTER, spaceBefore=16, spaceAfter=10, firstLineIndent=0)
+    h2 = ParagraphStyle("h2", fontName="TNR-Bold", fontSize=13, leading=13 * 1.3,
+                        alignment=TA_LEFT, spaceBefore=12, spaceAfter=6, firstLineIndent=0)
+    h3 = ParagraphStyle("h3", fontName="TNR-BoldItalic", fontSize=12.5, leading=12.5 * 1.3,
+                        alignment=TA_LEFT, spaceBefore=10, spaceAfter=5, firstLineIndent=0)
     caption = ParagraphStyle("caption", fontName="TNR-Italic", fontSize=12,
                              leading=12 * 1.25, alignment=TA_CENTER,
                              spaceBefore=4, spaceAfter=8, firstLineIndent=0)
@@ -495,7 +685,7 @@ def build_pdf(blocks, out_path: Path, meta: dict):
     cov(meta["doc_kind"], 20, True, 8, caps=True)
     cov(meta["course"], 15, True, 20, caps=True)
     cov(meta["topic_label"], 14, True, 6, caps=True)
-    cov(f'"{meta["title"].upper()}"', 15, True, 28)
+    cov(meta["title"].upper(), 15, True, 28)
 
     cov(meta["advisor_label"], 13, True, 3, caps=True, align=TA_LEFT)
     cov(meta["advisor"], 13, True, 16, align=TA_LEFT)
@@ -503,8 +693,10 @@ def build_pdf(blocks, out_path: Path, meta: dict):
     cov(meta["team_name"], 13, True, 3, align=TA_LEFT)
     for text, bold in meta["members"]:
         cov(text, 13, bold, 3, align=TA_LEFT)
+    if "github" in meta:
+        cov(f"Mã nguồn GitHub: {meta['github']}", 11, False, 3, align=TA_LEFT)
 
-    story.append(Spacer(1, 30))
+    story.append(Spacer(1, 18))
     cov(meta["place_date"], 14, True, 0, caps=True)
     story.append(PageBreak())
 
@@ -554,6 +746,36 @@ def build_pdf(blocks, out_path: Path, meta: dict):
 
         elif kind == "toc":
             story.append(toc)
+
+        elif kind == "toc_title":
+            story.append(Paragraph(rich(block[1]), h1))
+
+        elif kind == "toc_list":
+            col_w = [TEXT_W - 2.0 * CM, 2.0 * CM]
+            list_data = []
+            for item in block[1]:
+                if isinstance(item, (list, tuple)):
+                    title_text, page_str = item[0], str(item[1])
+                else:
+                    title_text, page_str = str(item), ""
+                anc = make_caption_anchor(title_text)
+                title_html = f'<a href="#{anc}">{rich(title_text)}</a>'
+                page_html = f'<a href="#{anc}">{page_str}</a>' if page_str else ""
+                list_data.append([
+                    Paragraph(title_html, cell),
+                    Paragraph(page_html, cell_r),
+                ])
+            list_tbl = Table(list_data, colWidths=col_w)
+            list_tbl.setStyle(TableStyle([
+                ("VALIGN", (0, 0), (-1, -1), "BOTTOM"),
+                ("TOPPADDING", (0, 0), (-1, -1), 1),
+                ("BOTTOMPADDING", (0, 0), (-1, -1), 1),
+                ("LEFTPADDING", (0, 0), (-1, -1), 0),
+                ("RIGHTPADDING", (0, 0), (-1, -1), 0),
+                ("LINEBELOW", (0, 0), (-1, -1), 0.25, colors.HexColor("#D8D8D8")),
+            ]))
+            story.append(list_tbl)
+            story.append(Spacer(1, 6))
 
         elif kind in ("h1", "h2", "h3"):
             level = int(kind[1]) - 1
@@ -614,8 +836,9 @@ def build_pdf(blocks, out_path: Path, meta: dict):
                 ("LEFTPADDING", (0, 0), (-1, -1), 4),
                 ("RIGHTPADDING", (0, 0), (-1, -1), 4),
             ]))
+            anc = make_caption_anchor(cap_text)
             story.append(Spacer(1, 4))
-            story.append(Paragraph(rich(cap_text), caption))
+            story.append(Paragraph(f'<a name="{anc}"/>{rich(cap_text)}', caption))
             story.append(tbl)
             story.append(Spacer(1, 10))
 
@@ -623,11 +846,12 @@ def build_pdf(blocks, out_path: Path, meta: dict):
             _, cap_text, rel = block
             path = PROJECT_ROOT / rel
             asset, w, h = fig_asset(path)
+            anc = make_caption_anchor(cap_text)
             story.append(KeepTogether([
                 Spacer(1, 4),
                 Image(str(asset), width=w, height=h, hAlign="CENTER"),
                 Spacer(1, 4),
-                Paragraph(rich(cap_text), caption),
+                Paragraph(f'<a name="{anc}"/>{rich(cap_text)}', caption),
             ]))
 
         else:  # pragma: no cover

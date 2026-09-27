@@ -29,6 +29,20 @@ env/
 # Agent / IDE assistants
 .agents/
 
-# macOS
+# Microsoft Office temporary lock files
+~$*
+.~lock.*
+
+# Temporary / scratch files
+*.tmp
+*.bak
+*.log
+
+# Coverage
+.coverage
+htmlcov/
+
+# macOS / OS junk
 .DS_Store
 **/.DS_Store
+Thumbs.db

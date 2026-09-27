@@ -16,7 +16,7 @@ Dự án được xây dựng và hoàn thiện bởi nhóm 4 sinh viên theo m�
 | **👑 Hoàng Hôn (TV1)** | **Trưởng nhóm / Tech Lead**<br>• Quản trị kiến trúc kỹ thuật & Quality Gatekeeper<br>• Xây dựng Pipeline tiền xử lý 2 tầng tiếng Việt & Negation Scope<br>• Giám sát kiểm thử tự động (**55/55 tests pass**) | Pipeline Tiền xử lý (`src/preprocessing.py`), Test Suite (`tests/`), Bộ từ điển chuẩn hóa (`data/dictionaries/`) |
 | **📄 Văn Duy (TV2)** | **Data & Research Specialist**<br>• Khám phá dữ liệu chuyên sâu (EDA) & Trích xuất đặc trưng TF-IDF<br>• Thực hiện nghiên cứu đối chứng đặc trưng (Ablation Study)<br>• Chuyên trách biên soạn Báo cáo Đồ án toàn văn 6 Chương | Cuốn Báo cáo toàn văn Word/PDF, Báo cáo kỹ thuật EDA & Trích xuất đặc trưng (`reports/eda_feature_engineering.md`) |
 | **🎨 Duy Khang (TV3)** | **Machine Learning Specialist**<br>• Huấn luyện, tối ưu 4 mô hình ML cơ sở & Stacking Ensemble<br>• Triển khai thử nghiệm Deep Learning ViSoBERT trên GPU Runpod<br>• Chuyên trách thiết kế Bộ Slide trình chiếu 15 trang Dark-tech | File Slide PowerPoint (`reports/slides/NLP_ITviec_Sentiment_Slides.pptx`), Artifacts mô hình (`models/`), Script sinh slide |
-| **🎬 Phạm Thành Trung (TV4)** | **UI/UX & Deployment Specialist**<br>• Phát triển ứng dụng Web Streamlit 4 trang giao diện Dark-tech<br>• Tích hợp tính năng giải thích mô hình (XAI Highlight) & Threshold Policy<br>• Chuyên trách Kịch bản thuyết trình & Trực tiếp Demo trước Hội đồng | Web Dashboard (`app.py`, `app_pages/`), Kịch bản thuyết trình (`reports/slides/KICH_BAN_THUYET_TRINH_VA_DEMO.md`), Video Demo |
+| **🎬 Phạm Thành Trung (TV4)** | **UI/UX & Deployment Specialist**<br>• Phát triển ứng dụng Web Streamlit 4 trang giao diện Dark-tech<br>• Tích hợp tính năng giải thích mô hình (XAI Highlight) & Threshold Policy<br>• Phụ trách triển khai hệ thống & Trực tiếp Demo trước Hội đồng | Web Dashboard (`app.py`, `app_pages/`), Video Demo |
 
 ---
 
@@ -245,9 +245,7 @@ Thật POS [   9    69  1163 ]       Thật POS [  19    61  1161 ]
 
 | Danh mục | Đường dẫn trong repo (tính từ thư mục gốc) | Mô tả nội dung |
 | :--- | :--- | :--- |
-| **Slide Thuyết trình** | `reports/slides/NLP_ITviec_Sentiment_Slides.pptx` | File trình chiếu 15 slide Dark-tech chuẩn hóa |
-| **Kịch bản Thuyết trình** | `reports/slides/KICH_BAN_THUYET_TRINH_VA_DEMO.md` | Lời thoại chi tiết từng slide và kịch bản demo |
-| **Ngân hàng Q&A** | `reports/slides/NGAN_HANG_CAU_HOI_PHAN_BIEN_NLP_VA_DEMO.md` | Bộ câu hỏi phản biện & câu trả lời mẫu cho Hội đồng |
+| **Slide Thuyết trình** | `reports/slides/NLP_ITviec_Sentiment_Slides.pptx` | File trình chiếu 15 slide Dark-tech chuẩn hóa (kèm bản PDF) |
 | **Ứng dụng Streamlit** | `app.py` | Điểm khởi chạy Web Demo (`streamlit run app.py`) |
 | **Pipeline Tiền xử lý** | `src/preprocessing.py` | Module làm sạch 2 tầng, Unicode, Teencode & Negation Scope |
 | **Trích xuất đặc trưng** | `src/features.py` | Module TF-IDF N-gram, Lexicon & Ablation Study |
